@@ -10,6 +10,13 @@ export { SpeciesSection } from './ui/SpeciesSection';
 export { LogisticsSection } from './ui/LogisticsSection';
 export { CommitmentCard } from './ui/CommitmentCard';
 export { FAQAccordion } from './ui/FAQAccordion';
+export { OperatorHero } from './ui/OperatorHero';
+export { AuthoritySection } from './ui/AuthoritySection';
+export { RatingDistribution } from './ui/RatingDistribution';
+export { ReviewCard } from './ui/ReviewCard';
+export { CapabilitiesSection } from './ui/CapabilitiesSection';
+export { PastTourItem } from './ui/PastTourItem';
+export { TrackRecordSummary } from './ui/TrackRecordSummary';
 
 // Shared Components
 export { TourCard } from './TourCard';
