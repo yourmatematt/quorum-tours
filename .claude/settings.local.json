@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_serena_serena__list_dir",
+      "Bash(dir:*)",
+      "Bash(npm install)",
+      "Bash(npm run dev:*)",
+      "mcp__plugin_playwright_playwright__browser_resize",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "mcp__plugin_playwright_playwright__browser_console_messages",
+      "mcp__plugin_playwright_playwright__browser_close",
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "mcp__plugin_playwright_playwright__browser_press_key",
+      "Bash(copy:*)",
+      "Bash(cmd /c copy \"D:\\\\projects\\\\quorum-tours\\\\.playwright-mcp\\\\home__focus__primary-button.png\" \"D:\\\\projects\\\\quorum-tours\\\\artifacts\\\\screenshots\\\\home__focus__primary-button.png\")",
+      "Bash(powershell -Command:*)"
+    ]
+  }
+}

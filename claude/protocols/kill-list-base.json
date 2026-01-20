@@ -1,0 +1,347 @@
+{
+  "version": "1.0.0",
+  "base": "standard",
+  "description": "Base kill list rules - standard template smells to avoid",
+  "rules": [
+    {
+      "id": "KL-LAYOUT-001",
+      "category": "layout",
+      "severity": "major",
+      "pattern": "More than 2 consecutive card grid sections",
+      "description": "Repetitive card grids signal template assembly. Breaks visual rhythm.",
+      "detection": {
+        "visual": "Count consecutive sections using 3+ column card layouts",
+        "code": "grid-cols-3 or grid-cols-4 in consecutive sections"
+      },
+      "alternative": "Break rhythm with full-width text, split-panel, or asymmetric sections",
+      "exceptions": ["Portfolio/gallery pages where grid is content-appropriate"],
+      "enabled": true,
+      "tls_penalty": 8
+    },
+    {
+      "id": "KL-LAYOUT-002",
+      "category": "layout",
+      "severity": "minor",
+      "pattern": "Hero section ending with hard line at fold",
+      "description": "Hard fold lines discourage scrolling. Content should tease below.",
+      "detection": {
+        "visual": "Check if hero has clear bottom edge with no peek from next section"
+      },
+      "alternative": "Next section peeks up, image bleeds past fold, or gradient fades",
+      "exceptions": ["Above-fold conversion pages where scroll is not the goal"],
+      "enabled": true,
+      "tls_penalty": 5
+    },
+    {
+      "id": "KL-LAYOUT-003",
+      "category": "layout",
+      "severity": "minor",
+      "pattern": "Predictable background alternation (White-Gray-White-Dark)",
+      "description": "Regular alternation reads as template logic, not intentional design.",
+      "detection": {
+        "visual": "Check section backgrounds follow A-B-A-B pattern",
+        "code": "bg-white, bg-gray, bg-white pattern in sections"
+      },
+      "alternative": "Group related sections into visual chapters with shared backgrounds",
+      "exceptions": [],
+      "enabled": true,
+      "tls_penalty": 4
+    },
+    {
+      "id": "KL-LAYOUT-004",
+      "category": "layout",
+      "severity": "major",
+      "pattern": "Center-aligned text blocks longer than 3 lines",
+      "description": "Centered long text is harder to read and signals lazy layout.",
+      "detection": {
+        "visual": "Check for centered paragraphs > 3 lines",
+        "code": "text-center on elements with > 150 characters"
+      },
+      "alternative": "Left-align by default. Reserve centering for headlines and short labels.",
+      "exceptions": ["Poetry, quotes under 3 lines, call-to-action sections"],
+      "enabled": true,
+      "tls_penalty": 6
+    },
+    {
+      "id": "KL-LAYOUT-005",
+      "category": "layout",
+      "severity": "minor",
+      "pattern": "Symmetric Sandwich layout (Center text - Center image - Center text)",
+      "description": "This layout is the default AI generation pattern.",
+      "detection": {
+        "visual": "Look for text-image-text with all elements centered"
+      },
+      "alternative": "Force asymmetry with offset images, bleeds, or split layouts",
+      "exceptions": [],
+      "enabled": true,
+      "tls_penalty": 5
+    },
+    {
+      "id": "KL-COMP-001",
+      "category": "components",
+      "severity": "critical",
+      "pattern": "Default lift+shadow hover on cards",
+      "description": "This is THE most common template tell. Avoid at all costs.",
+      "detection": {
+        "visual": "Hover over cards and check for lift + shadow effect",
+        "code": "hover:shadow-lg, hover:-translate-y, hover:scale combined",
+        "regex": "hover:[^\\s]*(shadow|translate-y|scale)"
+      },
+      "alternative": "Use internal element changes: border color, image zoom, text reveal, button appear",
+      "exceptions": [],
+      "enabled": true,
+      "tls_penalty": 15
+    },
+    {
+      "id": "KL-COMP-002",
+      "category": "components",
+      "severity": "major",
+      "pattern": "Row of 4 icons with default Lucide/Heroicons",
+      "description": "Icon rows with default icons scream 'generated from template'.",
+      "detection": {
+        "visual": "Check for 4 icons in a row with standard library icons",
+        "code": "lucide-react imports with grid-cols-4"
+      },
+      "alternative": "Use custom illustrated icons or feature lists with screenshots",
+      "exceptions": ["When icons are custom-designed for the brand"],
+      "enabled": true,
+      "tls_penalty": 10
+    },
+    {
+      "id": "KL-COMP-003",
+      "category": "components",
+      "severity": "minor",
+      "pattern": "Uniform shadow-lg for card separation",
+      "description": "Default shadows lack intentionality.",
+      "detection": {
+        "code": "shadow-lg without color customization",
+        "regex": "shadow-lg(?!\\s+shadow-)"
+      },
+      "alternative": "Use border, colored shadows (shadow-blue-500/20), or background contrast",
+      "exceptions": ["Modals and elevated dialogs"],
+      "enabled": true,
+      "tls_penalty": 4
+    },
+    {
+      "id": "KL-COMP-004",
+      "category": "components",
+      "severity": "minor",
+      "pattern": "Uniform rounded-lg on everything",
+      "description": "Single border radius throughout lacks visual hierarchy.",
+      "detection": {
+        "code": "All interactive elements use rounded-lg",
+        "regex": "rounded-lg appearing > 10 times"
+      },
+      "alternative": "Mix radii: pill buttons + sharper cards create hierarchy",
+      "exceptions": [],
+      "enabled": true,
+      "tls_penalty": 3
+    },
+    {
+      "id": "KL-COMP-005",
+      "category": "components",
+      "severity": "minor",
+      "pattern": "Generic testimonial carousel with dots",
+      "description": "Auto-rotating carousels with dot navigation are template defaults.",
+      "detection": {
+        "visual": "Carousel with < > arrows and dot indicators",
+        "code": "embla-carousel or swiper with default dots"
+      },
+      "alternative": "Static featured testimonial OR scroll-triggered sequence",
+      "exceptions": ["When client has 10+ high-quality testimonials with video"],
+      "enabled": true,
+      "tls_penalty": 6
+    },
+    {
+      "id": "KL-COMP-006",
+      "category": "components",
+      "severity": "minor",
+      "pattern": "Generic accordion arrows",
+      "description": "Default chevron arrows on accordions are ubiquitous.",
+      "detection": {
+        "visual": "Accordions with standard down/up chevrons",
+        "code": "ChevronDown from lucide-react in accordion"
+      },
+      "alternative": "Use +/- signs, custom icons, or numbered expand states",
+      "exceptions": [],
+      "enabled": true,
+      "tls_penalty": 3
+    },
+    {
+      "id": "KL-CONTENT-001",
+      "category": "content",
+      "severity": "critical",
+      "pattern": "LLM high-frequency words in headlines",
+      "description": "These words are statistically over-represented in AI output.",
+      "detection": {
+        "code": "Search H1/H2 for banned words",
+        "regex": "(unlock|unleash|elevate|supercharge|empower|facilitate|optimize|seamless|cutting-edge|leverage)"
+      },
+      "alternative": "Use construction verbs: Build, Fix, Deploy, Ship, Design, Write",
+      "exceptions": [],
+      "enabled": true,
+      "tls_penalty": 12
+    },
+    {
+      "id": "KL-CONTENT-002",
+      "category": "content",
+      "severity": "minor",
+      "pattern": "Exclamation marks in H1 or H2",
+      "description": "Exclamation marks reduce authority and feel salesy.",
+      "detection": {
+        "code": "H1 or H2 ending with !",
+        "regex": "<h[12][^>]*>.*!\\s*</h[12]>"
+      },
+      "alternative": "Use periods for authority. Let content create excitement.",
+      "exceptions": ["Playful/casual brand voice with documented rationale"],
+      "enabled": true,
+      "tls_penalty": 3
+    },
+    {
+      "id": "KL-CONTENT-003",
+      "category": "content",
+      "severity": "major",
+      "pattern": "'Contact Us' as section header",
+      "description": "Generic contact headers waste CTA opportunity.",
+      "detection": {
+        "code": "Section header text 'Contact Us' or 'Get in Touch'",
+        "regex": "(contact us|get in touch|reach out)"
+      },
+      "alternative": "'Start Your Project', 'Get a Quote', 'Book a Call'",
+      "exceptions": [],
+      "enabled": true,
+      "tls_penalty": 5
+    },
+    {
+      "id": "KL-CONTENT-004",
+      "category": "content",
+      "severity": "major",
+      "pattern": "Generic value propositions without specifics",
+      "description": "Copy without numbers, dates, or proper nouns is template filler.",
+      "detection": {
+        "visual": "Check if any sentence has a number, date, or proper noun",
+        "regex": "We provide.*services|Your trusted partner|Delivering excellence"
+      },
+      "alternative": "Every H2 needs a number, date, or proper noun",
+      "exceptions": [],
+      "enabled": true,
+      "tls_penalty": 8
+    },
+    {
+      "id": "KL-CONTENT-005",
+      "category": "content",
+      "severity": "minor",
+      "pattern": "Hidden business friction",
+      "description": "Hiding pricing, wait times, or constraints reduces trust.",
+      "detection": {
+        "visual": "Check if pricing, wait times, minimums are visible"
+      },
+      "alternative": "Explicitly state: 'Min budget $5k', 'Waitlist: 2 weeks', 'License #305428C'",
+      "exceptions": ["Complex B2B where pricing requires consultation"],
+      "enabled": true,
+      "tls_penalty": 4
+    },
+    {
+      "id": "KL-CONTENT-006",
+      "category": "content",
+      "severity": "major",
+      "pattern": "'Learn More' as CTA text",
+      "description": "Generic CTAs reduce conversion and signal template assembly.",
+      "detection": {
+        "code": "Button text 'Learn More' or 'Read More'",
+        "regex": ">(learn more|read more|find out more)<"
+      },
+      "alternative": "Action-specific: 'Join the Expedition', 'Get Your Quote', 'Start Building'",
+      "exceptions": [],
+      "enabled": true,
+      "tls_penalty": 7
+    },
+    {
+      "id": "KL-IMAGE-001",
+      "category": "imagery",
+      "severity": "critical",
+      "pattern": "Undraw or flat vector illustrations",
+      "description": "Purple-skin giant-limb illustrations are the #1 template indicator.",
+      "detection": {
+        "visual": "Check for flat vector people with unnatural colors"
+      },
+      "alternative": "Real photography, abstract geometric patterns, or custom illustration",
+      "exceptions": [],
+      "enabled": true,
+      "tls_penalty": 15
+    },
+    {
+      "id": "KL-IMAGE-002",
+      "category": "imagery",
+      "severity": "major",
+      "pattern": "Floating gradient blur blobs (SaaS 2.0 aurora)",
+      "description": "The colorful blurred gradient blobs are peak template aesthetic.",
+      "detection": {
+        "visual": "Look for blurred colorful shapes in background",
+        "code": "blur-3xl with gradient backgrounds"
+      },
+      "alternative": "Sharp defined shapes, noise textures, or solid colors",
+      "exceptions": [],
+      "enabled": true,
+      "tls_penalty": 10
+    },
+    {
+      "id": "KL-IMAGE-003",
+      "category": "imagery",
+      "severity": "minor",
+      "pattern": "Standard laptop mockup with screenshot",
+      "description": "The 'laptop with app' pattern is overused.",
+      "detection": {
+        "visual": "Standard MacBook mockup with screenshot inside"
+      },
+      "alternative": "Creatively cropped/skewed screenshots, or real usage photography",
+      "exceptions": ["When showing actual app interface is necessary"],
+      "enabled": true,
+      "tls_penalty": 4
+    },
+    {
+      "id": "KL-TRUST-001",
+      "category": "trust",
+      "severity": "major",
+      "pattern": "Grayscale logo wall without context",
+      "description": "Logo walls without context are weak trust signals.",
+      "detection": {
+        "visual": "Row of grayscale logos without text or links"
+      },
+      "alternative": "'Trusted by X for [specific task]' with case study links",
+      "exceptions": ["When accompanied by Level 3+ proof elsewhere"],
+      "enabled": true,
+      "tls_penalty": 6
+    },
+    {
+      "id": "KL-TRUST-002",
+      "category": "trust",
+      "severity": "major",
+      "pattern": "Generic testimonials without specifics",
+      "description": "'Great service!' quotes damage credibility.",
+      "detection": {
+        "visual": "Testimonials without specific outcomes",
+        "regex": "(great service|highly recommend|best experience)"
+      },
+      "alternative": "Full name, role, company, AND specific outcome required",
+      "exceptions": [],
+      "enabled": true,
+      "tls_penalty": 8
+    },
+    {
+      "id": "KL-NAV-001",
+      "category": "layout",
+      "severity": "minor",
+      "pattern": "Standard navigation labels",
+      "description": "'Home, Features, Pricing, Contact' is template default.",
+      "detection": {
+        "code": "Nav items with generic labels",
+        "regex": "(Home|Features|About Us|Contact)"
+      },
+      "alternative": "Action-oriented: 'Find a Store', 'Start Project', 'See Pricing'",
+      "exceptions": [],
+      "enabled": true,
+      "tls_penalty": 3
+    }
+  ]
+}

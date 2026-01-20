@@ -1,0 +1,103 @@
+/* Quorum Tours Design Tokens */
+
+:root {
+  /* Typography Scale (Aggressive: H1 is 4-6x body) */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --text-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+  --text-xl: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
+  --text-2xl: clamp(2rem, 1.5rem + 2.5vw, 3rem);
+  --text-3xl: clamp(2.5rem, 2rem + 3vw, 4rem);
+  --text-hero: clamp(3rem, 2rem + 5vw, 5.5rem);
+
+  /* Colors - Calm, Trust-First Palette */
+  --color-ink: #1a1a1a;
+  --color-ink-muted: #4a4a4a;
+  --color-ink-subtle: #6b6b6b;
+
+  --color-surface: #fafafa;
+  --color-surface-raised: #ffffff;
+  --color-surface-sunken: #f0f0f0;
+
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+
+  --color-confirmed: #059669;
+  --color-confirmed-bg: #d1fae5;
+  --color-forming: #d97706;
+  --color-forming-bg: #fef3c7;
+  --color-not-running: #6b7280;
+  --color-not-running-bg: #f3f4f6;
+
+  --color-border: #e5e5e5;
+  --color-border-strong: #d4d4d4;
+
+  /* Spacing (Varied for rhythm) */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 6rem;
+  --space-section-tight: 3rem;
+  --space-section-normal: 5rem;
+  --space-section-loose: 8rem;
+
+  /* Border Radius (Mixed for hierarchy) */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-pill: 9999px;
+  --radius-asymmetric: 0.75rem 0.25rem 0.75rem 0.25rem;
+
+  /* Shadows (Colored, not default) */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 4px 12px rgba(37, 99, 235, 0.08);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* Container */
+  --container-max: 1280px;
+  --container-content: 720px;
+}
+
+/* Base Styles */
+html {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-ink);
+  background: var(--color-surface);
+  line-height: 1.6;
+}
+
+/* Display Typography */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: 'tnum' 1;
+}
+
+/* No lift+shadow hover - use border/internal changes instead */
+.card-hover {
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.card-hover:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-card-hover);
+}
