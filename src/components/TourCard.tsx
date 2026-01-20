@@ -12,6 +12,7 @@ interface TourCardProps {
   date: string;
   location: string;
   href?: string;
+  speciesHighlight?: string;
 }
 
 export function TourCard({
@@ -23,6 +24,7 @@ export function TourCard({
   date,
   location,
   href = '#',
+  speciesHighlight,
 }: TourCardProps) {
   return (
     <a
@@ -66,6 +68,23 @@ export function TourCard({
         <span aria-hidden="true">&middot;</span>
         <span>{location}</span>
       </div>
+
+      {/* Species highlight - optional */}
+      {speciesHighlight && (
+        <div className="
+          flex items-center gap-2
+          text-sm text-[var(--color-ink-muted)]
+          mb-4
+        ">
+          <span
+            className="text-[var(--color-accent)]"
+            aria-hidden="true"
+          >
+            ◇
+          </span>
+          <span>{speciesHighlight}</span>
+        </div>
+      )}
 
       {/* Progress - Non-urgent display */}
       <ThresholdProgressBar

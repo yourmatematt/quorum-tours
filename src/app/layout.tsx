@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { GlobalNav } from '@/components/GlobalNav';
 
 export const metadata: Metadata = {
   title: 'Quorum Tours',
@@ -34,6 +35,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <GlobalNav />
         {children}
       </body>
     </html>
