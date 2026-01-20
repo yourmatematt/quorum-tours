@@ -30,3 +30,15 @@ export { ComparisonSection } from './home/ComparisonSection';
 export { TourStatesSection } from './home/TourStatesSection';
 export { TrustSection } from './home/TrustSection';
 export { PathwaysSection } from './home/PathwaysSection';
+
+// How It Works Page Sections
+export {
+  StageCard,
+  ProblemSection,
+  MechanicSection,
+  FailureCaseSection,
+  ConfirmationSection,
+  BoundaryItem,
+  BoundariesSection,
+  ClosingCTA,
+} from './how-it-works';

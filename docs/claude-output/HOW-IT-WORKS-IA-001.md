@@ -1,11 +1,13 @@
 # HOW-IT-WORKS-IA-001 — How It Works Page Information Architecture
 
 ```
-STATUS: READY_FOR_REVIEW
+STATUS: APPROVED
 TASK_ID: HOW-IT-WORKS-IA-001
 TASK: Define Information Architecture, section intent, and component inventory for How It Works page
 ASSIGNED_AGENT: web-design-lead
 REPORTS_TO: orchestrator
+APPROVED_BY: orchestrator
+APPROVED_DATE: 2026-01-20
 INPUTS_USED:
   - docs/wireframes.md (PAGE 6 specification)
   - docs/claude-output/HOME-IA-001.md
@@ -19,6 +21,8 @@ GATES_REQUIRED:
   - GATE-TLS
 GATES_PASSED:
   - GATE-MSG-STRICT
+  - GATE-KILL-LIST
+  - GATE-TLS
 EVIDENCE:
   screenshots: []
   a11y: []
@@ -573,9 +577,12 @@ Mobile: Single column, sections stack vertically
 ---
 
 ```
+COMPLETED_ACTIONS:
+  1. orchestrator approved IA specification — 2026-01-20
+
 NEXT_ACTIONS:
-  1. orchestrator to review and approve IA specification
-  2. If approved: frontend-implementer receives HOW-IT-WORKS-UI-001 task
-  3. visual-qa to capture evidence after implementation
-  4. a11y-auditor to run baseline checks after implementation
+  1. frontend-implementer to receive HOW-IT-WORKS-UI-001 task
+  2. visual-qa to capture evidence after implementation
+  3. a11y-auditor to run baseline checks after implementation
+  4. code-reviewer to run GATE-CODE-REVIEW after implementation
 ```
