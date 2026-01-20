@@ -43,3 +43,14 @@ export {
   BoundariesSection,
   ClosingCTA,
 } from './how-it-works';
+
+// Auth Components
+export {
+  AuthCard,
+  PasswordInput,
+  FormAlert,
+  AuthDivider,
+  MagicLinkOption,
+  OAuthButton,
+  LoginForm,
+} from './auth';

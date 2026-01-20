@@ -1,11 +1,13 @@
 # AUTH-LOGIN-IA-001 — Login Page Information Architecture
 
 ```
-STATUS: READY_FOR_REVIEW
+STATUS: APPROVED
 TASK_ID: AUTH-LOGIN-IA-001
 TASK: Define Information Architecture, section intent, and component inventory for Login page
 ASSIGNED_AGENT: web-design-lead
 REPORTS_TO: orchestrator
+APPROVED_BY: orchestrator
+APPROVED_DATE: 2026-01-21
 INPUTS_USED:
   - docs/wireframes.md (Global rules, Phase 2 context)
   - docs/context/quorum_tours_shared_operator_user_pain_point_ux_synthesis_claude_build_guide.md
