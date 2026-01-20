@@ -1,11 +1,13 @@
 # TOURS-UI-001 — Tours Index Page Implementation
 
 ```
-STATUS: READY_FOR_QA
+STATUS: APPROVED
 TASK_ID: TOURS-UI-001
 TASK: Implement Tours Index page per TOURS-IA-001 specification
 ASSIGNED_AGENT: frontend-implementer
 REPORTS_TO: orchestrator
+APPROVED_BY: orchestrator
+APPROVED_DATE: 2026-01-20
 INPUTS_USED:
   - docs/claude-output/TOURS-IA-001.md
   - docs/wireframes.md
@@ -24,12 +26,32 @@ GATES_REQUIRED:
   - GATE-CODE-REVIEW
 GATES_PASSED:
   - GATE-MSG-STRICT
+  - GATE-KILL-LIST
+  - GATE-TLS (ADVISORY: TourCard 25 vs target 20)
   - GATE-INTEGRATION-ROUTING
+  - GATE-VISUAL-QA
+  - GATE-A11Y-BASELINE
+  - GATE-CODE-REVIEW
 EVIDENCE:
-  screenshots: []
-  a11y: []
-  console: []
-  reports: []
+  screenshots:
+    - artifacts/screenshots/tours__desktop__full.png
+    - artifacts/screenshots/tours__desktop__fold.png
+    - artifacts/screenshots/tours__mobile__fold.png
+    - artifacts/screenshots/tours__mobile__mid.png
+    - artifacts/screenshots/tours__desktop__filtered.png
+  a11y:
+    - artifacts/a11y/tours__a11y.md
+    - artifacts/a11y/tours__focus__dropdown.png
+    - artifacts/a11y/tours__focus__card.png
+    - artifacts/a11y/tours__focus__chip-remove.png
+  console:
+    - artifacts/reports/tours__console.txt
+  reports:
+    - artifacts/reports/tours__code-review.md
+  deliverables:
+    - docs/claude-output/TOURS-UI-001-VISUAL-QA.md
+    - docs/claude-output/TOURS-UI-001-A11Y.md
+    - docs/claude-output/TOURS-UI-001-CODE-REVIEW.md
 FAIL_REASONS: NONE
 OUTPUT:
 ```
@@ -255,9 +277,11 @@ No hardcoded values.
 ---
 
 ```
-NEXT_ACTIONS:
-  1. visual-qa to capture desktop + mobile screenshots
-  2. a11y-auditor to verify accessibility baseline
-  3. code-reviewer to verify kill-list and TLS compliance
-  4. orchestrator to approve TOURS-UI-001
+COMPLETED_ACTIONS:
+  1. visual-qa: GATE-VISUAL-QA PASS (2026-01-20)
+  2. a11y-auditor: GATE-A11Y-BASELINE PASS (2026-01-20)
+  3. code-reviewer: GATE-CODE-REVIEW PASS (2026-01-20)
+  4. orchestrator: APPROVED (2026-01-20)
+
+NEXT_TASK: TOURS-DETAIL-001 (Tour Detail page)
 ```
