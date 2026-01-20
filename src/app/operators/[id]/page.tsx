@@ -370,7 +370,7 @@ export default function OperatorProfilePage({ params }: PageProps) {
             </li>
             <li className="text-[var(--color-ink-subtle)]" aria-hidden="true">/</li>
             <li>
-              <a href="/tours" className="text-[var(--color-ink-muted)] hover:text-[var(--color-accent)]">
+              <a href="/operators" className="text-[var(--color-ink-muted)] hover:text-[var(--color-accent)]">
                 Operators
               </a>
             </li>

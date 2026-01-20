@@ -17,6 +17,7 @@ export { ReviewCard } from './ui/ReviewCard';
 export { CapabilitiesSection } from './ui/CapabilitiesSection';
 export { PastTourItem } from './ui/PastTourItem';
 export { TrackRecordSummary } from './ui/TrackRecordSummary';
+export { OperatorCard } from './ui/OperatorCard';
 
 // Shared Components
 export { TourCard } from './TourCard';
