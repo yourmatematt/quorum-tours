@@ -63,3 +63,13 @@ export {
   PastToursSection,
   SettingsSection,
 } from './profile';
+
+// Join Flow Components
+export {
+  TourConfirmationSummary,
+  JoinForm,
+  InterestForm,
+  PaymentSection,
+  CommitmentSummary,
+  SuccessMessage,
+} from './join';
