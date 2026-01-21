@@ -6,9 +6,9 @@
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-  --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
-  --text-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+  --text-xs: clamp(0.875rem, 0.8rem + 0.25vw, 1rem);
+  --text-sm: clamp(1rem, 0.95rem + 0.35vw, 1.125rem);
+  --text-base: clamp(1.125rem, 1.05rem + 0.5vw, 1.25rem);
   --text-lg: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
   --text-xl: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
   --text-2xl: clamp(2rem, 1.5rem + 2.5vw, 3rem);
@@ -27,9 +27,9 @@
   --color-accent: #2563eb;
   --color-accent-hover: #1d4ed8;
 
-  --color-confirmed: #059669;
+  --color-confirmed: #065f46;
   --color-confirmed-bg: #d1fae5;
-  --color-forming: #d97706;
+  --color-forming: #92400e;
   --color-forming-bg: #fef3c7;
   --color-not-running: #6b7280;
   --color-not-running-bg: #f3f4f6;

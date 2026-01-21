@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { OperatorHero } from '@/components/ui/OperatorHero';
 import { AuthoritySection } from '@/components/ui/AuthoritySection';
 import { RatingDistribution } from '@/components/ui/RatingDistribution';
@@ -350,11 +351,12 @@ interface PageProps {
 }
 
 export default function OperatorProfilePage({ params }: PageProps) {
-  const operator = getOperatorById(params.id);
+  const operator = useMemo(() => getOperatorById(params.id), [params.id]);
   const [activeTab, setActiveTab] = useState<'active' | 'past'>('active');
 
   return (
-    <main className="min-h-screen bg-[var(--color-surface)]">
+    <ErrorBoundary>
+      <main className="min-h-screen bg-[var(--color-surface)]">
       <div className="
         w-full max-w-[var(--container-max)]
         mx-auto px-[var(--space-lg)]
@@ -492,6 +494,7 @@ export default function OperatorProfilePage({ params }: PageProps) {
               onClick={() => setActiveTab('active')}
               className={`
                 pb-[var(--space-sm)]
+                py-3 px-2 min-h-[48px]
                 text-sm font-medium
                 border-b-2
                 transition-colors duration-[var(--transition-normal)]
@@ -508,6 +511,7 @@ export default function OperatorProfilePage({ params }: PageProps) {
               onClick={() => setActiveTab('past')}
               className={`
                 pb-[var(--space-sm)]
+                py-3 px-2 min-h-[48px]
                 text-sm font-medium
                 border-b-2
                 transition-colors duration-[var(--transition-normal)]
@@ -579,5 +583,6 @@ export default function OperatorProfilePage({ params }: PageProps) {
         </section>
       </div>
     </main>
+    </ErrorBoundary>
   );
 }

@@ -235,6 +235,210 @@ It is written explicitly for **Claude Code** to reference during build execution
 
 ---
 
+## PAGE 7 — Platform Admin Dashboard (Internal Tool)
+
+**Primary job:** Maintain marketplace integrity and operational health.
+
+**Access:** Platform administrators only (authentication required).
+
+**Design constraints:**
+* Operational tool, not a public-facing surface
+* No marketing language or persuasive elements
+* High contrast, large fonts (accessibility-first for 45-65+ demographic)
+* Calm information density
+* No gamification or achievement language
+* Revenue/metrics are operational data, not celebrations
+
+### Section Order & Intent
+
+1. **Dashboard Overview (Above the Fold)**
+
+   * Critical alerts requiring immediate attention
+   * Platform health summary (tours active, operators pending, system status)
+   * Quick action shortcuts (approve pending operator, review flagged content)
+
+2. **Operator Verification Queue**
+
+   * Pending operator applications with status workflow
+   * Credential document review interface
+   * Approval/rejection actions with reason tracking
+   * Expiring credentials visibility
+
+3. **Tour Oversight**
+
+   * All tours with threshold progress monitoring
+   * Tours approaching deadline without reaching threshold
+   * Dispute/issue flagging and resolution tracking
+   * Tour status distribution (forming/confirmed/cancelled)
+
+4. **User Management**
+
+   * User search and profile access
+   * Tier adjustment interface (manual override capability)
+   * Moderation actions (strikes, suspension)
+   * User activity patterns and trust metrics
+
+5. **Platform Metrics**
+
+   * Revenue tracking (escrowed vs paid out)
+   * Tour success rates (threshold reached %)
+   * User growth and retention curves
+   * Operator onboarding funnel
+   * Platform commission tracking
+
+6. **Alerts & Monitoring**
+
+   * System health indicators
+   * Fraud detection flags
+   * Payment processing issues
+   * User-reported issues queue
+
+7. **Audit Log**
+
+   * Admin action history (who did what, when)
+   * Compliance trail for legal requirements
+   * Filterable by admin, action type, date range
+
+### Component Inventory (Admin-Specific)
+
+* **Status Workflow UI** — Multi-step approval flows with reason tracking
+* **Document Viewer** — Inline PDF/image viewer for credential verification
+* **Action Audit Trail** — Timestamped history of admin decisions
+* **Metrics Dashboard Cards** — Operational KPIs with trend indicators
+* **Alert Priority Queue** — Triaged list by urgency (critical/warning/info)
+* **Search & Filter** — Multi-criteria search for operators/users/tours
+* **Approval Actions** — Approve/reject with mandatory reason fields
+* **Timeline View** — Chronological events for dispute resolution
+
+### Critical UX Requirements
+
+* **Binary status indicators** — Verified/Unverified, Active/Suspended (no ambiguous states)
+* **Mandatory reason fields** — All rejection/suspension actions require explanation
+* **Audit trail visibility** — All actions logged and visible to other admins
+* **No dark patterns** — Admin tools must be transparent and reversible where possible
+* **Financial clarity** — Held vs charged, escrowed vs paid always explicit
+* **Date/time precision** — All timestamps with timezone awareness
+* **Error state visibility** — Payment failures, system issues surfaced prominently
+
+### Pass / Fail (Admin Dashboard)
+
+**PASS if:**
+* Admin can complete verification workflow without ambiguity
+* All actions are auditable and reversible
+* Critical issues surface above informational data
+* Financial state is always explicit
+
+**FAIL if:**
+* Metrics use gamification language ("Level up!", achievement badges)
+* Revenue displays as celebration rather than operational data
+* Approval workflows lack reason tracking
+* Actions cannot be traced in audit log
+
+---
+
+## PAGE 8 — Operator Dashboard (Internal Tool)
+
+**Primary job:** Tour operation and business management for verified operators.
+
+**Access:** Verified operators only (authentication + verification required).
+
+**Design constraints:**
+* Operational tool for tour business management
+* No marketing language or persuasive elements
+* High contrast, large fonts (accessibility-first for 50-70 demographic)
+* Calm information density
+* No gamification or achievement language
+* Revenue/bookings are operational data, not celebrations
+* Financial clarity paramount (escrowed vs paid vs pending)
+
+### Section Order & Intent
+
+1. **Tour Management (Primary Surface)**
+
+   * Active tours list with status (forming/confirmed/completed/cancelled)
+   * Create new tour action (prominent)
+   * Threshold and capacity settings visibility
+   * Quick view of booking progress per tour
+   * Tour status workflow controls
+
+2. **Booking Progress Dashboard**
+
+   * Real-time threshold visualization for active tours
+   * "4 of 6 committed" progress indicators
+   * Days until booking deadline
+   * Recent commitment activity timeline
+   * Participant count trends
+
+3. **Participant List**
+
+   * Committed participants per tour
+   * User compatibility signals (pace preference, experience level, birding vs photography)
+   * Contact capabilities (platform-mediated messaging)
+   * Participant tier indicators (Explorer, Field Naturalist, Trusted Contributor)
+   * Dietary restrictions and accessibility needs visibility
+
+4. **Revenue Dashboard**
+
+   * Escrowed deposits by tour (held, not yet charged)
+   * Confirmed revenue (charged after threshold reached)
+   * Payout schedule and status
+   * Stripe Connect balance
+   * Transaction history
+   * Platform commission breakdown
+
+5. **Profile Management**
+
+   * Operator bio and credentials editor
+   * Photo gallery management (20+ photos target)
+   * Verification document upload
+   * Credential expiration tracking
+   * Public profile preview link
+
+6. **Reviews & Reputation**
+
+   * Recent reviews with rating distribution
+   * Operator response interface
+   * Average rating trend over time
+   * Response rate tracking
+   * Review analytics (sentiment, common themes)
+
+### Component Inventory (Operator-Specific)
+
+* **Tour Status Workflow** — Visual pipeline (forming → confirmed → running → completed)
+* **Threshold Progress Bar** — Non-urgent progress indicator with count
+* **Participant Card** — User profile summary with compatibility signals
+* **Revenue Breakdown Card** — Escrowed vs confirmed vs paid with explicit labels
+* **Payout Schedule Timeline** — Expected payout dates with Stripe status
+* **Review Response Editor** — Text input with character limit and submission
+* **Credential Upload Interface** — Document upload with status tracking
+* **Tour Creation Form** — Multi-step form with threshold, capacity, dates, species
+
+### Critical UX Requirements
+
+* **Threshold status always visible** — Operators need constant awareness of tour viability
+* **Financial state explicit** — "Escrowed: $2,400 (4 × $600)" not just "$2,400"
+* **No celebration language** — "6 participants committed" not "You got 6 bookings!"
+* **Payout transparency** — Exact dates, amounts, Stripe status visible
+* **Participant privacy** — Contact via platform only, no email/phone exposure
+* **Tour creation guidance** — Clear minimum threshold requirements
+* **Cancellation consequences** — Explicit explanation of what happens if threshold not met
+
+### Pass / Fail (Operator Dashboard)
+
+**PASS if:**
+* Operator can assess tour viability at a glance
+* Financial state is always unambiguous (escrowed vs paid)
+* Threshold progress is prominent and non-urgent
+* All business operations accessible without friction
+
+**FAIL if:**
+* Revenue uses gamification ("You earned $5K!")
+* Threshold progress creates fake urgency
+* Participant contact bypasses platform mediation
+* Tour status is ambiguous or requires interpretation
+
+---
+
 ## Cross-Page Component Inventory
 
 ### Core Components

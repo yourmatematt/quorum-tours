@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import {
   TourConfirmationSummary,
   JoinForm,
@@ -73,7 +74,7 @@ export default function JoinTourPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get tour data (UI shell)
-  const tour = exampleTours[tourId] || exampleTours['tasmania-raptors-2026'];
+  const tour = useMemo(() => exampleTours[tourId] || exampleTours['tasmania-raptors-2026'], [tourId]);
   const isConfirmed = tour.status === 'confirmed';
 
   // Handle form submission (UI shell)
@@ -91,7 +92,8 @@ export default function JoinTourPage() {
   // Auth gate (UI shell - would check real auth in production)
   if (!exampleUser.isAuthenticated) {
     return (
-      <main className="min-h-screen bg-[var(--color-surface)]">
+      <ErrorBoundary>
+        <main className="min-h-screen bg-[var(--color-surface)]">
         <div
           className="
             w-full max-w-[600px] mx-auto
@@ -166,11 +168,13 @@ export default function JoinTourPage() {
           </div>
         </div>
       </main>
+      </ErrorBoundary>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[var(--color-surface)]">
+    <ErrorBoundary>
+      <main className="min-h-screen bg-[var(--color-surface)]">
       <div
         className="
           w-full max-w-[600px] mx-auto
@@ -305,5 +309,6 @@ export default function JoinTourPage() {
         </form>
       </div>
     </main>
+    </ErrorBoundary>
   );
 }

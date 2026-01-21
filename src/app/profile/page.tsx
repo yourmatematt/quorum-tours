@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import {
   ProfileHeader,
   CommitmentsSection,
@@ -85,7 +86,8 @@ const examplePastTours = [
 
 export default function ProfilePage() {
   return (
-    <main className="min-h-screen bg-[var(--color-surface)]">
+    <ErrorBoundary>
+      <main className="min-h-screen bg-[var(--color-surface)]">
       <div
         className="
           w-full max-w-[800px] mx-auto
@@ -118,5 +120,6 @@ export default function ProfilePage() {
         </div>
       </div>
     </main>
+    </ErrorBoundary>
   );
 }

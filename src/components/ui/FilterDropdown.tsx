@@ -44,7 +44,8 @@ export function FilterDropdown({
         onClick={() => setIsOpen(!isOpen)}
         className="
           inline-flex items-center gap-2
-          px-4 py-2
+          px-4 py-3
+          min-h-[48px]
           text-sm
           bg-[var(--color-surface-raised)]
           border border-[var(--color-border)]
@@ -98,7 +99,7 @@ export function FilterDropdown({
                 setIsOpen(false);
               }}
               className={`
-                w-full px-4 py-2 text-left text-sm
+                w-full px-4 py-3 min-h-[48px] text-left text-sm
                 hover:bg-[var(--color-surface-sunken)]
                 transition-colors duration-[var(--transition-fast)]
                 ${value === option.value ? 'text-[var(--color-accent)] font-medium' : 'text-[var(--color-ink)]'}

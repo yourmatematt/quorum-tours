@@ -1,24 +1,27 @@
+'use client';
+
+import { useMemo } from 'react';
+
 interface ComparisonItem {
   problem: string;
   solution: string;
 }
 
-const comparisons: ComparisonItem[] = [
-  {
-    problem: 'You book a tour hoping others will too. If turnout is low, the experience suffers or cancels last-minute.',
-    solution: 'Tours only run when enough participants have committed. Confirmation is guaranteed before you travel.',
-  },
-  {
-    problem: 'Operators guess at demand and schedule speculatively. Underbooked tours lose money; overbooked tours decline quality.',
-    solution: 'Operators see real demand before committing resources. Tours run at optimal group sizes.',
-  },
-  {
-    problem: 'Refund policies vary. Cancellation fees apply. You bear the risk of uncertainty.',
-    solution: 'Conditional commitment means no charge until confirmation. The risk is on the system, not you.',
-  },
-];
-
 export function ComparisonSection() {
+  const comparisons: ComparisonItem[] = useMemo(() => [
+    {
+      problem: 'You book a tour hoping others will too. If turnout is low, the experience suffers or cancels last-minute.',
+      solution: 'Tours only run when enough participants have committed. Confirmation is guaranteed before you travel.',
+    },
+    {
+      problem: 'Operators guess at demand and schedule speculatively. Underbooked tours lose money; overbooked tours decline quality.',
+      solution: 'Operators see real demand before committing resources. Tours run at optimal group sizes.',
+    },
+    {
+      problem: 'Refund policies vary. Cancellation fees apply. You bear the risk of uncertainty.',
+      solution: 'Conditional commitment means no charge until confirmation. The risk is on the system, not you.',
+    },
+  ], []);
   return (
     <section className="
       py-[var(--space-section-normal)]

@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { GlobalNav } from '@/components/GlobalNav';
 import {
   ProblemSection,
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function HowItWorksPage() {
   return (
-    <>
+    <ErrorBoundary>
       <GlobalNav />
       <main>
         {/* Page header */}
@@ -95,6 +96,6 @@ export default function HowItWorksPage() {
         {/* Section 6: Closing CTA */}
         <ClosingCTA />
       </main>
-    </>
+    </ErrorBoundary>
   );
 }

@@ -1,5 +1,7 @@
 'use client';
 
+import { useMemo } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ConfirmationBanner } from '@/components/ui/ConfirmationBanner';
 import { SpeciesSection } from '@/components/ui/SpeciesSection';
 import { LogisticsSection } from '@/components/ui/LogisticsSection';
@@ -221,10 +223,11 @@ interface PageProps {
 }
 
 export default function TourDetailPage({ params }: PageProps) {
-  const tour = getTourById(params.id);
+  const tour = useMemo(() => getTourById(params.id), [params.id]);
 
   return (
-    <main className="min-h-screen bg-[var(--color-surface)]">
+    <ErrorBoundary>
+      <main className="min-h-screen bg-[var(--color-surface)]">
       {/* Section 1: Confirmation Status Banner */}
       <div className="
         w-full
@@ -439,5 +442,6 @@ export default function TourDetailPage({ params }: PageProps) {
         </div>
       </div>
     </main>
+    </ErrorBoundary>
   );
 }

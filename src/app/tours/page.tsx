@@ -6,6 +6,7 @@ import { FilterDropdown } from '@/components/ui/FilterDropdown';
 import { FilterChip } from '@/components/ui/FilterChip';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/Button';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 type ConfirmationStatus = 'confirmed' | 'forming' | 'not-running';
 
@@ -22,8 +23,16 @@ interface Tour {
   speciesHighlight: string;
 }
 
-// Example data demonstrating different states and filtering
-const allTours: Tour[] = [
+/**
+ * Tours Index Page - Discovery & Comparison
+ *
+ * Primary job: Allow users to evaluate tours without guesswork.
+ * Every tour's confirmation state, threshold progress, and key
+ * attributes must be immediately comparable.
+ */
+export default function ToursPage() {
+  // Example data demonstrating different states and filtering (memoized to prevent re-creation)
+  const allTours: Tour[] = useMemo(() => [
   {
     id: '1',
     title: 'Dawn Chorus at Werribee',
@@ -120,16 +129,16 @@ const allTours: Tour[] = [
     region: 'tas',
     speciesHighlight: 'Forty-spotted Pardalote, Swift Parrot',
   },
-];
+  ], []);
 
-const statusOptions = [
+  const statusOptions = useMemo(() => [
   { value: 'all', label: 'All tours' },
   { value: 'confirmed', label: 'Confirmed' },
   { value: 'forming', label: 'Forming' },
   { value: 'not-running', label: 'Not running' },
-];
+  ], []);
 
-const regionOptions = [
+  const regionOptions = useMemo(() => [
   { value: 'all', label: 'All regions' },
   { value: 'vic', label: 'Victoria' },
   { value: 'nsw', label: 'New South Wales' },
@@ -137,22 +146,13 @@ const regionOptions = [
   { value: 'sa', label: 'South Australia' },
   { value: 'wa', label: 'Western Australia' },
   { value: 'tas', label: 'Tasmania' },
-];
+  ], []);
 
-const sortOptions = [
+  const sortOptions = useMemo(() => [
   { value: 'date', label: 'Soonest first' },
   { value: 'confirmed', label: 'Most confirmed' },
   { value: 'progress', label: 'Nearest threshold' },
-];
-
-/**
- * Tours Index Page - Discovery & Comparison
- *
- * Primary job: Allow users to evaluate tours without guesswork.
- * Every tour's confirmation state, threshold progress, and key
- * attributes must be immediately comparable.
- */
-export default function ToursPage() {
+  ], []);
   const [statusFilter, setStatusFilter] = useState('all');
   const [regionFilter, setRegionFilter] = useState('all');
   const [sortBy, setSortBy] = useState('date');
@@ -192,7 +192,7 @@ export default function ToursPage() {
     });
 
     return tours;
-  }, [statusFilter, regionFilter, sortBy]);
+  }, [allTours, statusFilter, regionFilter, sortBy]);
 
   // Calculate aggregate stats
   const stats = useMemo(() => {
@@ -227,27 +227,28 @@ export default function ToursPage() {
 
   return (
     <main className="min-h-screen bg-[var(--color-surface)]">
-      <div className="
-        w-full max-w-[var(--container-max)]
-        mx-auto px-[var(--space-lg)]
-        py-[var(--space-3xl)]
-      ">
-        {/* Section 1: Page Header */}
-        <header className="mb-[var(--space-2xl)]">
-          <h1 className="
-            font-display
-            text-[var(--text-2xl)]
-            text-[var(--color-ink)]
-            mb-[var(--space-sm)]
-          ">
-            Available Tours
-          </h1>
-          <p className="text-[var(--color-ink-muted)]">
-            Compare tours by confirmation status, timing, and region. Every tour shows its current threshold progress.
-          </p>
-        </header>
+      <ErrorBoundary>
+        <div className="
+          w-full max-w-[var(--container-max)]
+          mx-auto px-[var(--space-lg)]
+          py-[var(--space-3xl)]
+        ">
+          {/* Section 1: Page Header */}
+          <header className="mb-[var(--space-2xl)]">
+            <h1 className="
+              font-display
+              text-[var(--text-2xl)]
+              text-[var(--color-ink)]
+              mb-[var(--space-sm)]
+            ">
+              Available Tours
+            </h1>
+            <p className="text-[var(--color-ink-muted)]">
+              Compare tours by confirmation status, timing, and region. Every tour shows its current threshold progress.
+            </p>
+          </header>
 
-        {/* Section 2: Filtering & Sorting Controls */}
+          {/* Section 2: Filtering & Sorting Controls */}
         <div className="
           mb-[var(--space-xl)]
           p-[var(--space-lg)]
@@ -306,6 +307,7 @@ export default function ToursPage() {
                     text-sm text-[var(--color-accent)]
                     hover:underline
                     focus:outline-none focus:underline
+                    py-3 px-2 min-h-[48px]
                   "
                 >
                   Clear all
@@ -392,7 +394,8 @@ export default function ToursPage() {
             </Button>
           </div>
         )}
-      </div>
+        </div>
+      </ErrorBoundary>
     </main>
   );
 }

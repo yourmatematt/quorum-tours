@@ -73,3 +73,27 @@ export {
   CommitmentSummary,
   SuccessMessage,
 } from './join';
+
+// Admin Dashboard Components
+export {
+  DashboardOverview,
+  OperatorVerificationQueue,
+  TourOversight,
+  UserManagement,
+  PlatformMetrics,
+  AlertsMonitoring,
+  AuditLog,
+} from './admin';
+
+// Operator Dashboard Components
+export {
+  TourManagement,
+  BookingProgressDashboard,
+  ParticipantList,
+  RevenueDashboard,
+  ProfileManagement,
+  ReviewsReputation,
+} from './operator';
+
+// Error Handling
+export { ErrorBoundary } from './ErrorBoundary';

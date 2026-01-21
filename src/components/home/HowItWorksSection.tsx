@@ -1,28 +1,31 @@
+'use client';
+
+import { useMemo } from 'react';
+
 interface ProcessStep {
   number: number;
   action: string;
   outcome: string;
 }
 
-const steps: ProcessStep[] = [
-  {
-    number: 1,
-    action: 'Express interest',
-    outcome: 'Your signal joins the aggregate. No charge, no obligation.',
-  },
-  {
-    number: 2,
-    action: 'Commit conditionally',
-    outcome: 'You agree to join if the threshold is met. Still no charge.',
-  },
-  {
-    number: 3,
-    action: 'Tour confirms',
-    outcome: 'Threshold met. The tour runs. Everyone goes.',
-  },
-];
-
 export function HowItWorksSection() {
+  const steps: ProcessStep[] = useMemo(() => [
+    {
+      number: 1,
+      action: 'Express interest',
+      outcome: 'Your signal joins the aggregate. No charge, no obligation.',
+    },
+    {
+      number: 2,
+      action: 'Commit conditionally',
+      outcome: 'You agree to join if the threshold is met. Still no charge.',
+    },
+    {
+      number: 3,
+      action: 'Tour confirms',
+      outcome: 'Threshold met. The tour runs. Everyone goes.',
+    },
+  ], []);
   return (
     <section className="
       py-[var(--space-section-normal)]

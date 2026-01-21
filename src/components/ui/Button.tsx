@@ -42,6 +42,7 @@ export function Button({
       className={`
         inline-flex items-center justify-center
         px-6 py-3
+        min-h-[48px]
         font-medium text-base
         rounded-[var(--radius-md)]
         transition-all duration-[var(--transition-normal)]

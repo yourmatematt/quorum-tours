@@ -4,6 +4,7 @@ import { ComparisonSection } from '../components/home/ComparisonSection';
 import { TourStatesSection } from '../components/home/TourStatesSection';
 import { TrustSection } from '../components/home/TrustSection';
 import { PathwaysSection } from '../components/home/PathwaysSection';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 
 /**
  * Home Page - Public Discovery
@@ -24,22 +25,34 @@ export default function HomePage() {
   return (
     <main>
       {/* Section 1: Hero - What Quorum Solves */}
-      <HeroSection />
+      <ErrorBoundary>
+        <HeroSection />
+      </ErrorBoundary>
 
       {/* Section 2: How It Works - Visual Mechanic */}
-      <HowItWorksSection />
+      <ErrorBoundary>
+        <HowItWorksSection />
+      </ErrorBoundary>
 
       {/* Section 3: Why This Is Different - Comparison */}
-      <ComparisonSection />
+      <ErrorBoundary>
+        <ComparisonSection />
+      </ErrorBoundary>
 
       {/* Section 4: Live Tour States - Example cards */}
-      <TourStatesSection />
+      <ErrorBoundary>
+        <TourStatesSection />
+      </ErrorBoundary>
 
       {/* Section 5: Trust Foundations - Credibility signals */}
-      <TrustSection />
+      <ErrorBoundary>
+        <TrustSection />
+      </ErrorBoundary>
 
       {/* Section 6: Pathways Forward - CTAs */}
-      <PathwaysSection />
+      <ErrorBoundary>
+        <PathwaysSection />
+      </ErrorBoundary>
     </main>
   );
 }

@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AuthCard, SignupForm } from '@/components/auth';
 
 export const metadata: Metadata = {
@@ -21,7 +22,8 @@ export const metadata: Metadata = {
  */
 export default function SignupPage() {
   return (
-    <main className="min-h-screen bg-[var(--color-surface)]">
+    <ErrorBoundary>
+      <main className="min-h-screen bg-[var(--color-surface)]">
       {/* Centered container */}
       <div
         className="
@@ -76,5 +78,6 @@ export default function SignupPage() {
         </div>
       </div>
     </main>
+    </ErrorBoundary>
   );
 }

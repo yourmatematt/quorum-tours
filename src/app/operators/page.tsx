@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { OperatorCard } from '@/components/ui/OperatorCard';
 import { FilterDropdown } from '@/components/ui/FilterDropdown';
 import { FilterChip } from '@/components/ui/FilterChip';
@@ -131,36 +132,6 @@ const allOperators: OperatorListItem[] = [
   },
 ];
 
-const regionOptions = [
-  { value: 'all', label: 'All regions' },
-  { value: 'vic', label: 'Victoria' },
-  { value: 'nsw', label: 'New South Wales' },
-  { value: 'qld', label: 'Queensland' },
-  { value: 'sa', label: 'South Australia' },
-  { value: 'wa', label: 'Western Australia' },
-  { value: 'tas', label: 'Tasmania' },
-  { value: 'nt', label: 'Northern Territory' },
-  { value: 'act', label: 'ACT' },
-];
-
-const specializationOptions = [
-  { value: 'all', label: 'All specializations' },
-  { value: 'shorebirds', label: 'Shorebirds' },
-  { value: 'wetlands', label: 'Wetlands' },
-  { value: 'rainforest', label: 'Rainforest' },
-  { value: 'pelagic', label: 'Pelagic' },
-  { value: 'raptors', label: 'Raptors' },
-  { value: 'grasslands', label: 'Grasslands' },
-  { value: 'nocturnal', label: 'Nocturnal' },
-];
-
-const sortOptions = [
-  { value: 'name', label: 'Alphabetical' },
-  { value: 'reviews', label: 'Most reviewed' },
-  { value: 'tours', label: 'Most active' },
-  { value: 'rating', label: 'Highest rated' },
-];
-
 /**
  * Operators Index Page - Discovery & Comparison
  *
@@ -172,6 +143,36 @@ export default function OperatorsPage() {
   const [regionFilter, setRegionFilter] = useState('all');
   const [specializationFilter, setSpecializationFilter] = useState('all');
   const [sortBy, setSortBy] = useState('name');
+
+  const regionOptions = useMemo(() => [
+    { value: 'all', label: 'All regions' },
+    { value: 'vic', label: 'Victoria' },
+    { value: 'nsw', label: 'New South Wales' },
+    { value: 'qld', label: 'Queensland' },
+    { value: 'sa', label: 'South Australia' },
+    { value: 'wa', label: 'Western Australia' },
+    { value: 'tas', label: 'Tasmania' },
+    { value: 'nt', label: 'Northern Territory' },
+    { value: 'act', label: 'ACT' },
+  ], []);
+
+  const specializationOptions = useMemo(() => [
+    { value: 'all', label: 'All specializations' },
+    { value: 'shorebirds', label: 'Shorebirds' },
+    { value: 'wetlands', label: 'Wetlands' },
+    { value: 'rainforest', label: 'Rainforest' },
+    { value: 'pelagic', label: 'Pelagic' },
+    { value: 'raptors', label: 'Raptors' },
+    { value: 'grasslands', label: 'Grasslands' },
+    { value: 'nocturnal', label: 'Nocturnal' },
+  ], []);
+
+  const sortOptions = useMemo(() => [
+    { value: 'name', label: 'Alphabetical' },
+    { value: 'reviews', label: 'Most reviewed' },
+    { value: 'tours', label: 'Most active' },
+    { value: 'rating', label: 'Highest rated' },
+  ], []);
 
   // Filter and sort operators
   const filteredOperators = useMemo(() => {
@@ -246,7 +247,8 @@ export default function OperatorsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[var(--color-surface)]">
+    <ErrorBoundary>
+      <main className="min-h-screen bg-[var(--color-surface)]">
       <div className="
         w-full max-w-[var(--container-max)]
         mx-auto px-[var(--space-lg)]
@@ -323,6 +325,7 @@ export default function OperatorsPage() {
                   type="button"
                   onClick={clearAllFilters}
                   className="
+                    py-3 px-2 min-h-[48px]
                     text-sm text-[var(--color-accent)]
                     hover:underline
                     focus:outline-none focus:underline
@@ -390,5 +393,6 @@ export default function OperatorsPage() {
         )}
       </div>
     </main>
+    </ErrorBoundary>
   );
 }

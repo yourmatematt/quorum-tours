@@ -29,10 +29,26 @@ body {
   background-color: var(--color-surface);
 }
 
-/* Focus visible for accessibility */
-:focus-visible {
-  outline: 2px solid var(--color-accent);
+/* Enhanced AAA Focus Indicators (High Contrast Dual-Ring) */
+*:focus-visible {
+  outline: 3px solid var(--color-accent);
   outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.15);
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.15);
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.15), 0 0 0 1px var(--color-border-strong);
 }
 
 /* Remove default button styles */

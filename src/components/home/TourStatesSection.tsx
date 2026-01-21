@@ -1,37 +1,39 @@
+'use client';
+
+import { useMemo } from 'react';
 import { TourCard } from '../TourCard';
 
-// Example data demonstrating different states
-const exampleTours = [
-  {
-    title: 'Dawn Chorus at Werribee',
-    operatorName: 'Sarah Mitchell',
-    status: 'confirmed' as const,
-    currentParticipants: 8,
-    threshold: 6,
-    date: 'Mar 15, 2026',
-    location: 'Werribee, VIC',
-  },
-  {
-    title: 'Shorebird Migration Watch',
-    operatorName: 'David Chen',
-    status: 'forming' as const,
-    currentParticipants: 4,
-    threshold: 8,
-    date: 'Apr 2, 2026',
-    location: 'Cairns, QLD',
-  },
-  {
-    title: 'Rainforest Endemics Trek',
-    operatorName: 'Maria Santos',
-    status: 'not-running' as const,
-    currentParticipants: 2,
-    threshold: 10,
-    date: 'Feb 28, 2026',
-    location: 'Daintree, QLD',
-  },
-];
-
 export function TourStatesSection() {
+  // Example data demonstrating different states (memoized to prevent re-creation)
+  const exampleTours = useMemo(() => [
+    {
+      title: 'Dawn Chorus at Werribee',
+      operatorName: 'Sarah Mitchell',
+      status: 'confirmed' as const,
+      currentParticipants: 8,
+      threshold: 6,
+      date: 'Mar 15, 2026',
+      location: 'Werribee, VIC',
+    },
+    {
+      title: 'Shorebird Migration Watch',
+      operatorName: 'David Chen',
+      status: 'forming' as const,
+      currentParticipants: 4,
+      threshold: 8,
+      date: 'Apr 2, 2026',
+      location: 'Cairns, QLD',
+    },
+    {
+      title: 'Rainforest Endemics Trek',
+      operatorName: 'Maria Santos',
+      status: 'not-running' as const,
+      currentParticipants: 2,
+      threshold: 10,
+      date: 'Feb 28, 2026',
+      location: 'Daintree, QLD',
+    },
+  ], []);
   return (
     <section className="
       py-[var(--space-section-normal)]

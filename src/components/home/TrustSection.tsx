@@ -1,3 +1,6 @@
+'use client';
+
+import { useMemo } from 'react';
 import { OperatorPreviewCard } from '../OperatorPreviewCard';
 
 interface TrustSignal {
@@ -6,39 +9,38 @@ interface TrustSignal {
   description: string;
 }
 
-const trustSignals: TrustSignal[] = [
-  {
-    icon: '✓',
-    title: 'Verified operators only',
-    description: 'Every operator is reviewed before listing. Credentials, experience, and safety records are checked.',
-  },
-  {
-    icon: '○',
-    title: 'No charge until confirmed',
-    description: 'Your payment method is not charged until the tour threshold is met and the tour is guaranteed to run.',
-  },
-  {
-    icon: '◊',
-    title: 'Transparent conditions',
-    description: 'Thresholds, dates, and refund conditions are visible upfront. No hidden fees. No surprise cancellations.',
-  },
-];
-
-// Example featured operators
-const featuredOperators = [
-  {
-    name: 'Sarah Mitchell',
-    expertise: 'Wetland ecology, 15 years guiding',
-    verified: true,
-  },
-  {
-    name: 'David Chen',
-    expertise: 'Shorebird specialist, conservation biologist',
-    verified: true,
-  },
-];
-
 export function TrustSection() {
+  const trustSignals: TrustSignal[] = useMemo(() => [
+    {
+      icon: '✓',
+      title: 'Verified operators only',
+      description: 'Every operator is reviewed before listing. Credentials, experience, and safety records are checked.',
+    },
+    {
+      icon: '○',
+      title: 'No charge until confirmed',
+      description: 'Your payment method is not charged until the tour threshold is met and the tour is guaranteed to run.',
+    },
+    {
+      icon: '◊',
+      title: 'Transparent conditions',
+      description: 'Thresholds, dates, and refund conditions are visible upfront. No hidden fees. No surprise cancellations.',
+    },
+  ], []);
+
+  // Example featured operators (memoized to prevent re-creation)
+  const featuredOperators = useMemo(() => [
+    {
+      name: 'Sarah Mitchell',
+      expertise: 'Wetland ecology, 15 years guiding',
+      verified: true,
+    },
+    {
+      name: 'David Chen',
+      expertise: 'Shorebird specialist, conservation biologist',
+      verified: true,
+    },
+  ], []);
   return (
     <section className="
       py-[var(--space-section-normal)]
@@ -143,6 +145,7 @@ export function TrustSection() {
                 text-sm font-medium
                 hover:underline
                 mt-[var(--space-md)]
+                py-3 px-2 min-h-[48px]
               "
             >
               View all operators

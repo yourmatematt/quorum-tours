@@ -8,7 +8,8 @@ export function FilterChip({ label, onRemove }: FilterChipProps) {
     <span
       className="
         inline-flex items-center gap-2
-        px-3 py-1.5
+        pl-4 pr-2 py-2
+        min-h-[48px]
         text-sm
         bg-[var(--color-surface-sunken)]
         border border-[var(--color-border)]
@@ -21,7 +22,7 @@ export function FilterChip({ label, onRemove }: FilterChipProps) {
         type="button"
         onClick={onRemove}
         className="
-          w-4 h-4
+          min-w-[32px] min-h-[32px]
           flex items-center justify-center
           rounded-full
           text-[var(--color-ink-subtle)]
@@ -29,19 +30,20 @@ export function FilterChip({ label, onRemove }: FilterChipProps) {
           hover:bg-[var(--color-border)]
           transition-colors duration-[var(--transition-fast)]
           focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-1
+          -mr-1
         "
         aria-label={`Remove ${label} filter`}
       >
         <svg
-          width="10"
-          height="10"
-          viewBox="0 0 10 10"
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
           aria-hidden="true"
         >
-          <path d="M1 1l8 8M9 1l-8 8" />
+          <path d="M2 2l8 8M10 2l-8 8" />
         </svg>
       </button>
     </span>
