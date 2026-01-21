@@ -46,11 +46,9 @@ const config: Config = {
         },
       },
       spacing: {
-        section: {
-          tight: 'var(--space-section-tight)',
-          normal: 'var(--space-section-normal)',
-          loose: 'var(--space-section-loose)',
-        },
+        'section-tight': 'var(--space-section-tight)',
+        'section-normal': 'var(--space-section-normal)',
+        'section-loose': 'var(--space-section-loose)',
       },
       borderRadius: {
         sm: 'var(--radius-sm)',

@@ -54,3 +54,12 @@ export {
   OAuthButton,
   LoginForm,
 } from './auth';
+
+// Profile Components
+export {
+  ProfileHeader,
+  UserCommitmentCard,
+  CommitmentsSection,
+  PastToursSection,
+  SettingsSection,
+} from './profile';
