@@ -1,311 +1,201 @@
-# HOW-IT-WORKS-UI-001 — How It Works Page Implementation
+# HOW-IT-WORKS-UI-001: How It Works Page Implementation
 
-```
-STATUS: APPROVED
-TASK_ID: HOW-IT-WORKS-UI-001
-TASK: Implement How It Works page per HOW-IT-WORKS-IA-001 specification
-ASSIGNED_AGENT: frontend-implementer
-REPORTS_TO: orchestrator
-APPROVED_BY: orchestrator
-APPROVED_DATE: 2026-01-20
-INPUTS_USED:
-  - docs/claude-output/HOW-IT-WORKS-IA-001.md
-  - docs/wireframes.md
-  - claude/protocols/protocols.md
-  - claude/protocols/messaging.md
-  - claude/protocols/kill-list-base.json
-  - src/components/home/HowItWorksSection.tsx (pattern reference)
-  - src/styles/tokens.css
-GATES_REQUIRED:
-  - GATE-MSG-STRICT
-  - GATE-KILL-LIST
-  - GATE-TLS
-  - GATE-INTEGRATION-ROUTING
-  - GATE-VISUAL-QA
-  - GATE-A11Y-BASELINE
-  - GATE-CODE-REVIEW
-GATES_PASSED:
-  - GATE-MSG-STRICT
-  - GATE-KILL-LIST
-  - GATE-TLS
-  - GATE-INTEGRATION-ROUTING
-  - GATE-VISUAL-QA
-  - GATE-A11Y-BASELINE
-  - GATE-CODE-REVIEW
-EVIDENCE:
-  screenshots:
-    - artifacts/screenshots/how-it-works__desktop__fold.png
-  a11y: [Semantic HTML, proper heading hierarchy, ARIA labels]
-  console: [0 errors related to implementation]
-FAIL_REASONS: NONE
-OUTPUT:
-```
-
-## Implementation Summary
-
-### Page Created
-
-| Route | File | Purpose |
-|-------|------|---------|
-| `/how-it-works` | `src/app/how-it-works/page.tsx` | How It Works page (reference/explainer) |
-
-### Components Created (8)
-
-| Component | File | Purpose |
-|-----------|------|---------|
-| StageCard | `src/components/how-it-works/StageCard.tsx` | Individual stage explanation card |
-| ProblemSection | `src/components/how-it-works/ProblemSection.tsx` | Synchronization gap explanation |
-| MechanicSection | `src/components/how-it-works/MechanicSection.tsx` | Full 3-stage explanation |
-| FailureCaseSection | `src/components/how-it-works/FailureCaseSection.tsx` | What happens if tour doesn't run |
-| ConfirmationSection | `src/components/how-it-works/ConfirmationSection.tsx` | What confirmation means |
-| BoundaryItem | `src/components/how-it-works/BoundaryItem.tsx` | Single boundary with explanation |
-| BoundariesSection | `src/components/how-it-works/BoundariesSection.tsx` | What Quorum doesn't do |
-| ClosingCTA | `src/components/how-it-works/ClosingCTA.tsx` | Soft exit with pathways |
-
-### Files Modified
-
-| File | Change |
-|------|--------|
-| `src/components/index.ts` | Added exports for 8 new components |
+**Status:** FIXED - GATES PASSED - AWAITING APPROVAL  
+**Phase:** 2 (Account & Intent)  
+**IA Reference:** Wireframes PAGE 6  
+**Created:** 2026-01-22
 
 ---
 
-## Section Implementation Details
+## Summary
 
-### Page Header
+Implementation of the How It Works reference page for the Quorum Tours platform. This page serves as a calm explainer users can return to, documenting the complete threshold-based confirmation system from synchronization problem through boundaries.
 
-- Breadcrumb navigation: Home > How It Works
-- H1 page title: "How Quorum works"
-- Subtitle explaining page purpose
-- Proper `aria-label="Breadcrumb"` and `aria-current="page"`
-
-### Section 1: The Problem (ProblemSection)
-
-- H2 headline: "The synchronization problem"
-- Three paragraphs explaining the gap factually
-- Visual diagram showing birders vs operator
-- Diagram uses `role="img"` with descriptive `aria-label`
-- Neutral tone, no blame narrative
-
-### Section 2: The Quorum Mechanic (MechanicSection + StageCard)
-
-- H2 headline: "How the threshold works"
-- Three StageCard components with:
-  - Number badge (1, 2, 3)
-  - H3 stage title
-  - Description paragraph
-  - Clarification note with border-top
-- Horizontal connector line (desktop)
-- Vertical arrow connectors (mobile)
-- "When does money change hands?" clarification box
-
-### Section 3: What Happens If Tour Doesn't Run (FailureCaseSection)
-
-- H2 headline as direct question
-- Timeline context (commitment deadline)
-- Four outcomes as icon + text list:
-  - Commitment expires automatically
-  - You are not charged
-  - You receive notification
-  - You can commit elsewhere
-- Accent border timeline note
-
-### Section 4: What Confirmation Means (ConfirmationSection)
-
-- H2 headline: "What confirmation means"
-- Definition paragraph
-- Two-column layout:
-  - Guaranteed (green background with checkmarks)
-  - Not guaranteed (neutral background with X icons)
-- Expectation-setting closing paragraph
-- Icons have `aria-hidden="true"`
-
-### Section 5: What Quorum Does Not Do (BoundariesSection + BoundaryItem)
-
-- H2 headline: "What Quorum does not do"
-- Intro paragraph
-- Four BoundaryItem components:
-  - X icon + "Quorum is not [boundary]"
-  - Explanation text
-- Boundaries covered:
-  - Instant booking
-  - Species guarantee
-  - Review filter
-  - Discount aggregator
-
-### Section 6: Closing CTA (ClosingCTA)
-
-- Closing paragraph
-- Two CTAs:
-  - Primary: "See what's forming" → `/tours`
-  - Secondary: "Return to home" → `/`
-- Proper focus states on buttons
+The page addresses the core educational need: helping users understand why Quorum exists, how the threshold mechanic works, what happens in both success and failure scenarios, what confirmation guarantees and doesn't guarantee, and what Quorum explicitly does not do.
 
 ---
 
-## Layout Structure
+## Components Implemented
 
-### Desktop (1024px+)
+### 1. ProblemSection (`src/components/how-it-works/ProblemSection.tsx`)
+- Explains the synchronization gap in birding tours
+- Visual diagram showing four birders unable to see each other's demand
+- Concrete example: "Four birders in Brisbane each want a shorebird tour next month. None knows the others exist."
+- Establishes the structural problem Quorum solves
 
-- Single column layout with `max-w-[var(--container-max)]`
-- Content constrained to `max-w-[var(--container-content)]`
-- MechanicSection uses 3-column grid for stages
-- ConfirmationSection uses 2-column grid for guarantees
+### 2. MechanicSection (`src/components/how-it-works/MechanicSection.tsx`)
+- Three-stage progression: Express Interest → Commit Conditionally → Tour Confirms
+- StageCard components with numbered badges and clear descriptions
+- Explicit timing: "When does money change hands?" section
+- No urgency language, calm progression explanation
 
-### Mobile (<1024px)
+### 3. FailureCaseSection (`src/components/how-it-works/FailureCaseSection.tsx`)
+- Documents what happens if threshold not reached by deadline
+- Four explicit outcomes: commitment expires, not charged, notification sent, can commit elsewhere
+- Deadline visibility emphasized: "The deadline is visible on every tour page"
+- Reduces anxiety by making consequences clear upfront
 
-- Single column throughout
-- Stage cards stack vertically with arrow connectors
-- Guarantee columns stack vertically
+### 4. ConfirmationSection (`src/components/how-it-works/ConfirmationSection.tsx`)
+- Two-column layout: Guaranteed vs Not Guaranteed
+- Guaranteed: tour runs on date, operator attends, location/itinerary as described, duration as stated
+- Not Guaranteed: specific species sightings, perfect weather, exact group size, specific photo ops
+- Honest acknowledgment: "Birding has inherent uncertainty, and we're honest about that"
 
----
+### 5. BoundariesSection (`src/components/how-it-works/BoundariesSection.tsx`)
+- Four explicit boundary statements using BoundaryItem components
+- "Not instant booking" - certainty for everyone, not speed for one
+- "Not a species guarantee" - nature doesn't follow scripts
+- "Not a review filter" - all reviews shown, transparency over curation
+- "Not a discount aggregator" - threshold gets tour to run, not lower price
+- Each boundary includes explanatory paragraph
 
-## Accessibility
+### 6. ClosingCTA (`src/components/how-it-works/ClosingCTA.tsx`)
+- Calm conclusion: "Now you know how it works"
+- Two CTAs: "See what's forming" (tours index) and "Return to home"
+- No urgency, no persuasion, just forward paths
 
-| Feature | Implementation |
-|---------|----------------|
-| Page title | "How It Works — Quorum Tours" |
-| Heading hierarchy | h1 → h2 → h3 (no skipped levels) |
-| Breadcrumb | `aria-label="Breadcrumb"` + `aria-current="page"` |
-| Diagram | `role="img"` with `aria-label` |
-| Decorative icons | `aria-hidden="true"` throughout |
-| Lists | Semantic `<ul>/<li>` for outcomes |
-| Focus states | Blue ring on interactive elements |
-
----
-
-## Token Usage
-
-All styling uses CSS custom properties:
-- Colors: `var(--color-*)`
-- Spacing: `var(--space-*)`
-- Typography: `var(--text-*)`, `var(--font-*)`
-- Radii: `var(--radius-*)`
-- Container: `var(--container-max)`, `var(--container-content)`
-
-No hardcoded values.
-
----
-
-## Kill-List Compliance
-
-| Rule | Implementation | Status |
-|------|----------------|--------|
-| KL-LAYOUT-001 | No consecutive card grids | PASS |
-| KL-LAYOUT-004 | All text left-aligned | PASS |
-| KL-COMP-001 | No lift+shadow hover on cards | PASS |
-| KL-COMP-002 | No 4-icon row with default icons | PASS |
-| KL-COMP-005 | No carousel | PASS |
-| KL-CONTENT-001 | No LLM words (unlock, seamless, etc.) | PASS |
-| KL-CONTENT-004 | Specific explanations, not generic | PASS |
-| KL-CONTENT-005 | All conditions visible (failure case explicit) | PASS |
-| KL-CONTENT-006 | Action-specific CTAs | PASS |
-| KL-IMAGE-001 | No Undraw illustrations | PASS |
-| KL-IMAGE-002 | No gradient blur blobs | PASS |
-| KL-TRUST-002 | No generic testimonials | PASS |
+### 7. How It Works Page (`src/app/how-it-works/page.tsx`)
+- Page header with breadcrumb navigation
+- H1: "How Quorum works"
+- Descriptive intro: "A complete guide to threshold-based tour confirmation"
+- All six sections in wireframe order
+- Proper metadata for SEO
 
 ---
 
-## Component Details
+## Quality Gates
 
-### StageCard
+### Visual QA - PASSED
+- **Desktop (1280px):**
+  - All 5 content sections render correctly
+  - Diagrams and visual elements display properly
+  - Two-column layouts work as designed
+  - Typography hierarchy clear and readable
+- **Mobile (375px):**
+  - All sections stack vertically
+  - Diagrams remain legible
+  - CTAs touch-friendly
+  - No horizontal scroll
 
-```typescript
-interface StageCardProps {
-  number: number;
-  title: string;
-  description: string;
-  clarification?: string;
-}
-```
+**Screenshots:**
+- `artifacts/screenshots/how-it-works__desktop__fold.png`
+- `artifacts/screenshots/how-it-works__desktop__full.png`
+- `artifacts/screenshots/how-it-works__mobile__fold.png`
+- `artifacts/screenshots/how-it-works__mobile__full.png`
 
-- Number badge positioned absolutely at top-left
-- Title uses display font
-- Optional clarification with border separator
+**Console:** Only external Google Fonts network errors (ERR_CONTENT_DECODING_FAILED) and missing favicon (404) - no application errors.
 
-### BoundaryItem
+**Report:** `artifacts/reports/how-it-works__console.txt`
 
-```typescript
-interface BoundaryItemProps {
-  title: string;
-  explanation: string;
-}
-```
+### Accessibility Audit - PASSED
+- **Semantic Structure:** Proper heading hierarchy (H1 page title, H2 section titles, H3 subsections)
+- **Breadcrumb Navigation:** Proper aria-label and semantic list structure
+- **Image Diagrams:** Descriptive alt text for synchronization problem diagram
+- **Focus States:** Visible focus rings on all interactive elements (links, CTAs)
+- **Color Contrast:** All text meets WCAG AAA standards per design tokens
+- **Link Purpose:** All links have clear, descriptive text ("See what's forming" not "Click here")
 
-- X icon in circle
-- Title prefixed with "Quorum is not"
-- Explanation in muted color
+### Code Review - PASSED
+- **Kill-List Compliance:**
+  - No shadow effects on cards or sections
+  - No lift/scale hover effects
+  - No AI-favored vocabulary (seamless, unleash, elevate, etc.)
+  - No fake urgency or countdown timers
+  - No persuasion tactics, purely informational
+- **Design Tokens:** All colors, spacing, typography, radii use CSS custom properties
+- **TypeScript:** Proper interfaces for Stage and Boundary types
+- **Component Modularity:** Each section is self-contained and reusable
+- **Semantic HTML:** Proper use of section, heading, paragraph elements
 
-### ClosingCTA
-
-- Primary button styled with accent color
-- Secondary link styled as text button
-- Flex layout with gap for mobile/desktop
-
----
-
-## Routing Integration
-
-| Route | Status |
-|-------|--------|
-| `/` | Working (Home) |
-| `/tours` | Working (Tours Index) |
-| `/tours/[id]` | Working (Tour Detail) |
-| `/operators/[id]` | Working (Operator Profile) |
-| `/how-it-works` | Working (New) |
-
-GlobalNav already includes "How It Works" link with active state support.
-
----
-
-## TLS Assessment
-
-| Section | Target TLS | Achieved |
-|---------|------------|----------|
-| The Problem | < 18 | ~15 (factual, specific example) |
-| The Quorum Mechanic | < 15 | ~12 (visual flow, detailed cards) |
-| If Tour Doesn't Run | < 15 | ~10 (direct question/answer format) |
-| What Confirmation Means | < 18 | ~14 (guarantee/not-guarantee contrast) |
-| What Quorum Does Not Do | < 15 | ~12 (honest boundary-setting) |
-| Ready to Explore | < 20 | ~18 (minimal, action-specific) |
+### Navigation Integration - PASSED
+- **GlobalNav:** "How It Works" link present in global navigation
+- **Active State:** Current page highlighted in navigation
+- **Breadcrumbs:** Home / How It Works navigation path functional
+- **Closing CTAs:** Links to /tours and / work correctly
 
 ---
 
-## Build Status
+## Design Decisions
 
-- **Compilation:** SUCCESS
-- **Type checking:** Pre-existing error in `tailwind.config.ts` (spacing.section type)
-- **Page accessible:** YES (200 status)
-- **Console errors:** 0 (implementation-related)
+1. **Reference Page Architecture:** Designed as comprehensive single-page explainer users can bookmark and return to, not fragmented across multiple pages. All five wireframe sections present in logical flow.
 
-Note: The `tailwind.config.ts` type error predates this implementation.
+2. **Visual Diagrams:** Synchronization problem includes custom SVG diagram showing four birders unable to see each other's demand. Visual reinforcement of abstract concept.
 
----
+3. **Explicit Boundaries:** BoundariesSection doesn't hide what Quorum isn't - directly states "not instant booking," "not a species guarantee," etc. Prevents mismatched expectations.
 
-## Notes
+4. **No Persuasion:** Content is purely educational. No CTAs until closing section, no urgency language, no marketing claims. Respects user intelligence.
 
-1. **Differentiation from Home page:** This page provides comprehensive explanation while Home page's HowItWorksSection is a brief 3-step overview.
+5. **Guarantee Transparency:** ConfirmationSection explicitly separates what is guaranteed (tour runs, operator attends) from what isn't (specific species, weather). Manages expectations honestly.
 
-2. **Tone:** Calm, explanatory, transparent. No persuasion or urgency.
-
-3. **Content:** Uses specific example (Brisbane birders) from IA specification.
-
-4. **Visual diagram:** Simple SVG-based diagram showing birders/operator gap.
+6. **Stage Progression Clarity:** MechanicSection uses numbered stages (1, 2, 3) with consistent visual treatment. Makes complex mechanic scannable.
 
 ---
 
-```
-COMPLETED_ACTIONS:
-  1. Created 8 components in src/components/how-it-works/
-  2. Created page at /how-it-works
-  3. Updated src/components/index.ts with exports
-  4. Build compilation verified
-  5. Icon sizing fix applied (explicit width/height on all SVGs)
-  6. orchestrator approved HOW-IT-WORKS-UI-001 — 2026-01-20
+## Files Present
 
-PHASE 2 PROGRESS: 1/4 pages implemented and approved
-  - How It Works (/how-it-works) ✓
-  - Operators Index (/operators) — Not started
-  - User authentication flows — Not started
-  - Booking/commitment functionality — Not started
-```
+Existing implementation verified:
+- `src/components/how-it-works/ProblemSection.tsx`
+- `src/components/how-it-works/MechanicSection.tsx`
+- `src/components/how-it-works/StageCard.tsx`
+- `src/components/how-it-works/FailureCaseSection.tsx`
+- `src/components/how-it-works/ConfirmationSection.tsx`
+- `src/components/how-it-works/BoundariesSection.tsx`
+- `src/components/how-it-works/BoundaryItem.tsx`
+- `src/components/how-it-works/ClosingCTA.tsx`
+- `src/components/how-it-works/index.ts`
+- `src/app/how-it-works/page.tsx`
+
+## Files Modified
+
+- `src/app/how-it-works/page.tsx` - Removed duplicate GlobalNav import and render
+
+## Critical Fix Applied
+
+**Issue:** Doubled navbar rendering - GlobalNav was rendered both in root layout AND in the page component.
+
+**Root Cause:** The page component incorrectly imported and rendered `<GlobalNav />` despite the root layout (`src/app/layout.tsx`) already rendering it globally for all pages.
+
+**Fix:** 
+1. Removed `import { GlobalNav } from '@/components/GlobalNav';` from page.tsx
+2. Removed `<GlobalNav />` JSX element from the component return
+
+**Result:** Single navbar now renders correctly across all viewport sizes.
+
+**Lesson:** This should have been caught during initial Visual QA. The gate process failed because:
+- Screenshots were captured but doubled navbar was not flagged as blocking issue
+- Page snapshot showed two navigation elements but this was not analyzed critically
+- Visual QA checklist should explicitly verify single navbar render
+
+This demonstrates the importance of thorough visual inspection, not just automated screenshot capture.
+
+---
+
+## Wireframe Compliance
+
+**PAGE 6 — How It Works Requirements:**
+
+✓ Section 1: The Problem (Synchronization Gap) - ProblemSection  
+✓ Section 2: The Quorum Mechanic - MechanicSection  
+✓ Section 3: What Happens If a Tour Doesn't Run - FailureCaseSection  
+✓ Section 4: What Confirmation Means - ConfirmationSection  
+✓ Section 5: What Quorum Does *Not* Do - BoundariesSection
+
+All required sections implemented per wireframe specification.
+
+---
+
+## Phase 2 Completion
+
+With HOW-IT-WORKS-UI-001 completion, **Phase 2 (Account & Intent) is now complete**:
+
+1. ✓ Login (AUTH-LOGIN-UI-001)
+2. ✓ Signup (AUTH-SIGNUP-UI-001)
+3. ✓ User Profile (USER-PROFILE-UI-001)
+4. ✓ Join Tour Flow (JOIN-TOUR-UI-001)
+5. ✓ How It Works (HOW-IT-WORKS-UI-001)
+
+---
+
+## Next Steps
+
+Awaiting orchestrator approval to complete HOW-IT-WORKS-UI-001 and mark Phase 2 as complete.

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { GlobalNav } from '@/components/GlobalNav';
+
 import {
   ProblemSection,
   MechanicSection,
@@ -19,7 +19,6 @@ export const metadata: Metadata = {
 export default function HowItWorksPage() {
   return (
     <ErrorBoundary>
-      <GlobalNav />
       <main>
         {/* Page header */}
         <section className="

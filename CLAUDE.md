@@ -45,6 +45,8 @@ When executing any task, follow this order:
    → navigation + routing cohesion  
 6. `claude/protocols/flow-gates.md`  
    → phased journey validation  
+7. `claude/protocols/responsiveness.md`  
+   → desktop, tablet, mobile verification  
 
 If instructions conflict, **higher items override lower ones**.
 
