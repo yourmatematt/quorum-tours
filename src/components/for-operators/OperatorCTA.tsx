@@ -1,7 +1,8 @@
-import Link from 'next/link';
-
 const PRIMARY_CTA_CLASSES = "inline-flex items-center justify-center bg-white text-[var(--color-primary)] hover:bg-white/90 px-8 py-4 text-lg font-semibold rounded-[var(--radius-md)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--color-primary)] transition-colors";
 const SECONDARY_CTA_CLASSES = "inline-flex items-center justify-center bg-transparent text-white border-2 border-white/40 hover:bg-white/10 hover:border-white/60 px-8 py-4 text-lg font-semibold rounded-[var(--radius-md)] focus:outline-none focus:ring-2 focus:ring-white transition-colors";
+
+// TODO: Update with actual Calendly URL before launch
+const CALENDLY_URL = "https://calendly.com/quorumtours/operator-onboarding";
 
 function PhoneIcon(): JSX.Element {
   return (
@@ -24,9 +25,14 @@ export function OperatorCTA(): JSX.Element {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-[var(--space-md)] justify-center mb-[var(--space-xl)]">
-          <Link href="/operator/onboarding" className={PRIMARY_CTA_CLASSES}>
+          <a
+            href={CALENDLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={PRIMARY_CTA_CLASSES}
+          >
             List Your First Tour
-          </Link>
+          </a>
           <a href="mailto:hello@quorumtours.com" className={SECONDARY_CTA_CLASSES}>
             Have Questions? Email Us
           </a>
