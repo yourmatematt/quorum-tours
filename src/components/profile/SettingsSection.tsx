@@ -55,7 +55,7 @@ export function SettingsSection({ onSignOut }: SettingsSectionProps) {
 
   return (
     <section aria-labelledby="settings-heading">
-      <h2 id="settings-heading" className="font-display text-lg text-[var(--color-ink)] mb-3">
+      <h2 id="settings-heading" className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-md)]">
         Account Settings
       </h2>
 

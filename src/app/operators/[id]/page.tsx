@@ -403,7 +403,7 @@ export default function OperatorProfilePage({ params }: PageProps) {
         {/* Section 3: Narrative */}
         {operator.bio && (
           <section className="mb-[var(--space-3xl)]">
-            <h2 className="font-display text-lg text-[var(--color-ink)] mb-[var(--space-lg)]">
+            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
               About
             </h2>
             <div className="
@@ -432,7 +432,7 @@ export default function OperatorProfilePage({ params }: PageProps) {
         {/* Section 4: Reviews & Feedback */}
         {operator.reviews.length > 0 && (
           <section className="mb-[var(--space-3xl)]">
-            <h2 className="font-display text-lg text-[var(--color-ink)] mb-[var(--space-lg)]">
+            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
               Reviews
             </h2>
 
@@ -474,7 +474,7 @@ export default function OperatorProfilePage({ params }: PageProps) {
 
         {/* Section 6: Active & Past Tours */}
         <section className="mb-[var(--space-3xl)]">
-          <h2 className="font-display text-lg text-[var(--color-ink)] mb-[var(--space-lg)]">
+          <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
             Tours
           </h2>
 

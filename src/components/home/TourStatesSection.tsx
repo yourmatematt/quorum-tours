@@ -56,10 +56,10 @@ export function TourStatesSection() {
         <div className="mb-16 text-center max-w-2xl mx-auto">
           <h2 className="
             font-display
-            text-4xl lg:text-5xl
-            font-semibold
+            text-[clamp(1.75rem,4vw,2.5rem)]
+            leading-tight
             text-[var(--color-ink)]
-            mb-4
+            mb-[var(--space-md)]
           ">
             Featured tours.
           </h2>

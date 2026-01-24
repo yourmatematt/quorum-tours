@@ -33,7 +33,7 @@ export function CommitmentsSection({ commitments }: CommitmentsSectionProps) {
     <section aria-labelledby="commitments-heading">
       <h2
         id="commitments-heading"
-        className="font-display text-lg text-[var(--color-ink)] mb-3"
+        className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-md)]"
       >
         Your Commitments
       </h2>

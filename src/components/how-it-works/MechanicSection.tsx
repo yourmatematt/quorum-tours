@@ -62,8 +62,8 @@ export function MechanicSection() {
         <div className="mb-16 text-center max-w-3xl mx-auto">
           <h2 className="
             font-display
-            text-2xl sm:text-3xl
-            font-semibold
+            text-[clamp(1.75rem,4vw,2.5rem)]
+            leading-tight
             text-[var(--color-ink)]
             mb-[var(--space-md)]
           ">

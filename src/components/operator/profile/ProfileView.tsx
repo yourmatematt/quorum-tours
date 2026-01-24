@@ -101,16 +101,19 @@ function PublicProfileTab() {
       {/* Basic Info - Compact grid */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-sm font-medium text-[var(--color-ink)] mb-1">Full Name *</label>
+          <label htmlFor="full-name" className="block text-sm font-medium text-[var(--color-ink)] mb-1">Full Name *</label>
           <input
+            id="full-name"
             type="text"
             defaultValue="Roberto Clay"
+            aria-required="true"
             className="w-full px-3 py-2 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] focus:border-[var(--color-primary)] focus:outline-none"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--color-ink)] mb-1">Primary Location</label>
+          <label htmlFor="primary-location" className="block text-sm font-medium text-[var(--color-ink)] mb-1">Primary Location</label>
           <input
+            id="primary-location"
             type="text"
             defaultValue="Buenos Aires, Argentina"
             className="w-full px-3 py-2 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] focus:border-[var(--color-primary)] focus:outline-none"
@@ -118,8 +121,9 @@ function PublicProfileTab() {
         </div>
 
         <div className="col-span-2">
-          <label className="block text-sm font-medium text-[var(--color-ink)] mb-1">Headline</label>
+          <label htmlFor="headline" className="block text-sm font-medium text-[var(--color-ink)] mb-1">Headline</label>
           <input
+            id="headline"
             type="text"
             placeholder="Expert Birding Guide Specializing in Andean Ecosystems"
             className="w-full px-3 py-2 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] focus:border-[var(--color-primary)] focus:outline-none"
@@ -127,8 +131,9 @@ function PublicProfileTab() {
         </div>
 
         <div className="col-span-2">
-          <label className="block text-sm font-medium text-[var(--color-ink)] mb-1">About Me</label>
+          <label htmlFor="about-me" className="block text-sm font-medium text-[var(--color-ink)] mb-1">About Me</label>
           <textarea
+            id="about-me"
             rows={3}
             placeholder="Tell participants about your background, experience, and guiding philosophy..."
             className="w-full px-3 py-2 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] focus:border-[var(--color-primary)] focus:outline-none resize-none"
@@ -136,8 +141,9 @@ function PublicProfileTab() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-[var(--color-ink)] mb-1">Years of Experience</label>
+          <label htmlFor="years-experience" className="block text-sm font-medium text-[var(--color-ink)] mb-1">Years of Experience</label>
           <input
+            id="years-experience"
             type="number"
             defaultValue={15}
             className="w-full px-3 py-2 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] focus:border-[var(--color-primary)] focus:outline-none"
@@ -215,23 +221,26 @@ function BusinessInfoTab() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-[var(--color-ink)] mb-1">Company Name *</label>
+        <label htmlFor="company-name" className="block text-sm font-medium text-[var(--color-ink)] mb-1">Company Name *</label>
         <input
+          id="company-name"
           type="text"
           defaultValue="Roberto Clay Birding Tours"
+          aria-required="true"
           className="w-full px-3 py-2 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] focus:border-[var(--color-primary)] focus:outline-none"
         />
         <p className="text-xs text-[var(--color-ink-muted)] mt-1">Appears on booking invoices</p>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-[var(--color-ink)] mb-1">Tax ID / Business Registration</label>
+        <label htmlFor="tax-id" className="block text-sm font-medium text-[var(--color-ink)] mb-1">Tax ID / Business Registration</label>
         <input
+          id="tax-id"
           type="text"
           placeholder="CUIT: 20-12345678-9"
           className="w-full px-3 py-2 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] focus:border-[var(--color-primary)] focus:outline-none"
         />
-        <p className="text-xs text-[var(--color-ink-muted)] mt-1">🔒 Private - not shown publicly</p>
+        <p className="text-xs text-[var(--color-ink-muted)] mt-1">Private - not shown publicly</p>
       </div>
     </div>
   );

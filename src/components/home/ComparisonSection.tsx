@@ -35,7 +35,8 @@ export function ComparisonSection() {
         <div className="mb-[var(--space-3xl)] max-w-[var(--container-content)]">
           <h2 className="
             font-display
-            text-[var(--text-2xl)]
+            text-[clamp(1.75rem,4vw,2.5rem)]
+            leading-tight
             text-[var(--color-ink)]
             mb-[var(--space-md)]
           ">

@@ -6,7 +6,7 @@ interface ConfirmationStatusBadgeProps {
 
 const statusConfig: Record<ConfirmationStatus, { label: string; bgColor: string; textColor: string }> = {
   confirmed: {
-    label: 'Confirmed',
+    label: 'Quorum Reached',
     bgColor: 'var(--color-confirmed-bg)',
     textColor: 'var(--color-confirmed)',
   },

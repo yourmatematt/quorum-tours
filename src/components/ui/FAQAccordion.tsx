@@ -83,7 +83,7 @@ export function FAQAccordion({ items }: FAQAccordionProps) {
   return (
     <section>
       <h3 className="
-        font-display text-lg text-[var(--color-ink)]
+        font-display text-[clamp(1.25rem,3vw,1.5rem)] leading-tight text-[var(--color-ink)]
         mb-[var(--space-md)]
       ">
         Questions

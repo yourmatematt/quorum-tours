@@ -117,7 +117,7 @@ export function QuorumIndicator({
                   : 'text-[var(--color-forming)]'
               }`}
             >
-              {isConfirmed ? 'Confirmed' : 'Forming'}
+              {isConfirmed ? 'Quorum Reached' : 'Forming'}
             </span>
           )}
         </div>

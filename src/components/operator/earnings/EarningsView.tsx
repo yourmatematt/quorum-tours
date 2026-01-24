@@ -128,7 +128,9 @@ export function EarningsView() {
               <button
                 key={option.id}
                 onClick={() => setTimeFilter(option.id)}
-                className={`px-3 py-1.5 rounded-[var(--radius-organic)] font-medium text-sm transition-colors duration-200 ${
+                aria-label={`Filter by ${option.label}`}
+                aria-pressed={timeFilter === option.id}
+                className={`px-3 py-1.5 min-h-[44px] rounded-[var(--radius-organic)] font-medium text-sm transition-colors duration-200 ${
                   timeFilter === option.id
                     ? 'bg-[var(--color-primary)] text-white'
                     : 'bg-[var(--color-surface)] border-2 border-[var(--color-border)] text-[var(--color-ink)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]'
@@ -156,7 +158,9 @@ export function EarningsView() {
               <button
                 key={option.id}
                 onClick={() => setTourFilter(option.id)}
-                className={`px-3 py-1.5 rounded-[var(--radius-organic)] font-medium text-sm transition-colors duration-200 ${
+                aria-label={`Filter by ${option.label} tours`}
+                aria-pressed={tourFilter === option.id}
+                className={`px-3 py-1.5 min-h-[44px] rounded-[var(--radius-organic)] font-medium text-sm transition-colors duration-200 ${
                   tourFilter === option.id
                     ? 'bg-[var(--color-primary)] text-white'
                     : 'bg-[var(--color-surface)] border-2 border-[var(--color-border)] text-[var(--color-ink)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]'

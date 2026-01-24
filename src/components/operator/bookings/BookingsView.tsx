@@ -99,12 +99,12 @@ export function BookingsView() {
             <table className="w-full">
               <thead className="bg-[var(--color-surface-raised)] border-b-2 border-[var(--color-border)]">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Tour</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Participant</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Booking Date</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Amount</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Actions</th>
+                  <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Tour</th>
+                  <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Participant</th>
+                  <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Status</th>
+                  <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Booking Date</th>
+                  <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Amount</th>
+                  <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--color-border)]">

@@ -97,7 +97,6 @@ function SpeciesGroup({ group }: { group: SpeciesGroupData }) {
 
   const isCollapsible = group.level === 'opportunistic';
   const visibleSpecies = isExpanded ? group.species : group.species.slice(0, 2);
-  const hasMore = group.species.length > 2 && !isExpanded;
 
   return (
     <div className="mb-[var(--space-lg)]">
@@ -168,7 +167,7 @@ export function SpeciesSection({ groups }: SpeciesSectionProps) {
   return (
     <section>
       <h3 className="
-        font-display text-lg text-[var(--color-ink)]
+        font-display text-[clamp(1.25rem,3vw,1.5rem)] leading-tight text-[var(--color-ink)]
         mb-[var(--space-md)]
       ">
         Species Focus

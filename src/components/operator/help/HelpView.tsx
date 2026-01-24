@@ -50,10 +50,11 @@ export function HelpView() {
           <p className="text-sm text-[var(--color-ink-muted)]">Find answers and resources</p>
         </div>
         <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-ink-muted)]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-ink-muted)]" aria-hidden="true" />
           <input
             type="search"
             placeholder="Search help..."
+            aria-label="Search help topics"
             className="w-full pl-9 pr-3 py-2 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] bg-[var(--color-surface)] focus:border-[var(--color-primary)] focus:outline-none"
           />
         </div>
@@ -117,13 +118,15 @@ export function HelpView() {
               <div key={idx}>
                 <button
                   onClick={() => setExpandedQuestion(isExpanded ? null : qId)}
+                  aria-expanded={isExpanded}
+                  aria-controls={`faq-answer-${qId}`}
                   className="w-full px-4 py-2.5 flex items-center justify-between text-left hover:bg-[var(--color-surface-sunken)] transition-colors"
                 >
                   <span className="text-sm font-medium text-[var(--color-ink)]">{item.q}</span>
-                  <ChevronDown className={`w-4 h-4 text-[var(--color-ink-muted)] flex-shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-4 h-4 text-[var(--color-ink-muted)] flex-shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''}`} aria-hidden="true" />
                 </button>
                 {isExpanded && (
-                  <div className="px-4 pb-3 text-sm text-[var(--color-ink-muted)]">
+                  <div id={`faq-answer-${qId}`} className="px-4 pb-3 text-sm text-[var(--color-ink-muted)]">
                     {item.a}
                   </div>
                 )}

@@ -28,7 +28,7 @@ export function CapabilitiesSection({
 
   return (
     <section className="mb-[var(--space-3xl)]">
-      <h2 className="font-display text-lg text-[var(--color-ink)] mb-[var(--space-lg)]">
+      <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
         Resources
       </h2>
 

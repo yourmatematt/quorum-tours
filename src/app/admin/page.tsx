@@ -1,25 +1,22 @@
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { DashboardOverview, PlatformMetrics } from '@/components/admin';
+import { DashboardOverview } from '@/components/admin';
 
 export default function AdminOverviewPage() {
   return (
     <ErrorBoundary>
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto">
         {/* Page Header */}
-        <div className="mb-6">
-          <h1 className="font-display text-3xl font-semibold text-[var(--color-ink)]">
+        <div className="mb-4">
+          <h1 className="font-display text-2xl font-semibold text-[var(--color-ink)]">
             Platform Overview
           </h1>
-          <p className="text-[var(--color-ink-muted)] mt-2">
+          <p className="text-sm text-[var(--color-ink-muted)] mt-1">
             Marketplace health and critical alerts at a glance
           </p>
         </div>
 
-        {/* Critical alerts + system health */}
+        {/* Compact dashboard - fits in one viewport */}
         <DashboardOverview />
-
-        {/* Key metrics summary */}
-        <PlatformMetrics />
       </div>
     </ErrorBoundary>
   );
