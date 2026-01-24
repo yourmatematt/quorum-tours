@@ -19,10 +19,9 @@ export function ConfirmationSection() {
       bg-[var(--color-surface-sunken)]
     ">
       <div className="
-        w-full max-w-[var(--container-max)]
-        mx-auto px-6 lg:px-8
+        w-full max-w-[1400px]
+        mx-auto px-[var(--space-lg)]
       ">
-        <div className="max-w-4xl mx-auto">
           {/* Section headline */}
           <h2 className="
             font-display
@@ -204,7 +203,6 @@ export function ConfirmationSection() {
             guaranteed sightings. Birding has inherent uncertainty, and we're honest about
             that. What we can guarantee is that everyone shows up and the experience happens.
           </p>
-        </div>
       </div>
     </section>
   );

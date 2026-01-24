@@ -362,7 +362,7 @@ export default function TourDetailPage({ params }: PageProps) {
             {/* Section 4: Operator Preview */}
             <section className="mb-[var(--space-3xl)]">
               <h3 className="
-                font-display text-lg text-[var(--color-ink)]
+                font-display text-[clamp(1.25rem,3vw,1.5rem)] leading-tight text-[var(--color-ink)]
                 mb-[var(--space-md)]
               ">
                 Your Guide

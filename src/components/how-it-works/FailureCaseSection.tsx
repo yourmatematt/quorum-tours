@@ -88,10 +88,9 @@ export function FailureCaseSection() {
       bg-[var(--color-surface)]
     ">
       <div className="
-        w-full max-w-[var(--container-max)]
-        mx-auto px-6 lg:px-8
+        w-full max-w-[1400px]
+        mx-auto px-[var(--space-lg)]
       ">
-        <div className="max-w-4xl mx-auto">
           {/* Direct question as headline */}
           <h2 className="
             font-display
@@ -155,7 +154,6 @@ export function FailureCaseSection() {
               know exactly when the threshold needs to be met, so there are no surprises.
             </p>
           </div>
-        </div>
       </div>
     </section>
   );

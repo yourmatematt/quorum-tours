@@ -55,11 +55,11 @@ export function MechanicSection() {
       bg-[var(--color-surface-sunken)]
     ">
       <div className="
-        w-full max-w-[var(--container-max)]
-        mx-auto px-6 lg:px-8
+        w-full max-w-[1400px]
+        mx-auto px-[var(--space-lg)]
       ">
         {/* Section header - center aligned */}
-        <div className="mb-16 text-center max-w-3xl mx-auto">
+        <div className="mb-16 text-center">
           <h2 className="
             font-display
             text-[clamp(1.75rem,4vw,2.5rem)]
@@ -78,7 +78,7 @@ export function MechanicSection() {
         </div>
 
         {/* Vertical timeline */}
-        <div className="max-w-4xl mx-auto">
+        <div>
           {stages.map((stage, index) => (
             <div key={stage.number} className="relative">
               {/* Step container with horizontal layout */}
@@ -114,7 +114,8 @@ export function MechanicSection() {
                 <div className="flex-1 pb-[var(--space-2xl)]">
                   <h3 className="
                     font-display
-                    text-[var(--text-lg)]
+                    text-[clamp(1.25rem,3vw,1.5rem)]
+                    leading-tight
                     text-[var(--color-ink)]
                     mb-[var(--space-sm)]
                   ">
@@ -153,8 +154,6 @@ export function MechanicSection() {
           border-2 border-[var(--color-border)]
           rounded-[var(--radius-organic)]
           shadow-[var(--shadow-card)]
-          max-w-3xl
-          mx-auto
         ">
           <p className="
             text-[var(--color-ink)]

@@ -12,8 +12,9 @@ const navItems = [
 export function GlobalNav() {
   const pathname = usePathname();
 
-  // Don't render navigation on dashboard routes
-  if (pathname?.startsWith('/operator') || pathname?.startsWith('/admin')) {
+  // Don't render navigation on dashboard routes (but keep for /operators consumer page)
+  const isDashboard = pathname === '/operator' || pathname?.startsWith('/operator/') || pathname?.startsWith('/admin');
+  if (isDashboard) {
     return null;
   }
 

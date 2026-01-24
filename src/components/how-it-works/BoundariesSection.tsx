@@ -35,10 +35,9 @@ export function BoundariesSection() {
       bg-[var(--color-surface)]
     ">
       <div className="
-        w-full max-w-[var(--container-max)]
-        mx-auto px-6 lg:px-8
+        w-full max-w-[1400px]
+        mx-auto px-[var(--space-lg)]
       ">
-        <div className="max-w-4xl mx-auto">
           {/* Section headline */}
           <h2 className="
             font-display
@@ -70,7 +69,6 @@ export function BoundariesSection() {
               />
             ))}
           </div>
-        </div>
       </div>
     </section>
   );

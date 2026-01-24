@@ -7,10 +7,9 @@ export function ClosingCTA() {
       bg-[var(--color-surface-sunken)]
     ">
       <div className="
-        w-full max-w-[var(--container-max)]
-        mx-auto px-6 lg:px-8
+        w-full max-w-[1400px]
+        mx-auto px-[var(--space-lg)]
       ">
-        <div className="max-w-3xl mx-auto">
           {/* Closing text */}
           <p className="
             text-[var(--color-ink)]
@@ -61,7 +60,6 @@ export function ClosingCTA() {
               Return to home
             </Link>
           </div>
-        </div>
       </div>
     </section>
   );

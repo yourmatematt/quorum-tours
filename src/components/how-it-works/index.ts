@@ -1,3 +1,4 @@
+export { HowItWorksHero } from './HowItWorksHero';
 export { StageCard } from './StageCard';
 export { ProblemSection } from './ProblemSection';
 export { MechanicSection } from './MechanicSection';

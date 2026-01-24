@@ -110,6 +110,13 @@ html {
   color: var(--color-ink);
   background: var(--color-surface);
   line-height: 1.6;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 /* Display Typography */
