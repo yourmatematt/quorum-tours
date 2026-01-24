@@ -36,42 +36,23 @@ export function PastToursSection({ tours }: PastToursSectionProps) {
         onClick={() => setIsExpanded(!isExpanded)}
         aria-expanded={isExpanded}
         aria-controls="past-tours-content"
-        className="
-          w-full
-          flex items-center justify-between
-          py-[var(--space-md)]
-          text-left
-          focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2
-          rounded-[var(--radius-md)]
-        "
+        className="w-full flex items-center justify-between py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded"
       >
-        <h2
-          id="past-tours-heading"
-          className="
-            font-display
-            text-[var(--text-xl)]
-            text-[var(--color-ink)]
-          "
-        >
+        <h2 id="past-tours-heading" className="font-display text-lg text-[var(--color-ink)]">
           Past Tours
         </h2>
-
-        <div className="flex items-center gap-[var(--space-sm)]">
-          <span className="text-[var(--text-sm)] text-[var(--color-ink-muted)]">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-[var(--color-ink-muted)]">
             {tours.length} {tours.length === 1 ? 'tour' : 'tours'}
           </span>
           <svg
-            width="20"
-            height="20"
+            width="16"
+            height="16"
             viewBox="0 0 20 20"
             fill="none"
             stroke="currentColor"
             strokeWidth="1.5"
-            className={`
-              text-[var(--color-ink-subtle)]
-              transition-transform duration-[var(--transition-normal)]
-              ${isExpanded ? 'rotate-180' : ''}
-            `}
+            className={`text-[var(--color-ink-subtle)] transition-transform ${isExpanded ? 'rotate-180' : ''}`}
             aria-hidden="true"
           >
             <path d="M5 8l5 5 5-5" />
@@ -82,13 +63,7 @@ export function PastToursSection({ tours }: PastToursSectionProps) {
       {isExpanded && (
         <div
           id="past-tours-content"
-          className="
-            mt-[var(--space-md)]
-            bg-[var(--color-surface-raised)]
-            border border-[var(--color-border)]
-            rounded-[var(--radius-lg)]
-            p-[var(--space-md)]
-          "
+          className="mt-2 bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-3"
         >
           {tours.map((tour) => (
             <PastTourItem

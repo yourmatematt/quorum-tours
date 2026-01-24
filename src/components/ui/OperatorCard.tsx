@@ -28,11 +28,13 @@ export function OperatorCard({
         block
         p-[var(--space-lg)]
         bg-[var(--color-surface-raised)]
-        border border-[var(--color-border)]
-        rounded-[var(--radius-lg)]
-        transition-colors duration-[var(--transition-normal)]
-        hover:border-[var(--color-accent)]
-        focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2
+        border-2 border-[var(--color-border)]
+        rounded-[var(--radius-organic)]
+        shadow-[var(--shadow-card)]
+        transition-all duration-200
+        hover:border-[var(--color-primary)]
+        hover:shadow-[var(--shadow-card-hover)]
+        focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2
         group
       "
     >
@@ -63,8 +65,8 @@ export function OperatorCard({
           <div className="flex items-center gap-[var(--space-sm)] mb-[var(--space-xs)]">
             <span className="
               font-medium text-[var(--color-ink)]
-              group-hover:text-[var(--color-accent)]
-              transition-colors duration-[var(--transition-normal)]
+              group-hover:text-[var(--color-primary)]
+              transition-colors duration-200
               truncate
             ">
               {name}
@@ -159,8 +161,8 @@ export function OperatorCard({
       <div className="
         mt-[var(--space-md)]
         text-sm text-[var(--color-ink-subtle)]
-        group-hover:text-[var(--color-accent)]
-        transition-colors duration-[var(--transition-normal)]
+        group-hover:text-[var(--color-primary)]
+        transition-colors duration-200
         flex items-center gap-[var(--space-xs)]
       ">
         View profile

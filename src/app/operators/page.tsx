@@ -174,9 +174,9 @@ export default function OperatorsPage() {
     { value: 'rating', label: 'Highest rated' },
   ], []);
 
-  // Filter and sort operators
+  // Filter and sort operators (only show verified)
   const filteredOperators = useMemo(() => {
-    let operators = [...allOperators];
+    let operators = allOperators.filter(op => op.verified);
 
     // Apply region filter
     if (regionFilter !== 'all') {
@@ -258,14 +258,15 @@ export default function OperatorsPage() {
         <header className="mb-[var(--space-2xl)]">
           <h1 className="
             font-display
-            text-[var(--text-2xl)]
+            text-3xl sm:text-4xl
+            font-semibold
             text-[var(--color-ink)]
             mb-[var(--space-sm)]
           ">
-            Tour Operators
+            Verified Guides
           </h1>
           <p className="text-[var(--color-ink-muted)]">
-            Meet the guides running tours on Quorum. Filter by region or specialization to find operators in your area.
+            Every operator on Quorum is verified for credentials, experience, and professionalism. Filter by region or specialization to find the right guide for your next birding adventure.
           </p>
         </header>
 
@@ -274,8 +275,9 @@ export default function OperatorsPage() {
           mb-[var(--space-xl)]
           p-[var(--space-lg)]
           bg-[var(--color-surface-raised)]
-          border border-[var(--color-border)]
-          rounded-[var(--radius-lg)]
+          border-2 border-[var(--color-border)]
+          rounded-[var(--radius-organic)]
+          shadow-[var(--shadow-card)]
         ">
           {/* Filter dropdowns */}
           <div className="
@@ -326,7 +328,7 @@ export default function OperatorsPage() {
                   onClick={clearAllFilters}
                   className="
                     py-3 px-2 min-h-[48px]
-                    text-sm text-[var(--color-accent)]
+                    text-sm text-[var(--color-primary)] font-medium
                     hover:underline
                     focus:outline-none focus:underline
                   "

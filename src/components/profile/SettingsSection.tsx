@@ -10,28 +10,16 @@ function SettingLink({ href, title, description }: SettingLinkProps) {
   return (
     <a
       href={href}
-      className="
-        block
-        py-[var(--space-md)]
-        border-b border-[var(--color-border)]
-        last:border-b-0
-        hover:bg-[var(--color-surface-sunken)]
-        -mx-[var(--space-md)] px-[var(--space-md)]
-        rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--transition-fast)]
-        focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-inset
-      "
+      className="block py-2 border-b border-[var(--color-border)] last:border-b-0 hover:bg-[var(--color-surface-sunken)] -mx-3 px-3 rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-inset"
     >
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-[var(--color-ink)] font-medium">{title}</p>
-          <p className="text-[var(--text-sm)] text-[var(--color-ink-muted)]">
-            {description}
-          </p>
+          <p className="text-sm text-[var(--color-ink)] font-medium">{title}</p>
+          <p className="text-xs text-[var(--color-ink-muted)]">{description}</p>
         </div>
         <svg
-          width="16"
-          height="16"
+          width="14"
+          height="14"
           viewBox="0 0 16 16"
           fill="none"
           stroke="currentColor"
@@ -67,28 +55,13 @@ export function SettingsSection({ onSignOut }: SettingsSectionProps) {
 
   return (
     <section aria-labelledby="settings-heading">
-      <h2
-        id="settings-heading"
-        className="
-          font-display
-          text-[var(--text-xl)]
-          text-[var(--color-ink)]
-          mb-[var(--space-lg)]
-        "
-      >
+      <h2 id="settings-heading" className="font-display text-lg text-[var(--color-ink)] mb-3">
         Account Settings
       </h2>
 
-      <div
-        className="
-          bg-[var(--color-surface-raised)]
-          border border-[var(--color-border)]
-          rounded-[var(--radius-lg)]
-          p-[var(--space-md)]
-        "
-      >
+      <div className="bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-3">
         {/* Settings links */}
-        <div className="mb-[var(--space-md)]">
+        <div className="mb-2">
           <SettingLink
             href="/profile/settings"
             title="Profile"
@@ -97,7 +70,7 @@ export function SettingsSection({ onSignOut }: SettingsSectionProps) {
           <SettingLink
             href="/profile/security"
             title="Email & Password"
-            description="Update your sign-in credentials"
+            description="Update sign-in credentials"
           />
           <SettingLink
             href="/profile/notifications"
@@ -106,25 +79,15 @@ export function SettingsSection({ onSignOut }: SettingsSectionProps) {
           />
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-[var(--color-border)] my-[var(--space-md)]" />
-
         {/* Sign out button */}
-        <button
-          onClick={handleSignOut}
-          className="
-            w-full sm:w-auto
-            py-[var(--space-sm)] px-[var(--space-md)]
-            text-[var(--text-sm)]
-            text-[var(--color-ink-muted)]
-            hover:text-[var(--color-ink)]
-            focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2
-            rounded-[var(--radius-md)]
-            transition-colors duration-[var(--transition-fast)]
-          "
-        >
-          Sign out
-        </button>
+        <div className="pt-2 border-t border-[var(--color-border)]">
+          <button
+            onClick={handleSignOut}
+            className="text-sm text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] transition-colors min-h-[44px] px-2"
+          >
+            Sign out
+          </button>
+        </div>
       </div>
     </section>
   );

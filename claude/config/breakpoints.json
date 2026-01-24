@@ -1,0 +1,31 @@
+{
+  "responsive_matrix": {
+    "mobile": {
+      "width": 375,
+      "height": 812,
+      "label": "Mobile (iPhone 13)"
+    },
+    "tablet": {
+      "width": 768,
+      "height": 1024,
+      "label": "Tablet (iPad)"
+    },
+    "desktop": {
+      "width": 1440,
+      "height": 900,
+      "label": "Desktop (Standard)"
+    }
+  },
+  "test_pages": [
+    "/",
+    "/tours",
+    "/tours/sample-id",
+    "/operators/sample-id"
+  ],
+  "quality_thresholds": {
+    "tls_minimum": 85,
+    "wcag_level": "AAA",
+    "max_console_errors": 0,
+    "max_template_violations": 0
+  }
+}

@@ -48,12 +48,12 @@ export function FilterDropdown({
           min-h-[48px]
           text-sm
           bg-[var(--color-surface-raised)]
-          border border-[var(--color-border)]
-          rounded-[var(--radius-md)]
+          border-2 border-[var(--color-border)]
+          rounded-[var(--radius-organic)]
           text-[var(--color-ink)]
-          hover:border-[var(--color-border-strong)]
-          focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-1
-          transition-colors duration-[var(--transition-fast)]
+          hover:border-[var(--color-primary)]
+          focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-1
+          transition-colors duration-200
         "
         aria-haspopup="listbox"
         aria-expanded={isOpen}
@@ -83,8 +83,8 @@ export function FilterDropdown({
             absolute z-10 mt-1
             w-full min-w-[160px]
             bg-[var(--color-surface-raised)]
-            border border-[var(--color-border)]
-            rounded-[var(--radius-md)]
+            border-2 border-[var(--color-border)]
+            rounded-[var(--radius-organic)]
             shadow-[var(--shadow-card)]
             py-1
           "
@@ -101,8 +101,8 @@ export function FilterDropdown({
               className={`
                 w-full px-4 py-3 min-h-[48px] text-left text-sm
                 hover:bg-[var(--color-surface-sunken)]
-                transition-colors duration-[var(--transition-fast)]
-                ${value === option.value ? 'text-[var(--color-accent)] font-medium' : 'text-[var(--color-ink)]'}
+                transition-colors duration-200
+                ${value === option.value ? 'text-[var(--color-primary)] font-medium' : 'text-[var(--color-ink)]'}
               `}
               role="option"
               aria-selected={value === option.value}

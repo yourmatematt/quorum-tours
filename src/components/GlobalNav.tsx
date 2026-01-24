@@ -12,6 +12,11 @@ const navItems = [
 export function GlobalNav() {
   const pathname = usePathname();
 
+  // Don't render navigation on dashboard routes
+  if (pathname?.startsWith('/operator') || pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <nav
       className="

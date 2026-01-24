@@ -56,7 +56,7 @@ export function OperatorHero({
         <div className="flex-1 min-w-0">
           {/* Name + Verification */}
           <div className="flex flex-wrap items-center gap-[var(--space-sm)] mb-[var(--space-sm)]">
-            <h1 className="font-display text-[var(--text-2xl)] text-[var(--color-ink)]">
+            <h1 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--color-ink)]">
               {name}
             </h1>
             {verified && (

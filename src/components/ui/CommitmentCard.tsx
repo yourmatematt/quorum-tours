@@ -42,9 +42,10 @@ export function CommitmentCard({
   return (
     <div className="
       bg-[var(--color-surface-raised)]
-      border border-[var(--color-border)]
-      rounded-[var(--radius-lg)]
+      border-2 border-[var(--color-border)]
+      rounded-[var(--radius-organic)]
       p-[var(--space-lg)]
+      shadow-[var(--shadow-card)]
     ">
       {/* Price Display */}
       <div className="mb-[var(--space-lg)]">
@@ -92,11 +93,20 @@ export function CommitmentCard({
         </div>
       )}
 
-      {/* CTA Button */}
+      {/* CTA Button - Gold accent for high visibility */}
       <Button
         variant="primary"
         disabled={cta.disabled}
-        className="w-full mb-[var(--space-md)]"
+        className="
+          w-full mb-[var(--space-md)]
+          !bg-[var(--color-accent)]
+          !text-[var(--color-ink)]
+          hover:!bg-[var(--color-accent-hover)]
+          !rounded-[var(--radius-organic)]
+          !font-medium
+          !shadow-[var(--shadow-card)]
+          transition-all duration-200
+        "
       >
         {cta.text}
       </Button>

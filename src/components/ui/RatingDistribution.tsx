@@ -14,8 +14,9 @@ export function RatingDistribution({
   return (
     <div className="
       bg-[var(--color-surface-raised)]
-      border border-[var(--color-border)]
-      rounded-[var(--radius-lg)]
+      border-2 border-[var(--color-border)]
+      rounded-[var(--radius-organic)]
+      shadow-[var(--shadow-card)]
       p-[var(--space-lg)]
     ">
       <div className="flex flex-col sm:flex-row gap-[var(--space-xl)]">

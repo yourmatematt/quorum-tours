@@ -3,14 +3,14 @@ import Link from 'next/link';
 export function ClosingCTA() {
   return (
     <section className="
-      py-[var(--space-section-loose)]
+      py-20
       bg-[var(--color-surface-sunken)]
     ">
       <div className="
         w-full max-w-[var(--container-max)]
-        mx-auto px-[var(--space-lg)]
+        mx-auto px-6 lg:px-8
       ">
-        <div className="max-w-[var(--container-content)]">
+        <div className="max-w-3xl mx-auto">
           {/* Closing text */}
           <p className="
             text-[var(--color-ink)]
@@ -34,7 +34,7 @@ export function ClosingCTA() {
                 text-white
                 text-[var(--text-base)]
                 font-medium
-                rounded-[var(--radius-md)]
+                rounded-[var(--radius-organic)]
                 transition-colors duration-[var(--transition-fast)]
                 hover:bg-[var(--color-accent-hover)]
                 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2
@@ -52,7 +52,7 @@ export function ClosingCTA() {
                 bg-transparent
                 text-[var(--color-ink-muted)]
                 text-[var(--text-base)]
-                rounded-[var(--radius-md)]
+                rounded-[var(--radius-organic)]
                 transition-colors duration-[var(--transition-fast)]
                 hover:text-[var(--color-ink)]
                 focus:outline-none focus:ring-2 focus:ring-[var(--color-border)] focus:ring-offset-2

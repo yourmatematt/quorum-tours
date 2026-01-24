@@ -1,0 +1,46 @@
+{
+  "swarms": {
+    "frontend_build": {
+      "agents": [
+        "feature-dev:code-architect",
+        "frontend-design",
+        "ui-ux-pro-max"
+      ],
+      "execution_mode": "sequential",
+      "timeout_minutes": 30
+    },
+    "quality_assurance": {
+      "agents": [
+        "dev-browser",
+        "feature-dev:code-reviewer"
+      ],
+      "execution_mode": "parallel",
+      "timeout_minutes": 15
+    },
+    "integration_verification": {
+      "agents": [
+        "Explore",
+        "full-stack-orchestration:performance-engineer"
+      ],
+      "execution_mode": "sequential",
+      "timeout_minutes": 20
+    },
+    "research_analysis": {
+      "agents": [
+        "content-marketing:search-specialist"
+      ],
+      "execution_mode": "sequential",
+      "timeout_minutes": 10
+    }
+  },
+  "evidence_requirements": {
+    "screenshots_per_page": 3,
+    "breakpoints": ["mobile", "tablet", "desktop"],
+    "mandatory_artifacts": [
+      "screenshots",
+      "console_logs",
+      "accessibility_report",
+      "code_review_notes"
+    ]
+  }
+}

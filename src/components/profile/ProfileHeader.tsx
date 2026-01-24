@@ -21,61 +21,44 @@ export function ProfileHeader({
     <div
       className="
         bg-[var(--color-surface-raised)]
-        border border-[var(--color-border)]
-        rounded-[var(--radius-lg)]
-        p-[var(--space-lg)] sm:p-[var(--space-xl)]
+        border-2 border-[var(--color-border)]
+        rounded-[var(--radius-organic)]
+        p-4
       "
     >
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-[var(--space-md)]">
-        <div>
-          {/* Display name - primary identifier */}
-          <h1
-            className="
-              font-display
-              text-[var(--text-xl)] sm:text-[var(--text-2xl)]
-              text-[var(--color-ink)]
-              mb-[var(--space-xs)]
-            "
-          >
-            {displayName}
-          </h1>
-
-          {/* Account identifier - secondary */}
-          <p className="text-[var(--color-ink-muted)] text-[var(--text-sm)]">
-            {email}
-          </p>
-
-          {/* Member since - factual timestamp, not celebratory */}
-          <p className="text-[var(--color-ink-subtle)] text-[var(--text-sm)] mt-[var(--space-xs)]">
-            Member since {memberSince}
-          </p>
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          {/* Avatar placeholder */}
+          <div className="w-12 h-12 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white font-display text-lg">
+            {displayName.split(' ').map(n => n[0]).join('')}
+          </div>
+          <div>
+            {/* Display name - primary identifier */}
+            <h1 className="font-display text-lg text-[var(--color-ink)]">
+              {displayName}
+            </h1>
+            {/* Account identifier + member since inline */}
+            <p className="text-sm text-[var(--color-ink-muted)]">
+              {email} · Member since {memberSince}
+            </p>
+          </div>
         </div>
 
         {/* Edit profile link */}
         <a
           href="/profile/settings"
           className="
-            inline-flex items-center gap-[var(--space-xs)]
-            text-[var(--text-sm)]
-            text-[var(--color-accent)]
-            hover:underline
-            focus:outline-none focus:underline
-            transition-colors duration-[var(--transition-fast)]
+            inline-flex items-center gap-2
+            px-3 py-1.5
+            text-sm font-medium
+            border-2 border-[var(--color-border)]
+            rounded-[var(--radius-organic)]
+            text-[var(--color-ink)]
+            hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]
+            transition-colors
           "
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            aria-hidden="true"
-          >
-            <path d="M8 3v10M3 8h10" />
-            <circle cx="8" cy="8" r="6" />
-          </svg>
-          Edit profile
+          Edit
         </a>
       </div>
     </div>

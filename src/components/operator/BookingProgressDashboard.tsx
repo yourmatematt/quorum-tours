@@ -34,9 +34,9 @@ export function BookingProgressDashboard() {
   ];
 
   const trendColors = {
-    up: 'text-confirmed',
-    stable: 'text-forming',
-    down: 'text-red-600',
+    up: 'text-[var(--color-confirmed)]',
+    stable: 'text-[var(--color-forming)]',
+    down: 'text-[var(--color-destructive)]',
   };
 
   const trendIcons = {
@@ -46,8 +46,8 @@ export function BookingProgressDashboard() {
   };
 
   return (
-    <section className="bg-surface-raised border border-border rounded-lg p-6">
-      <h2 className="font-display text-xl font-semibold text-ink mb-6">
+    <section className="bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] shadow-[var(--shadow-card)] p-6">
+      <h2 className="font-display text-xl font-semibold text-[var(--color-ink)] mb-6">
         Booking Progress
       </h2>
 
@@ -55,10 +55,10 @@ export function BookingProgressDashboard() {
         {progressMetrics.map((metric) => (
           <div
             key={metric.tourId}
-            className="border border-border rounded-lg p-4 bg-surface"
+            className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-4 bg-[var(--color-surface)] hover:border-[var(--color-primary)] transition-colors cursor-pointer"
           >
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-ink">{metric.tourTitle}</h3>
+              <h3 className="font-semibold text-[var(--color-ink)]">{metric.tourTitle}</h3>
               <span
                 className={`font-mono text-lg font-semibold ${trendColors[metric.trend]}`}
               >
@@ -68,16 +68,16 @@ export function BookingProgressDashboard() {
 
             <div className="mb-3" aria-live="polite" aria-atomic="true">
               <div className="flex items-baseline gap-2 mb-1">
-                <span className="font-mono text-2xl font-semibold text-ink">
+                <span className="font-mono text-2xl font-semibold text-[var(--color-ink)]">
                   {metric.current}
                 </span>
-                <span className="text-sm text-ink-muted">
+                <span className="text-sm text-[var(--color-ink-muted)]">
                   of {metric.threshold} needed
                 </span>
               </div>
-              <div className="w-full bg-surface-sunken rounded-full h-2">
+              <div className="w-full bg-[var(--color-surface-sunken)] rounded-full h-2">
                 <div
-                  className="h-2 rounded-full bg-forming"
+                  className="h-2 rounded-full bg-[var(--color-forming)]"
                   style={{
                     width: `${(metric.current / metric.threshold) * 100}%`,
                   }}
@@ -85,13 +85,13 @@ export function BookingProgressDashboard() {
               </div>
             </div>
 
-            <p className="text-xs text-ink-muted">{metric.recentActivity}</p>
+            <p className="text-xs text-[var(--color-ink-muted)]">{metric.recentActivity}</p>
           </div>
         ))}
       </div>
 
       {progressMetrics.length === 0 && (
-        <div className="border border-border rounded-md p-8 text-center text-ink-muted">
+        <div className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-8 text-center text-[var(--color-ink-muted)]">
           No active tours with pending bookings
         </div>
       )}

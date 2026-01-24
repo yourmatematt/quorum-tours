@@ -18,14 +18,14 @@ export default function RootLayout({
         {/* Preconnect to Google Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Display font: Fraunces */}
+        {/* Display/Heading font: Crimson Pro (Academic/Research) */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
-        {/* Body font: Inter */}
+        {/* Body font: Atkinson Hyperlegible (Accessibility-focused) */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap"
           rel="stylesheet"
         />
         {/* Mono font: JetBrains Mono */}

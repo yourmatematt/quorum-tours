@@ -19,8 +19,9 @@ export function AuthCard({ children }: AuthCardProps) {
         mx-auto
         p-[var(--space-xl)] sm:p-[var(--space-2xl)]
         bg-[var(--color-surface-raised)]
-        border border-[var(--color-border)]
-        rounded-[var(--radius-lg)]
+        border-2 border-[var(--color-border)]
+        rounded-[var(--radius-organic)]
+        shadow-[var(--shadow-card)]
       "
     >
       {children}

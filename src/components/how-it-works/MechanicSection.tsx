@@ -10,13 +10,20 @@ interface Stage {
 const stages: Stage[] = [
   {
     number: 1,
-    title: 'Express interest',
+    title: 'Browse and find a tour',
+    description:
+      'Explore our curated tours led by verified guides. Each tour displays its threshold, available spots, current interest, and commitment deadline.',
+    clarification: 'All tour details are transparent upfront—no hidden mechanics or surprise requirements.',
+  },
+  {
+    number: 2,
+    title: 'Express interest (no charge)',
     description:
       'Signal that you want this tour to happen. Your interest joins the aggregate count visible to everyone. No account required, no payment, no obligation.',
     clarification: "This is pure signal. You're saying \"I would go\" not \"I will go.\"",
   },
   {
-    number: 2,
+    number: 3,
     title: 'Commit conditionally',
     description:
       "Agree to join the tour if the threshold is met. Your payment method is authorized but not charged. You're committed only if enough others commit too.",
@@ -24,104 +31,130 @@ const stages: Stage[] = [
       "The commitment is conditional. If the threshold isn't reached, your authorization expires and you owe nothing.",
   },
   {
-    number: 3,
-    title: 'Tour confirms',
+    number: 4,
+    title: 'Tour confirms when threshold met',
     description:
-      'The threshold is met. The tour is now guaranteed to run. All conditional commits are charged. The operator confirms logistics. Everyone goes.',
+      'The threshold is met by the commitment deadline. The tour is now guaranteed to run. All conditional commits are charged. The operator confirms logistics.',
     clarification:
       'Confirmation means certainty for everyone—birders know the tour runs, operators know they have participants.',
+  },
+  {
+    number: 5,
+    title: 'You go birding',
+    description:
+      'Join your confirmed tour with the guide and fellow birders. The tour runs as scheduled with the guaranteed group size.',
+    clarification:
+      'No last-minute cancellations. Everyone committed, everyone shows up, the tour happens.',
   },
 ];
 
 export function MechanicSection() {
   return (
     <section className="
-      py-[var(--space-section-normal)]
+      py-20
       bg-[var(--color-surface-sunken)]
     ">
       <div className="
         w-full max-w-[var(--container-max)]
-        mx-auto px-[var(--space-lg)]
+        mx-auto px-6 lg:px-8
       ">
-        {/* Section header - left aligned */}
-        <div className="mb-[var(--space-3xl)] max-w-[var(--container-content)]">
+        {/* Section header - center aligned */}
+        <div className="mb-16 text-center max-w-3xl mx-auto">
           <h2 className="
             font-display
-            text-[var(--text-2xl)]
+            text-2xl sm:text-3xl
+            font-semibold
             text-[var(--color-ink)]
             mb-[var(--space-md)]
           ">
-            How the threshold works
+            For Birders: Your Journey
           </h2>
           <p className="
             text-[var(--color-ink-muted)]
             text-[var(--text-base)]
           ">
-            Three stages from interest to confirmed tour. You control how far you go.
+            Five clear steps from browsing to birding. You control how far you go at each stage.
           </p>
         </div>
 
-        {/* Stage cards with flow connectors */}
-        <div className="
-          grid grid-cols-1 md:grid-cols-3
-          gap-[var(--space-xl)]
-          relative
-        ">
-          {/* Connector line - visible on desktop */}
-          <div
-            className="
-              hidden md:block
-              absolute top-12 left-[16.67%] right-[16.67%]
-              h-0.5 bg-[var(--color-border)]
-            "
-            aria-hidden="true"
-          />
-
+        {/* Vertical timeline */}
+        <div className="max-w-4xl mx-auto">
           {stages.map((stage, index) => (
             <div key={stage.number} className="relative">
-              <StageCard
-                number={stage.number}
-                title={stage.title}
-                description={stage.description}
-                clarification={stage.clarification}
-              />
+              {/* Step container with horizontal layout */}
+              <div className="flex gap-[var(--space-lg)]">
+                {/* Number badge on left */}
+                <div className="flex flex-col items-center flex-shrink-0">
+                  <div className="
+                    w-10 h-10
+                    bg-[var(--color-primary)]
+                    text-white
+                    font-mono font-medium
+                    rounded-full
+                    flex items-center justify-center
+                    text-base
+                    flex-shrink-0
+                  ">
+                    {stage.number}
+                  </div>
 
-              {/* Arrow connector on mobile */}
-              {index < stages.length - 1 && (
-                <div
-                  className="
-                    md:hidden
-                    flex justify-center
-                    py-[var(--space-md)]
-                    text-[var(--color-ink-subtle)]
-                  "
-                  aria-hidden="true"
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    className="w-6 h-6"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M12 5v14M5 12l7 7 7-7" />
-                  </svg>
+                  {/* Vertical connecting line */}
+                  {index < stages.length - 1 && (
+                    <div className="
+                      w-0.5
+                      flex-1
+                      bg-[var(--color-border)]
+                      my-[var(--space-sm)]
+                      min-h-[var(--space-2xl)]
+                    " aria-hidden="true" />
+                  )}
                 </div>
-              )}
+
+                {/* Content on right */}
+                <div className="flex-1 pb-[var(--space-2xl)]">
+                  <h3 className="
+                    font-display
+                    text-[var(--text-lg)]
+                    text-[var(--color-ink)]
+                    mb-[var(--space-sm)]
+                  ">
+                    {stage.title}
+                  </h3>
+
+                  <p className="
+                    text-[var(--color-ink-muted)]
+                    text-[var(--text-base)]
+                    leading-relaxed
+                    mb-[var(--space-md)]
+                  ">
+                    {stage.description}
+                  </p>
+
+                  <p className="
+                    text-[var(--color-ink-subtle)]
+                    text-[var(--text-sm)]
+                    leading-relaxed
+                    pl-[var(--space-md)]
+                    border-l-2 border-[var(--color-border)]
+                  ">
+                    {stage.clarification}
+                  </p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
 
         {/* Key money clarification */}
         <div className="
-          mt-[var(--space-3xl)]
-          p-[var(--space-lg)]
+          mt-16
+          p-8
           bg-[var(--color-surface-raised)]
-          border border-[var(--color-border)]
-          rounded-[var(--radius-md)]
-          max-w-[var(--container-content)]
+          border-2 border-[var(--color-border)]
+          rounded-[var(--radius-organic)]
+          shadow-[var(--shadow-card)]
+          max-w-3xl
+          mx-auto
         ">
           <p className="
             text-[var(--color-ink)]

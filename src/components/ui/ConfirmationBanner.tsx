@@ -54,8 +54,9 @@ export function ConfirmationBanner({
       className="
         w-full
         p-[var(--space-lg)]
-        rounded-[var(--radius-lg)]
+        rounded-[var(--radius-organic)]
         border-l-4
+        shadow-[var(--shadow-card)]
       "
       style={{
         backgroundColor: config.bgColor,

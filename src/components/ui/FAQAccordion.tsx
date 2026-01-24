@@ -31,8 +31,8 @@ function FAQItemComponent({
           flex items-center justify-between
           text-left
           text-[var(--color-ink)]
-          hover:text-[var(--color-accent)]
-          focus:outline-none focus:text-[var(--color-accent)]
+          hover:text-[var(--color-primary)]
+          focus:outline-none focus:text-[var(--color-primary)]
           transition-colors duration-[var(--transition-fast)]
         "
         aria-expanded={isOpen}
@@ -92,7 +92,8 @@ export function FAQAccordion({ items }: FAQAccordionProps) {
       <div className="
         bg-[var(--color-surface-raised)]
         border border-[var(--color-border)]
-        rounded-[var(--radius-lg)]
+        rounded-[var(--radius-organic)]
+        shadow-[var(--shadow-card)]
         px-[var(--space-lg)]
       ">
         {items.map((item, index) => (

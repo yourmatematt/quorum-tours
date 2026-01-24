@@ -366,13 +366,13 @@ export default function OperatorProfilePage({ params }: PageProps) {
         <nav className="mb-[var(--space-xl)] text-sm" aria-label="Breadcrumb">
           <ol className="flex items-center gap-[var(--space-sm)]">
             <li>
-              <a href="/" className="text-[var(--color-ink-muted)] hover:text-[var(--color-accent)]">
+              <a href="/" className="text-[var(--color-ink-muted)] hover:text-[var(--color-primary)]">
                 Home
               </a>
             </li>
             <li className="text-[var(--color-ink-subtle)]" aria-hidden="true">/</li>
             <li>
-              <a href="/operators" className="text-[var(--color-ink-muted)] hover:text-[var(--color-accent)]">
+              <a href="/operators" className="text-[var(--color-ink-muted)] hover:text-[var(--color-primary)]">
                 Operators
               </a>
             </li>
@@ -420,7 +420,7 @@ export default function OperatorProfilePage({ params }: PageProps) {
                 mt-[var(--space-lg)]
                 text-[var(--color-ink)]
                 italic
-                border-l-2 border-[var(--color-accent)]
+                border-l-2 border-[var(--color-primary)]
                 pl-[var(--space-md)]
               ">
                 {operator.philosophy}
@@ -499,7 +499,7 @@ export default function OperatorProfilePage({ params }: PageProps) {
                 border-b-2
                 transition-colors duration-[var(--transition-normal)]
                 ${activeTab === 'active'
-                  ? 'border-[var(--color-accent)] text-[var(--color-accent)]'
+                  ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
                   : 'border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]'
                 }
               `}
@@ -516,7 +516,7 @@ export default function OperatorProfilePage({ params }: PageProps) {
                 border-b-2
                 transition-colors duration-[var(--transition-normal)]
                 ${activeTab === 'past'
-                  ? 'border-[var(--color-accent)] text-[var(--color-accent)]'
+                  ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
                   : 'border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]'
                 }
               `}
@@ -556,8 +556,9 @@ export default function OperatorProfilePage({ params }: PageProps) {
           {activeTab === 'past' && (
             <div className="
               bg-[var(--color-surface-raised)]
-              border border-[var(--color-border)]
-              rounded-[var(--radius-lg)]
+              border-2 border-[var(--color-border)]
+              rounded-[var(--radius-organic)]
+              shadow-[var(--shadow-card)]
               p-[var(--space-lg)]
             ">
               {operator.pastTours.length > 0 ? (

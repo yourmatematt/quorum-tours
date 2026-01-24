@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { PasswordInput } from './PasswordInput';
 import { FormAlert } from './FormAlert';
 import { AuthDivider } from './AuthDivider';
-import { MagicLinkOption } from './MagicLinkOption';
 import { OAuthButton } from './OAuthButton';
 
 interface LoginFormProps {
@@ -13,25 +12,21 @@ interface LoginFormProps {
 }
 
 /**
- * LoginForm - Email/password authentication form
+ * LoginForm - Redesigned with Organic Biophilic design system
  *
- * Primary login surface supporting:
- * - Email/password authentication
- * - Magic link (passwordless) alternative
- * - OAuth placeholders (Google)
+ * Design System: HOME-REDESIGN-DECISIONS.md
+ * - Typography: Crimson Pro (display) + Atkinson Hyperlegible (body)
+ * - Colors: Forest Green #2E8B57, Gold CTA #FFD700
+ * - Style: Organic rounded corners (20px), natural shadows
  *
- * Designed for older demographics:
- * - 48-52px input heights
- * - Visible labels above inputs
- * - Clear error messaging
- * - Password visibility toggle
+ * Fast, frictionless login for returning users.
+ * Mirrors SIGNUP layout for visual consistency.
  *
  * UI Shell: No actual authentication implemented.
  */
 export function LoginForm({ redirectTo }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,10 +53,6 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
       setPasswordError('Password is required');
       return false;
     }
-    if (value.length < 8) {
-      setPasswordError('Password must be at least 8 characters');
-      return false;
-    }
     setPasswordError(null);
     return true;
   };
@@ -84,9 +75,8 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     // Simulate error for demo purposes
-    // In production, this would be a real auth call
     setIsLoading(false);
-    setError('Email or password is incorrect. Check your details and try again.');
+    setError('Email or password is incorrect.');
   };
 
   const handleOAuthClick = (provider: string) => {
@@ -108,7 +98,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             htmlFor="email"
             className="
               block
-              text-[var(--text-sm)]
+              text-sm
               font-medium
               text-[var(--color-ink)]
               mb-[var(--space-xs)]
@@ -131,16 +121,16 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
               w-full
               h-12 sm:h-[52px]
               px-[var(--space-md)]
-              text-[var(--text-base)]
+              text-base
               text-[var(--color-ink)]
-              bg-[var(--color-surface)]
-              border rounded-[var(--radius-md)]
-              transition-colors duration-[var(--transition-fast)]
-              focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-1
+              bg-white
+              border-2 rounded-[var(--radius-organic)]
+              transition-all duration-200
+              focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-1
               ${
                 emailError
                   ? 'border-[var(--color-danger)] focus:ring-[var(--color-danger)]'
-                  : 'border-[var(--color-border)] hover:border-[var(--color-border-strong)]'
+                  : 'border-[var(--color-border)] hover:border-[var(--color-primary)]'
               }
             `}
             aria-invalid={emailError ? 'true' : 'false'}
@@ -151,7 +141,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
               id="email-error"
               className="
                 mt-[var(--space-xs)]
-                text-[var(--text-sm)]
+                text-sm
                 text-[var(--color-danger)]
               "
               role="alert"
@@ -181,11 +171,11 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             <a
               href="/reset-password"
               className="
-                text-[var(--text-sm)]
+                text-sm
                 text-[var(--color-ink-muted)]
-                hover:text-[var(--color-accent)]
-                focus:outline-none focus:text-[var(--color-accent)] focus:underline
-                transition-colors duration-[var(--transition-fast)]
+                hover:text-[var(--color-primary)]
+                focus:outline-none focus:text-[var(--color-primary)] focus:underline
+                transition-colors duration-200
               "
             >
               Forgot your password?
@@ -193,35 +183,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           </div>
         </div>
 
-        {/* Remember me checkbox */}
-        <div className="flex items-center gap-[var(--space-sm)]">
-          <input
-            type="checkbox"
-            id="remember-me"
-            checked={rememberMe}
-            onChange={(e) => setRememberMe(e.target.checked)}
-            className="
-              w-4 h-4
-              rounded-[var(--radius-sm)]
-              border-[var(--color-border)]
-              text-[var(--color-accent)]
-              focus:ring-[var(--color-accent)]
-              cursor-pointer
-            "
-          />
-          <label
-            htmlFor="remember-me"
-            className="
-              text-[var(--text-sm)]
-              text-[var(--color-ink-muted)]
-              cursor-pointer
-            "
-          >
-            Remember me
-          </label>
-        </div>
-
-        {/* Submit button */}
+        {/* Submit button - Gold CTA */}
         <button
           type="submit"
           disabled={isLoading}
@@ -229,15 +191,17 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             w-full
             h-12 sm:h-[52px]
             px-[var(--space-md)]
-            text-[var(--text-base)]
-            font-medium
-            text-white
+            text-base
+            font-semibold
+            text-[var(--color-ink)]
             bg-[var(--color-accent)]
-            rounded-[var(--radius-md)]
+            rounded-[var(--radius-organic)]
             hover:bg-[var(--color-accent-hover)]
-            focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2
+            shadow-[var(--shadow-card)]
+            hover:shadow-[var(--shadow-card-hover)]
+            focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2
             disabled:opacity-50 disabled:cursor-not-allowed
-            transition-colors duration-[var(--transition-normal)]
+            transition-all duration-200
             flex items-center justify-center gap-[var(--space-sm)]
           "
           aria-busy={isLoading}
@@ -262,13 +226,13 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
                 <path
                   className="opacity-75"
                   fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  d="M4 12a8 8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 />
               </svg>
               Signing in...
             </>
           ) : (
-            'Sign in'
+            'Log in'
           )}
         </button>
       </form>
@@ -276,12 +240,8 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
       {/* Divider */}
       <AuthDivider />
 
-      {/* Alternative auth methods */}
-      <div className="space-y-[var(--space-sm)]">
-        {/* Magic link option */}
-        <MagicLinkOption />
-
-        {/* OAuth buttons */}
+      {/* OAuth option */}
+      <div>
         <OAuthButton provider="google" onClick={() => handleOAuthClick('google')} />
       </div>
     </div>

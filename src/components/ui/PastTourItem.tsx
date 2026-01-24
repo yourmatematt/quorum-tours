@@ -53,27 +53,19 @@ export function PastTourItem({
   const config = outcomeConfig[outcome];
 
   return (
-    <div className="
-      flex items-center justify-between gap-[var(--space-md)]
-      py-[var(--space-sm)]
-      border-b border-[var(--color-border)]
-      last:border-b-0
-    ">
+    <div className="flex items-center justify-between gap-3 py-2 border-b border-[var(--color-border)] last:border-b-0">
       <div className="min-w-0 flex-1">
-        <div className="text-[var(--color-ink)] truncate">
-          {title}
-        </div>
-        <div className="text-sm text-[var(--color-ink-subtle)]">
+        <div className="text-sm text-[var(--color-ink)] truncate">{title}</div>
+        <div className="text-xs text-[var(--color-ink-subtle)]">
           {date}
           {outcome === 'completed' && participantCount !== undefined && (
-            <> &middot; {participantCount} participants</>
+            <> · {participantCount} participants</>
           )}
         </div>
       </div>
-
-      <div className={`flex items-center gap-[var(--space-xs)] flex-shrink-0 ${config.textColor}`}>
+      <div className={`flex items-center gap-1 flex-shrink-0 ${config.textColor}`}>
         {config.icon}
-        <span className="text-sm">{config.label}</span>
+        <span className="text-xs">{config.label}</span>
       </div>
     </div>
   );

@@ -47,73 +47,73 @@ export function RevenueDashboard() {
   const totalPaid = revenueData.reduce((sum, r) => sum + r.paidAmount, 0);
 
   return (
-    <section className="bg-surface-raised border border-border rounded-lg p-6">
-      <h2 className="font-display text-xl font-semibold text-ink mb-6">
+    <section className="bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] shadow-[var(--shadow-card)] p-6">
+      <h2 className="font-display text-xl font-semibold text-[var(--color-ink)] mb-6">
         Revenue Dashboard
       </h2>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="border border-border rounded-lg p-4 bg-surface">
-          <p className="text-xs text-ink-muted mb-1">
+        <div className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-4 bg-[var(--color-surface)]">
+          <p className="text-xs text-[var(--color-ink-muted)] mb-1">
             Escrowed (forming tours)
           </p>
-          <p className="font-mono text-2xl font-semibold text-forming">
+          <p className="font-mono text-2xl font-semibold text-[var(--color-forming)]">
             ${totalEscrowed.toLocaleString()}
           </p>
-          <p className="text-xs text-ink-muted mt-1">
+          <p className="text-xs text-[var(--color-ink-muted)] mt-1">
             Held, not yet charged
           </p>
         </div>
 
-        <div className="border border-border rounded-lg p-4 bg-surface">
-          <p className="text-xs text-ink-muted mb-1">
+        <div className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-4 bg-[var(--color-surface)]">
+          <p className="text-xs text-[var(--color-ink-muted)] mb-1">
             Confirmed (awaiting payout)
           </p>
-          <p className="font-mono text-2xl font-semibold text-confirmed">
+          <p className="font-mono text-2xl font-semibold text-[var(--color-confirmed)]">
             ${totalConfirmed.toLocaleString()}
           </p>
-          <p className="text-xs text-ink-muted mt-1">
+          <p className="text-xs text-[var(--color-ink-muted)] mt-1">
             Charged after threshold met
           </p>
         </div>
 
-        <div className="border border-border rounded-lg p-4 bg-surface">
-          <p className="text-xs text-ink-muted mb-1">Paid Out</p>
-          <p className="font-mono text-2xl font-semibold text-ink">
+        <div className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-4 bg-[var(--color-surface)]">
+          <p className="text-xs text-[var(--color-ink-muted)] mb-1">Paid Out</p>
+          <p className="font-mono text-2xl font-semibold text-[var(--color-ink)]">
             ${totalPaid.toLocaleString()}
           </p>
-          <p className="text-xs text-ink-muted mt-1">Transferred to account</p>
+          <p className="text-xs text-[var(--color-ink-muted)] mt-1">Transferred to account</p>
         </div>
       </div>
 
       {/* Tour Breakdown */}
       <div className="space-y-3">
-        <h3 className="font-medium text-ink mb-3">By Tour</h3>
+        <h3 className="font-medium text-[var(--color-ink)] mb-3">By Tour</h3>
         {revenueData.map((tour, index) => (
           <div
             key={index}
-            className="border border-border rounded-lg p-4 bg-surface"
+            className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-4 bg-[var(--color-surface)]"
           >
-            <h4 className="font-semibold text-ink mb-3">{tour.tourTitle}</h4>
+            <h4 className="font-semibold text-[var(--color-ink)] mb-3">{tour.tourTitle}</h4>
 
             {tour.status === 'forming' && (
               <div className="space-y-2">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-sm text-ink-muted">
+                  <span className="text-sm text-[var(--color-ink-muted)]">
                     Escrowed Deposits:
                   </span>
                   <div className="text-right">
-                    <span className="font-mono text-lg font-semibold text-forming">
+                    <span className="font-mono text-lg font-semibold text-[var(--color-forming)]">
                       ${tour.escrowedAmount.toLocaleString()}
                     </span>
-                    <span className="text-xs text-ink-muted ml-2">
+                    <span className="text-xs text-[var(--color-ink-muted)] ml-2">
                       ({tour.escrowedCount} × $
                       {(tour.escrowedAmount / tour.escrowedCount).toFixed(0)})
                     </span>
                   </div>
                 </div>
-                <p className="text-xs text-ink-muted italic">
+                <p className="text-xs text-[var(--color-ink-muted)] italic">
                   Will be charged when threshold is reached
                 </p>
               </div>
@@ -122,30 +122,30 @@ export function RevenueDashboard() {
             {tour.status === 'confirmed' && (
               <div className="space-y-2">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-sm text-ink-muted">
+                  <span className="text-sm text-[var(--color-ink-muted)]">
                     Confirmed Revenue:
                   </span>
                   <div className="text-right">
-                    <span className="font-mono text-lg font-semibold text-confirmed">
+                    <span className="font-mono text-lg font-semibold text-[var(--color-confirmed)]">
                       ${tour.confirmedAmount.toLocaleString()}
                     </span>
-                    <span className="text-xs text-ink-muted ml-2">
+                    <span className="text-xs text-[var(--color-ink-muted)] ml-2">
                       ({tour.confirmedCount} participants)
                     </span>
                   </div>
                 </div>
                 <div className="flex justify-between items-baseline text-sm">
-                  <span className="text-ink-muted">Platform commission (10%):</span>
-                  <span className="font-mono text-ink">
+                  <span className="text-[var(--color-ink-muted)]">Platform commission (10%):</span>
+                  <span className="font-mono text-[var(--color-ink)]">
                     -$
                     {(tour.confirmedAmount * platformCommission).toLocaleString()}
                   </span>
                 </div>
-                <div className="flex justify-between items-baseline pt-2 border-t border-border">
-                  <span className="text-sm font-medium text-ink">
+                <div className="flex justify-between items-baseline pt-2 border-t-2 border-[var(--color-border)]">
+                  <span className="text-sm font-medium text-[var(--color-ink)]">
                     Your payout:
                   </span>
-                  <span className="font-mono text-lg font-semibold text-ink">
+                  <span className="font-mono text-lg font-semibold text-[var(--color-ink)]">
                     $
                     {(
                       tour.confirmedAmount *
@@ -154,7 +154,7 @@ export function RevenueDashboard() {
                   </span>
                 </div>
                 {tour.nextPayoutDate && (
-                  <p className="text-xs text-ink-muted mt-2">
+                  <p className="text-xs text-[var(--color-ink-muted)] mt-2">
                     Scheduled payout:{' '}
                     {new Date(tour.nextPayoutDate).toLocaleDateString('en-US', {
                       month: 'long',
@@ -171,15 +171,15 @@ export function RevenueDashboard() {
       </div>
 
       {/* Stripe Connect Status */}
-      <div className="mt-6 pt-6 border-t border-border">
+      <div className="mt-6 pt-6 border-t-2 border-[var(--color-border)]">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-ink">Stripe Connect Status</p>
-            <p className="text-xs text-ink-muted mt-1">
+            <p className="text-sm font-medium text-[var(--color-ink)]">Stripe Connect Status</p>
+            <p className="text-xs text-[var(--color-ink-muted)] mt-1">
               Payments enabled • Account verified
             </p>
           </div>
-          <button className="text-sm font-medium text-accent hover:text-accent-hover py-3 px-2 min-h-[48px]">
+          <button className="text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] py-2 px-2 min-h-[44px]">
             View Stripe Dashboard →
           </button>
         </div>

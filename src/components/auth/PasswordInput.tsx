@@ -33,7 +33,7 @@ export function PasswordInput({
         htmlFor={inputId}
         className="
           block
-          text-[var(--text-sm)]
+          text-sm
           font-medium
           text-[var(--color-ink)]
           mb-[var(--space-xs)]
@@ -52,16 +52,16 @@ export function PasswordInput({
             h-12 sm:h-[52px]
             px-[var(--space-md)]
             pr-20
-            text-[var(--text-base)]
+            text-base
             text-[var(--color-ink)]
-            bg-[var(--color-surface)]
-            border rounded-[var(--radius-md)]
-            transition-colors duration-[var(--transition-fast)]
-            focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-1
+            bg-white
+            border-2 rounded-[var(--radius-organic)]
+            transition-all duration-200
+            focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-1
             ${
               error
                 ? 'border-[var(--color-danger)] focus:ring-[var(--color-danger)]'
-                : 'border-[var(--color-border)] hover:border-[var(--color-border-strong)]'
+                : 'border-[var(--color-border)] hover:border-[var(--color-primary)]'
             }
           `}
           aria-invalid={error ? 'true' : 'false'}
@@ -77,11 +77,11 @@ export function PasswordInput({
             absolute right-1 top-1/2 -translate-y-1/2
             px-[var(--space-sm)]
             py-[var(--space-xs)]
-            text-[var(--text-sm)]
+            text-sm
             text-[var(--color-ink-muted)]
             hover:text-[var(--color-ink)]
-            focus:outline-none focus:text-[var(--color-accent)]
-            transition-colors duration-[var(--transition-fast)]
+            focus:outline-none focus:text-[var(--color-primary)]
+            transition-colors duration-200
             flex items-center gap-1
           "
           aria-label={showPassword ? 'Hide password' : 'Show password'}
@@ -130,7 +130,7 @@ export function PasswordInput({
           id={errorId}
           className="
             mt-[var(--space-xs)]
-            text-[var(--text-sm)]
+            text-sm
             text-[var(--color-danger)]
           "
           role="alert"

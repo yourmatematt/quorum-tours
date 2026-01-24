@@ -54,33 +54,33 @@ export function ReviewsReputation() {
   ];
 
   return (
-    <section className="bg-surface-raised border border-border rounded-lg p-6">
-      <h2 className="font-display text-xl font-semibold text-ink mb-6">
+    <section className="bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] shadow-[var(--shadow-card)] p-6">
+      <h2 className="font-display text-xl font-semibold text-[var(--color-ink)] mb-6">
         Reviews & Reputation
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         {/* Average Rating */}
-        <div className="border border-border rounded-lg p-4 bg-surface">
-          <p className="text-xs text-ink-muted mb-1">Average Rating</p>
+        <div className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-4 bg-[var(--color-surface)]">
+          <p className="text-xs text-[var(--color-ink-muted)] mb-1">Average Rating</p>
           <div className="flex items-baseline gap-2">
-            <span className="font-mono text-3xl font-semibold text-ink">
+            <span className="font-mono text-3xl font-semibold text-[var(--color-ink)]">
               {reputationMetrics.averageRating.toFixed(1)}
             </span>
-            <span className="text-ink-muted">/ 5.0</span>
+            <span className="text-[var(--color-ink-muted)]">/ 5.0</span>
           </div>
-          <p className="text-xs text-ink-muted mt-1">
+          <p className="text-xs text-[var(--color-ink-muted)] mt-1">
             Based on {reputationMetrics.totalReviews} reviews
           </p>
         </div>
 
         {/* Response Rate */}
-        <div className="border border-border rounded-lg p-4 bg-surface">
-          <p className="text-xs text-ink-muted mb-1">Response Rate</p>
-          <span className="font-mono text-3xl font-semibold text-confirmed">
+        <div className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-4 bg-[var(--color-surface)]">
+          <p className="text-xs text-[var(--color-ink-muted)] mb-1">Response Rate</p>
+          <span className="font-mono text-3xl font-semibold text-[var(--color-confirmed)]">
             {reputationMetrics.responseRate}%
           </span>
-          <p className="text-xs text-ink-muted mt-1">
+          <p className="text-xs text-[var(--color-ink-muted)] mt-1">
             {Math.round(
               (reputationMetrics.totalReviews * reputationMetrics.responseRate) /
                 100
@@ -90,17 +90,17 @@ export function ReviewsReputation() {
         </div>
 
         {/* Rating Distribution */}
-        <div className="border border-border rounded-lg p-4 bg-surface">
-          <p className="text-xs text-ink-muted mb-2">Rating Distribution</p>
+        <div className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-4 bg-[var(--color-surface)]">
+          <p className="text-xs text-[var(--color-ink-muted)] mb-2">Rating Distribution</p>
           <div className="space-y-1">
             {[5, 4, 3, 2, 1].map((stars) => (
               <div key={stars} className="flex items-center gap-2">
-                <span className="text-xs text-ink-muted w-8">
+                <span className="text-xs text-[var(--color-ink-muted)] w-8">
                   {stars} ★
                 </span>
-                <div className="flex-1 bg-surface-sunken rounded-full h-1.5">
+                <div className="flex-1 bg-[var(--color-surface-sunken)] rounded-full h-2">
                   <div
-                    className="bg-forming h-1.5 rounded-full"
+                    className="bg-[var(--color-forming)] h-2 rounded-full"
                     style={{
                       width: `${
                         (reputationMetrics.ratingDistribution[
@@ -112,7 +112,7 @@ export function ReviewsReputation() {
                     }}
                   />
                 </div>
-                <span className="text-xs text-ink-muted w-6 text-right">
+                <span className="text-xs text-[var(--color-ink-muted)] w-6 text-right">
                   {
                     reputationMetrics.ratingDistribution[
                       stars as keyof typeof reputationMetrics.ratingDistribution
@@ -127,24 +127,24 @@ export function ReviewsReputation() {
 
       {/* Reviews List */}
       <div className="space-y-4">
-        <h3 className="font-medium text-ink mb-3">Recent Reviews</h3>
+        <h3 className="font-medium text-[var(--color-ink)] mb-3">Recent Reviews</h3>
         {reviews.map((review) => (
           <div
             key={review.id}
-            className="border border-border rounded-lg p-5 bg-surface"
+            className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-4 bg-[var(--color-surface)]"
           >
             <div className="flex items-start justify-between mb-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-semibold text-ink">
+                  <span className="font-semibold text-[var(--color-ink)]">
                     {review.userName}
                   </span>
-                  <span className="font-mono text-sm font-medium text-forming">
+                  <span className="font-mono text-sm font-medium text-[var(--color-forming)]">
                     {'★'.repeat(review.rating)}
                     {'☆'.repeat(5 - review.rating)}
                   </span>
                 </div>
-                <p className="text-xs text-ink-muted">
+                <p className="text-xs text-[var(--color-ink-muted)]">
                   {review.tourTitle} •{' '}
                   {new Date(review.date).toLocaleDateString('en-US', {
                     month: 'short',
@@ -155,15 +155,15 @@ export function ReviewsReputation() {
               </div>
             </div>
 
-            <p className="text-sm text-ink mb-3">{review.content}</p>
+            <p className="text-sm text-[var(--color-ink)] mb-3">{review.content}</p>
 
             {review.operatorResponse ? (
-              <div className="bg-surface-raised border-l-2 border-accent pl-4 py-2">
-                <p className="text-xs font-medium text-ink mb-1">
+              <div className="bg-[var(--color-surface-sunken)] border-l-2 border-[var(--color-primary)] pl-4 py-2 rounded-r-[var(--radius-sm)]">
+                <p className="text-xs font-medium text-[var(--color-ink)] mb-1">
                   Your Response
                 </p>
-                <p className="text-sm text-ink-muted">{review.operatorResponse}</p>
-                <p className="text-xs text-ink-muted mt-1">
+                <p className="text-sm text-[var(--color-ink-muted)]">{review.operatorResponse}</p>
+                <p className="text-xs text-[var(--color-ink-muted)] mt-1">
                   {new Date(review.responseDate!).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
@@ -172,7 +172,7 @@ export function ReviewsReputation() {
                 </p>
               </div>
             ) : (
-              <button className="text-sm font-medium text-accent hover:text-accent-hover py-3 px-2 min-h-[48px]">
+              <button className="text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] py-2 px-2 min-h-[44px]">
                 Respond to Review
               </button>
             )}
@@ -181,7 +181,7 @@ export function ReviewsReputation() {
       </div>
 
       {reviews.length === 0 && (
-        <div className="border border-border rounded-md p-8 text-center text-ink-muted">
+        <div className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-8 text-center text-[var(--color-ink-muted)]">
           No reviews yet
         </div>
       )}

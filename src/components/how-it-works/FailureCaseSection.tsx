@@ -84,18 +84,19 @@ export function FailureCaseSection() {
 
   return (
     <section className="
-      py-[var(--space-section-normal)]
+      py-20
       bg-[var(--color-surface)]
     ">
       <div className="
         w-full max-w-[var(--container-max)]
-        mx-auto px-[var(--space-lg)]
+        mx-auto px-6 lg:px-8
       ">
-        <div className="max-w-[var(--container-content)]">
+        <div className="max-w-4xl mx-auto">
           {/* Direct question as headline */}
           <h2 className="
             font-display
-            text-[var(--text-2xl)]
+            text-2xl sm:text-3xl
+            font-semibold
             text-[var(--color-ink)]
             mb-[var(--space-xl)]
           ">
@@ -143,8 +144,8 @@ export function FailureCaseSection() {
             mt-[var(--space-2xl)]
             p-[var(--space-lg)]
             bg-[var(--color-surface-sunken)]
-            border-l-4 border-[var(--color-accent)]
-            rounded-r-[var(--radius-md)]
+            border-l-4 border-[var(--color-primary)]
+            rounded-r-[var(--radius-organic)]
           ">
             <p className="
               text-[var(--color-ink)]

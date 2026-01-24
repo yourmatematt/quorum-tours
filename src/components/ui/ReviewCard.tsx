@@ -34,7 +34,7 @@ export function ReviewCard({
           <div className="text-sm text-[var(--color-ink-muted)]">
             <a
               href={`/tours/${tourId}`}
-              className="text-[var(--color-accent)] hover:underline"
+              className="text-[var(--color-primary)] hover:underline"
             >
               {tourTitle}
             </a>
@@ -76,7 +76,7 @@ export function ReviewCard({
         <div className="
           mt-[var(--space-md)]
           pl-[var(--space-md)]
-          border-l-2 border-[var(--color-accent)]
+          border-l-2 border-[var(--color-primary)]
         ">
           <div className="text-sm font-medium text-[var(--color-ink)] mb-[var(--space-xs)]">
             Operator response

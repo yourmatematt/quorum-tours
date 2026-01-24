@@ -37,12 +37,13 @@ export default function SignupPage() {
           <h1
             className="
               font-display
-              text-[var(--text-2xl)] sm:text-[var(--text-3xl)]
+              text-3xl sm:text-4xl
+              font-semibold
               text-[var(--color-ink)]
               mb-[var(--space-sm)]
             "
           >
-            Create your account
+            Join Quorum
           </h1>
           <p className="text-[var(--color-ink-muted)]">
             Track your tour commitments and get notified when tours confirm.
@@ -68,7 +69,8 @@ export default function SignupPage() {
           <a
             href="/login"
             className="
-              text-[var(--color-accent)]
+              text-[var(--color-primary)]
+              font-medium
               hover:underline
               focus:outline-none focus:underline
             "

@@ -237,11 +237,12 @@ export default function ToursPage() {
           <header className="mb-[var(--space-2xl)]">
             <h1 className="
               font-display
-              text-[var(--text-2xl)]
+              text-3xl sm:text-4xl
+              font-semibold
               text-[var(--color-ink)]
               mb-[var(--space-sm)]
             ">
-              Available Tours
+              Find Your Next Tour
             </h1>
             <p className="text-[var(--color-ink-muted)]">
               Compare tours by confirmation status, timing, and region. Every tour shows its current threshold progress.
@@ -253,8 +254,9 @@ export default function ToursPage() {
           mb-[var(--space-xl)]
           p-[var(--space-lg)]
           bg-[var(--color-surface-raised)]
-          border border-[var(--color-border)]
-          rounded-[var(--radius-lg)]
+          border-2 border-[var(--color-border)]
+          rounded-[var(--radius-organic)]
+          shadow-[var(--shadow-card)]
         ">
           {/* Filter dropdowns */}
           <div className="
@@ -304,7 +306,8 @@ export default function ToursPage() {
                   type="button"
                   onClick={clearAllFilters}
                   className="
-                    text-sm text-[var(--color-accent)]
+                    text-sm text-[var(--color-primary)]
+                    font-medium
                     hover:underline
                     focus:outline-none focus:underline
                     py-3 px-2 min-h-[48px]

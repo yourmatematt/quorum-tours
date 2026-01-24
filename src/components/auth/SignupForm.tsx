@@ -6,7 +6,6 @@ import { PasswordRequirements } from './PasswordRequirements';
 import { FormAlert } from './FormAlert';
 import { AuthDivider } from './AuthDivider';
 import { OAuthButton } from './OAuthButton';
-import { TermsNotice } from './TermsNotice';
 
 interface SignupFormProps {
   /** Redirect URL after successful signup */
@@ -14,29 +13,27 @@ interface SignupFormProps {
 }
 
 /**
- * SignupForm - Account registration form
+ * SignupForm - Redesigned with Organic Biophilic design system
  *
- * Minimal fields: email, password, confirm password.
- * No optional fields (reduces cognitive load).
+ * Design System: HOME-REDESIGN-DECISIONS.md
+ * - Typography: Crimson Pro (display) + Atkinson Hyperlegible (body)
+ * - Colors: Forest Green #2E8B57, Gold CTA #FFD700
+ * - Style: Organic rounded corners (20px), natural shadows
  *
- * Designed to address:
- * - NW-2 (Intimidation): No expertise questions, welcoming tone
- * - OP-8 (Technology Frustration): Large inputs, clear feedback
- * - EL-2 (Payment Anxiety): No billing mentions, simple access
+ * Minimal fields: email, password only (no confirm password)
+ * Trust-focused: Privacy assurance, social login, clear feedback
  *
  * UI Shell: No actual account creation implemented.
  */
 export function SignupForm({ redirectTo }: SignupFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Field-level errors
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [confirmError, setConfirmError] = useState<string | null>(null);
 
   const validateEmail = (value: string): boolean => {
     if (!value) {
@@ -65,19 +62,6 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
     return true;
   };
 
-  const validateConfirmPassword = (value: string): boolean => {
-    if (!value) {
-      setConfirmError('Please confirm your password');
-      return false;
-    }
-    if (value !== password) {
-      setConfirmError('Passwords do not match');
-      return false;
-    }
-    setConfirmError(null);
-    return true;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -85,9 +69,8 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
     // Validate all fields
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
-    const isConfirmValid = validateConfirmPassword(confirmPassword);
 
-    if (!isEmailValid || !isPasswordValid || !isConfirmValid) {
+    if (!isEmailValid || !isPasswordValid) {
       return;
     }
 
@@ -104,12 +87,11 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
     });
 
     // Simulate success or error for demo purposes
-    // In production, this would be a real auth call
     setIsLoading(false);
 
     // For demo: simulate email already exists error
     if (email === 'test@example.com') {
-      setError('An account with this email already exists. Sign in instead?');
+      setError('An account with this email already exists.');
     } else {
       // Simulate success - in real app would redirect
       setError(null);
@@ -129,19 +111,6 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
       {error && (
         <FormAlert variant="error">
           {error}
-          {error.includes('Sign in') && (
-            <a
-              href="/login"
-              className="
-                block mt-[var(--space-xs)]
-                text-[var(--color-danger)]
-                underline
-                hover:no-underline
-              "
-            >
-              Go to sign in
-            </a>
-          )}
         </FormAlert>
       )}
 
@@ -153,7 +122,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             htmlFor="email"
             className="
               block
-              text-[var(--text-sm)]
+              text-sm
               font-medium
               text-[var(--color-ink)]
               mb-[var(--space-xs)]
@@ -176,16 +145,16 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
               w-full
               h-12 sm:h-[52px]
               px-[var(--space-md)]
-              text-[var(--text-base)]
+              text-base
               text-[var(--color-ink)]
-              bg-[var(--color-surface)]
-              border rounded-[var(--radius-md)]
-              transition-colors duration-[var(--transition-fast)]
-              focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-1
+              bg-white
+              border-2 rounded-[var(--radius-organic)]
+              transition-all duration-200
+              focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-1
               ${
                 emailError
                   ? 'border-[var(--color-danger)] focus:ring-[var(--color-danger)]'
-                  : 'border-[var(--color-border)] hover:border-[var(--color-border-strong)]'
+                  : 'border-[var(--color-border)] hover:border-[var(--color-primary)]'
               }
             `}
             aria-invalid={emailError ? 'true' : 'false'}
@@ -196,7 +165,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
               id="email-error"
               className="
                 mt-[var(--space-xs)]
-                text-[var(--text-sm)]
+                text-sm
                 text-[var(--color-danger)]
               "
               role="alert"
@@ -215,10 +184,6 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             onChange={(e) => {
               setPassword(e.target.value);
               if (passwordError) validatePassword(e.target.value);
-              // Re-validate confirm if it has a value
-              if (confirmPassword) {
-                validateConfirmPassword(confirmPassword);
-              }
             }}
             onBlur={() => password && validatePassword(password)}
             autoComplete="new-password"
@@ -229,28 +194,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
           <PasswordRequirements password={password} id="password-requirements" />
         </div>
 
-        {/* Confirm password field */}
-        <div>
-          <PasswordInput
-            label="Confirm password"
-            id="confirm-password"
-            value={confirmPassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
-              if (confirmError) validateConfirmPassword(e.target.value);
-            }}
-            onBlur={() => confirmPassword && validateConfirmPassword(confirmPassword)}
-            autoComplete="new-password"
-            error={confirmError || undefined}
-          />
-        </div>
-
-        {/* Terms notice */}
-        <div className="pt-[var(--space-xs)]">
-          <TermsNotice />
-        </div>
-
-        {/* Submit button */}
+        {/* Submit button - Gold CTA */}
         <button
           type="submit"
           disabled={isLoading}
@@ -258,15 +202,17 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             w-full
             h-12 sm:h-[52px]
             px-[var(--space-md)]
-            text-[var(--text-base)]
-            font-medium
-            text-white
+            text-base
+            font-semibold
+            text-[var(--color-ink)]
             bg-[var(--color-accent)]
-            rounded-[var(--radius-md)]
+            rounded-[var(--radius-organic)]
             hover:bg-[var(--color-accent-hover)]
-            focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2
+            shadow-[var(--shadow-card)]
+            hover:shadow-[var(--shadow-card-hover)]
+            focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2
             disabled:opacity-50 disabled:cursor-not-allowed
-            transition-colors duration-[var(--transition-normal)]
+            transition-all duration-200
             flex items-center justify-center gap-[var(--space-sm)]
           "
           aria-busy={isLoading}
@@ -301,6 +247,20 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
           )}
         </button>
       </form>
+
+      {/* Privacy assurance */}
+      <div className="
+        px-[var(--space-md)]
+        py-[var(--space-sm)]
+        bg-[var(--color-surface)]
+        border border-[var(--color-border)]
+        rounded-[var(--radius-organic)]
+        text-center
+      ">
+        <p className="text-sm text-[var(--color-ink-muted)]">
+          🔒 We never share your data
+        </p>
+      </div>
 
       {/* Divider */}
       <AuthDivider />

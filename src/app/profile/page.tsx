@@ -90,13 +90,13 @@ export default function ProfilePage() {
       <main className="min-h-screen bg-[var(--color-surface)]">
       <div
         className="
-          w-full max-w-[800px] mx-auto
-          px-[var(--space-md)] sm:px-[var(--space-lg)]
-          py-[var(--space-2xl)] sm:py-[var(--space-3xl)]
+          w-full max-w-[1000px] mx-auto
+          px-4 sm:px-6
+          py-6 sm:py-8
         "
       >
         {/* Profile Header */}
-        <div className="mb-[var(--space-2xl)]">
+        <div className="mb-6">
           <ProfileHeader
             displayName={exampleUser.displayName}
             email={exampleUser.email}
@@ -105,17 +105,13 @@ export default function ProfilePage() {
         </div>
 
         {/* Active Commitments - Primary section */}
-        <div className="mb-[var(--space-2xl)]">
+        <div className="mb-6">
           <CommitmentsSection commitments={exampleCommitments} />
         </div>
 
-        {/* Past Tours - Collapsed by default */}
-        <div className="mb-[var(--space-2xl)]">
+        {/* Past Tours + Account Settings - Side by side on desktop */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <PastToursSection tours={examplePastTours} />
-        </div>
-
-        {/* Account Settings */}
-        <div>
           <SettingsSection />
         </div>
       </div>

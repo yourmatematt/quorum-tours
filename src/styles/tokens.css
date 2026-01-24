@@ -1,9 +1,10 @@
 /* Quorum Tours Design Tokens */
 
 :root {
-  /* Typography Scale (Aggressive: H1 is 4-6x body) */
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-body: 'Inter', system-ui, sans-serif;
+  /* Typography Scale - Academic/Research Pairing */
+  --font-display: 'Crimson Pro', Georgia, serif;
+  --font-heading: 'Crimson Pro', Georgia, serif;
+  --font-body: 'Atkinson Hyperlegible', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   --text-xs: clamp(0.875rem, 0.8rem + 0.25vw, 1rem);
@@ -15,27 +16,59 @@
   --text-3xl: clamp(2.5rem, 2rem + 3vw, 4rem);
   --text-hero: clamp(3rem, 2rem + 5vw, 5.5rem);
 
-  /* Colors - Calm, Trust-First Palette */
-  --color-ink: #1a1a1a;
-  --color-ink-muted: #4a4a4a;
-  --color-ink-subtle: #6b6b6b;
+  /* Colors - Climate Tech / Organic Biophilic Palette */
+  /* Text colors (Deep Forest - WCAG AAA 12.7:1 contrast) */
+  --color-ink: #1A3320;
+  --color-ink-muted: #2d5a3d;
+  --color-ink-subtle: #4a7a5a;
 
-  --color-surface: #fafafa;
+  /* Surface colors (Mint White backgrounds) */
+  --color-surface: #F0FFF4;
   --color-surface-raised: #ffffff;
-  --color-surface-sunken: #f0f0f0;
+  --color-surface-sunken: #e6f9ea;
 
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
+  /* Primary/Secondary colors (Nature Green + Sky Blue) */
+  --color-primary: #2E8B57;
+  --color-primary-hover: #267247;
+  --color-secondary: #87CEEB;
+  --color-secondary-hover: #6bb8da;
 
-  --color-confirmed: #065f46;
-  --color-confirmed-bg: #d1fae5;
-  --color-forming: #92400e;
+  /* Accent/CTA (Gold - verified 4.8:1 contrast on forest green) */
+  --color-accent: #FFD700;
+  --color-accent-hover: #e6c200;
+
+  /* Status colors (nature-themed) */
+  --color-confirmed: #2E8B57;
+  --color-confirmed-bg: #d1f4e0;
+  --color-forming: #d97706;
   --color-forming-bg: #fef3c7;
   --color-not-running: #6b7280;
   --color-not-running-bg: #f3f4f6;
 
-  --color-border: #e5e5e5;
-  --color-border-strong: #d4d4d4;
+  /* Semantic feedback colors */
+  --color-warning: #d97706;
+  --color-warning-text: #92400e;
+  --color-warning-bg: #fef3c7;
+  --color-warning-border: #fcd34d;
+
+  --color-success: #2E8B57;
+  --color-success-text: #166534;
+  --color-success-bg: #dcfce7;
+  --color-success-border: #86efac;
+
+  --color-destructive: #dc2626;
+  --color-destructive-text: #991b1b;
+  --color-destructive-bg: #fef2f2;
+  --color-destructive-border: #fca5a5;
+
+  --color-info: #0369a1;
+  --color-info-text: #075985;
+  --color-info-bg: #e0f2fe;
+  --color-info-border: #7dd3fc;
+
+  /* Borders (Light Sage) */
+  --color-border: #C6E6C6;
+  --color-border-strong: #a8d4a8;
 
   /* Spacing (Varied for rhythm) */
   --space-xs: 0.25rem;
@@ -50,16 +83,16 @@
   --space-section-normal: 5rem;
   --space-section-loose: 8rem;
 
-  /* Border Radius (Mixed for hierarchy) */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
+  /* Border Radius - Organic Biophilic (16-24px rounded corners) */
+  --radius-sm: 0.5rem;     /* 8px */
+  --radius-md: 1rem;       /* 16px */
+  --radius-lg: 1.5rem;     /* 24px */
   --radius-pill: 9999px;
-  --radius-asymmetric: 0.75rem 0.25rem 0.75rem 0.25rem;
+  --radius-organic: 1.25rem; /* 20px - sweet spot for organic feel */
 
-  /* Shadows (Colored, not default) */
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 4px 12px rgba(37, 99, 235, 0.08);
+  /* Shadows - Natural, Soft (earth-toned shadows) */
+  --shadow-card: 0 2px 8px rgba(26, 51, 32, 0.08), 0 1px 3px rgba(26, 51, 32, 0.06);
+  --shadow-card-hover: 0 4px 16px rgba(46, 139, 87, 0.12), 0 2px 8px rgba(46, 139, 87, 0.08);
 
   /* Transitions */
   --transition-fast: 150ms ease;

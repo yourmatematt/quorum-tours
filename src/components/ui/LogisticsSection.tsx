@@ -61,7 +61,7 @@ function LogisticsItem({ item }: { item: LogisticsItem }) {
           w-10 h-10
           flex items-center justify-center
           bg-[var(--color-surface-sunken)]
-          rounded-[var(--radius-md)]
+          rounded-[var(--radius-organic)]
           text-[var(--color-ink-subtle)]
         "
         aria-hidden="true"
@@ -103,7 +103,8 @@ export function LogisticsSection({ items }: LogisticsSectionProps) {
       <div className="
         bg-[var(--color-surface-raised)]
         border border-[var(--color-border)]
-        rounded-[var(--radius-lg)]
+        rounded-[var(--radius-organic)]
+        shadow-[var(--shadow-card)]
         px-[var(--space-lg)]
       ">
         <dl>

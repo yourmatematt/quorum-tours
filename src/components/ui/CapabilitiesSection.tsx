@@ -34,8 +34,9 @@ export function CapabilitiesSection({
 
       <div className="
         bg-[var(--color-surface-raised)]
-        border border-[var(--color-border)]
-        rounded-[var(--radius-lg)]
+        border-2 border-[var(--color-border)]
+        rounded-[var(--radius-organic)]
+        shadow-[var(--shadow-card)]
         p-[var(--space-lg)]
         space-y-[var(--space-xl)]
       ">

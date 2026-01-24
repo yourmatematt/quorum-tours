@@ -7,19 +7,21 @@ import { PathwaysSection } from '../components/home/PathwaysSection';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 
 /**
- * Home Page - Public Discovery
+ * Home Page - Redesigned with Organic Biophilic Design System
  *
- * Primary job: Explain what Quorum is, why it exists, and how certainty
- * is created — immediately. User should understand the threshold mechanic
- * within first scroll.
+ * Design System: HOME-REDESIGN-DECISIONS.md
+ * - Typography: Crimson Pro (display) + Atkinson Hyperlegible (body)
+ * - Colors: Forest Green (#2E8B57), Sky Blue (#87CEEB), Gold (#FFD700)
+ * - Style: Organic rounded corners (16-24px), natural shadows
+ * - Accessibility: WCAG AAA compliance
  *
- * Section Order (per HOME-IA-001):
- * 1. Hero: What Quorum Solves
- * 2. How It Works: Visual Mechanic
- * 3. Why This Is Different: Comparison
- * 4. Live Tour States: Example cards
- * 5. Trust Foundations: Credibility signals
- * 6. Pathways Forward: CTAs
+ * Section Order (per HOME-REDESIGN-DECISIONS.md):
+ * 1. Hero: Value prop + Browse Tours CTA
+ * 2. How Confirmation Works: 3-step threshold mechanic
+ * 3. Featured Tours: Cards with confirmation status
+ * 4. Why This Is Different: Before/after comparison
+ * 5. Trust Signals: Verified operators, eBird integration
+ * 6. Dual CTA: Browse Tours (primary) + How It Works (secondary)
  */
 export default function HomePage() {
   return (

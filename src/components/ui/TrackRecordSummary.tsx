@@ -14,7 +14,7 @@ export function TrackRecordSummary({
       grid grid-cols-3 gap-[var(--space-md)]
       p-[var(--space-lg)]
       bg-[var(--color-surface-sunken)]
-      rounded-[var(--radius-lg)]
+      rounded-[var(--radius-organic)]
     ">
       <div className="text-center">
         <div className="font-mono text-xl text-[var(--color-ink)]">

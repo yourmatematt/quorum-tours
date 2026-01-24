@@ -37,12 +37,13 @@ export default function LoginPage() {
           <h1
             className="
               font-display
-              text-[var(--text-2xl)] sm:text-[var(--text-3xl)]
+              text-3xl sm:text-4xl
+              font-semibold
               text-[var(--color-ink)]
               mb-[var(--space-sm)]
             "
           >
-            Sign in to Quorum
+            Welcome back
           </h1>
           <p className="text-[var(--color-ink-muted)]">
             Access your tour commitments and booking history.
@@ -68,7 +69,8 @@ export default function LoginPage() {
           <a
             href="/signup"
             className="
-              text-[var(--color-accent)]
+              text-[var(--color-primary)]
+              font-medium
               hover:underline
               focus:outline-none focus:underline
             "

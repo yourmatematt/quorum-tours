@@ -1,0 +1,82 @@
+{
+  "version": "2.0",
+  "system": "Quorum Autonomous Build System (QABS)",
+  "updated": "2026-01-23",
+
+  "pages": {
+    "public": [
+      { "route": "/", "name": "home", "status": "BUILT", "evidence": true },
+      { "route": "/tours", "name": "tours-index", "status": "BUILT", "evidence": true },
+      { "route": "/tours/[id]", "name": "tour-detail", "status": "BUILT", "evidence": true },
+      { "route": "/tours/[id]/join", "name": "join-tour", "status": "BUILT", "evidence": false },
+      { "route": "/tours/[id]/join/success", "name": "join-success", "status": "BUILT", "evidence": false },
+      { "route": "/operators", "name": "operators-index", "status": "BUILT", "evidence": true },
+      { "route": "/operators/[id]", "name": "operator-profile", "status": "BUILT", "evidence": true },
+      { "route": "/how-it-works", "name": "how-it-works", "status": "BUILT", "evidence": false },
+      { "route": "/for-operators", "name": "for-operators", "status": "BUILT", "evidence": true }
+    ],
+    "auth": [
+      { "route": "/login", "name": "login", "status": "BUILT", "evidence": true },
+      { "route": "/signup", "name": "signup", "status": "BUILT", "evidence": true }
+    ],
+    "user": [
+      { "route": "/profile", "name": "user-profile", "status": "BUILT", "evidence": false }
+    ],
+    "operator": [
+      { "route": "/operator", "name": "operator-dashboard", "status": "BUILT", "evidence": true },
+      { "route": "/operator/tours", "name": "operator-tours", "status": "BUILT", "evidence": false },
+      { "route": "/operator/tours/create", "name": "create-tour", "status": "BUILT", "evidence": false },
+      { "route": "/operator/bookings", "name": "operator-bookings", "status": "BUILT", "evidence": false },
+      { "route": "/operator/earnings", "name": "operator-earnings", "status": "BUILT", "evidence": false },
+      { "route": "/operator/profile", "name": "operator-profile-settings", "status": "BUILT", "evidence": false },
+      { "route": "/operator/help", "name": "operator-help", "status": "BUILT", "evidence": false }
+    ],
+    "admin": [
+      { "route": "/admin", "name": "admin-dashboard", "status": "BUILT", "evidence": true }
+    ]
+  },
+
+  "swarms": {
+    "build": {
+      "agents": ["feature-dev:code-architect", "frontend-design", "ui-ux-pro-max"],
+      "mode": "sequential",
+      "timeout": 30
+    },
+    "qa": {
+      "agents": ["dev-browser", "feature-dev:code-reviewer"],
+      "mode": "parallel",
+      "timeout": 15
+    },
+    "integration": {
+      "agents": ["Explore", "full-stack-orchestration:performance-engineer"],
+      "mode": "sequential",
+      "timeout": 20
+    },
+    "research": {
+      "agents": ["content-marketing:search-specialist"],
+      "mode": "sequential",
+      "timeout": 10
+    }
+  },
+
+  "breakpoints": {
+    "mobile": { "width": 375, "height": 812 },
+    "tablet": { "width": 768, "height": 1024 },
+    "desktop": { "width": 1440, "height": 900 }
+  },
+
+  "quality": {
+    "tls_minimum": 85,
+    "wcag_level": "AAA",
+    "max_console_errors": 0,
+    "lcp_budget_ms": 2500,
+    "cls_budget": 0.1
+  },
+
+  "evidence_paths": {
+    "screenshots": "artifacts/screenshots",
+    "accessibility": "artifacts/a11y",
+    "reports": "artifacts/reports",
+    "performance": "artifacts/performance"
+  }
+}

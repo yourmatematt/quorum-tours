@@ -21,7 +21,7 @@ This protocol overrides conversational or free-form responses.
 ## 2. Required Envelope (ALL responses)
 
 Every agent response MUST contain the following top-level fields, in this order:
-
+```
 STATUS:
 TASK_ID:
 TASK:
@@ -34,20 +34,32 @@ EVIDENCE:
 FAIL_REASONS:
 OUTPUT:
 NEXT_ACTIONS:
+```
 
 ---
 
 ## 3. Field Definitions
 
 ### STATUS
-One of:
-- BLOCKED
-- IN_PROGRESS
-- READY_FOR_QA
-- READY_FOR_REVIEW
-- APPROVED
+One of (in progression order):
+- BLOCKED — Cannot proceed, missing dependencies or failed gate
+- IN_PROGRESS — Work actively being done
+- READY_FOR_QA — Implementation complete, awaiting visual-qa + a11y-auditor
+- QA_IN_PROGRESS — visual-qa and a11y-auditor actively reviewing
+- READY_FOR_REVIEW — QA passed, awaiting code-reviewer
+- APPROVED — All gates passed, all evidence verified
 
-No other values are permitted.
+**No other values are permitted.**
+
+**Status Ownership:**
+| STATUS | Who Can Set It |
+|--------|----------------|
+| BLOCKED | Any agent |
+| IN_PROGRESS | Assigned build agent |
+| READY_FOR_QA | frontend-implementer ONLY |
+| QA_IN_PROGRESS | orchestrator ONLY |
+| READY_FOR_REVIEW | orchestrator ONLY (after QA pass) |
+| APPROVED | orchestrator ONLY (after all evidence) |
 
 ---
 
@@ -70,6 +82,8 @@ Examples:
 - web-design-lead
 - frontend-implementer
 - visual-qa
+- a11y-auditor
+- code-reviewer
 
 ---
 
@@ -99,6 +113,8 @@ Example:
 - GATE-TLS-HERO
 - GATE-INTEGRATION-NAV
 - GATE-VISUAL-QA
+- GATE-A11Y-BASELINE
+- GATE-CODE-REVIEW
 
 ---
 
@@ -106,7 +122,9 @@ Example:
 List of gate IDs that have been satisfied.
 Must be a subset of GATES_REQUIRED.
 
-If empty, STATUS must be BLOCKED or IN_PROGRESS.
+**Rules:**
+- If GATES_PASSED ≠ GATES_REQUIRED, STATUS cannot be APPROVED
+- Each gate in GATES_PASSED must have corresponding evidence
 
 ---
 
@@ -114,17 +132,24 @@ If empty, STATUS must be BLOCKED or IN_PROGRESS.
 Structured object pointing to files under `/artifacts`.
 
 Required keys:
-- screenshots: []
-- a11y: []
-- console: []
-- reports: []
+```
+screenshots: []
+a11y: []
+console: []
+reports: []
+```
 
 Each entry must be a valid relative file path.
+
+**Evidence is MANDATORY for gate claims:**
+- GATE-VISUAL-QA requires entries in `screenshots` + `console`
+- GATE-A11Y-BASELINE requires entries in `a11y`
+- GATE-CODE-REVIEW requires entries in `reports`
 
 ---
 
 ### FAIL_REASONS
-If STATUS is BLOCKED or READY_FOR_QA with failures:
+If STATUS is BLOCKED or any gate failed:
 - Explicit bullet list of failures
 - Each failure must reference a gate ID
 
@@ -147,8 +172,9 @@ Do not embed evidence here; reference it above.
 ### NEXT_ACTIONS
 Clear, ordered list of what happens next.
 Example:
-1. visual-qa to capture screenshots
-2. a11y-auditor to run baseline checks
+1. orchestrator to invoke visual-qa
+2. orchestrator to invoke a11y-auditor
+3. After QA pass, orchestrator to invoke code-reviewer
 
 ---
 
@@ -156,17 +182,46 @@ Example:
 
 - No agent may self-approve its own work.
 - No agent may omit GATES_REQUIRED.
-- No agent may claim PASS without evidence.
-- Any missing field = automatic failure.
+- No agent may claim PASS without evidence files existing.
+- Any missing field = automatic BLOCKED status.
+- frontend-implementer CANNOT set status beyond READY_FOR_QA.
+- APPROVED requires ALL gates in GATES_REQUIRED to be in GATES_PASSED.
 
 ---
 
 ## 5. Orchestrator Authority
 
 The Orchestrator:
-- validates envelope compliance
-- rejects malformed responses
-- blocks progress on gate failure
-- is the sole authority for APPROVED status
+- Validates envelope compliance
+- Rejects malformed responses
+- Blocks progress on gate failure
+- Is the SOLE authority for APPROVED status
+- MUST invoke QA agents explicitly (cannot skip)
+- MUST verify evidence exists before approval
 
 ---
+
+## 6. Status Transition Rules
+```
+BLOCKED ←──────────────────────────────────┐
+    ↓                                      │
+IN_PROGRESS                                │
+    ↓ (frontend-implementer completes)     │
+READY_FOR_QA                               │
+    ↓ (orchestrator invokes QA agents)     │
+QA_IN_PROGRESS                             │
+    ↓ (visual-qa + a11y-auditor PASS)      │
+    ├── FAIL ──────────────────────────────┘
+    ↓
+READY_FOR_REVIEW
+    ↓ (orchestrator invokes code-reviewer)
+    ├── FAIL ──────────────────────────────┘
+    ↓ (code-reviewer PASS)
+APPROVED
+```
+
+**Transitions that are FORBIDDEN:**
+- READY_FOR_QA → APPROVED (skips QA)
+- READY_FOR_QA → READY_FOR_REVIEW (skips QA)
+- IN_PROGRESS → APPROVED (skips everything)
+- Any agent setting APPROVED except orchestrator

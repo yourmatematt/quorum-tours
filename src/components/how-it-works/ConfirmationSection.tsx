@@ -15,18 +15,19 @@ export function ConfirmationSection() {
 
   return (
     <section className="
-      py-[var(--space-section-normal)]
+      py-20
       bg-[var(--color-surface-sunken)]
     ">
       <div className="
         w-full max-w-[var(--container-max)]
-        mx-auto px-[var(--space-lg)]
+        mx-auto px-6 lg:px-8
       ">
-        <div className="max-w-[var(--container-content)]">
+        <div className="max-w-4xl mx-auto">
           {/* Section headline */}
           <h2 className="
             font-display
-            text-[var(--text-2xl)]
+            text-2xl sm:text-3xl
+            font-semibold
             text-[var(--color-ink)]
             mb-[var(--space-xl)]
           ">
@@ -54,9 +55,10 @@ export function ConfirmationSection() {
             <div className="
               p-[var(--space-xl)]
               bg-[var(--color-confirmed-bg)]
-              border border-[var(--color-confirmed)]
+              border-2 border-[var(--color-confirmed)]
               border-opacity-20
-              rounded-[var(--radius-lg)]
+              rounded-[var(--radius-organic)]
+              shadow-[var(--shadow-card)]
             ">
               <h3 className="
                 font-display
@@ -124,8 +126,9 @@ export function ConfirmationSection() {
             <div className="
               p-[var(--space-xl)]
               bg-[var(--color-surface-raised)]
-              border border-[var(--color-border)]
-              rounded-[var(--radius-lg)]
+              border-2 border-[var(--color-border)]
+              rounded-[var(--radius-organic)]
+              shadow-[var(--shadow-card)]
             ">
               <h3 className="
                 font-display

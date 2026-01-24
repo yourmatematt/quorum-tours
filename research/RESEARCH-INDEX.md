@@ -6,16 +6,25 @@
 - /research/operators/Operator Profile Data Architecture.pdf
 - /research/pain-points/Part 1_ Operator Pain Points.pdf
 - /research/dashboards/admin dashboard research claude.md
+- /research/operators/*
+- /research/journeys/B2B Marketplace Research.pdf
+- /research/journeys/Operator Journey Mapping for Quorum T...md
 
 ### Established Listers (45-65)
 - /research/users/User Profile and progression design.md
 - /research/pain-points/Tour booking pain points - claude.md
 - /research/ux/Birding Platform Profile UX Design.pdf
+- /research/users/*
+- /research/journeys/Birding Tour User Research.pdf
+- /research/journeys/Birding Tour Platform Journey Analysis.md
 
 ### New Wave Birders (25-45)
 - /research/users/Designing a Birdwatching Tour Platform.md
 - /research/pain-points/Wildlife Tour Platform Pain Points.pdf
 - /research/branding/Quorum Tours_ Birding-Centric Visual...
+- /research/users/*
+- /research/journeys/New Wave Birder Research.pdf
+- /research/journeys/New Birder Journey Mapping.md
 
 ## By Domain
 ### Branding & Visual Identity
@@ -34,6 +43,9 @@
 ### Data Architecture
 - /research/database/Birdwatching Platform Species Database...
 - /research/operators/Operator Profile Data Architecture.pdf
+
+### Journeys (All Audiences)
+- /research/journeys/*
 
 ## By Page/Feature
 ### Home Page

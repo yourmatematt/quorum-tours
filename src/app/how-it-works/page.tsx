@@ -22,21 +22,20 @@ export default function HowItWorksPage() {
       <main>
         {/* Page header */}
         <section className="
-          pt-[var(--space-4xl)]
-          pb-[var(--space-2xl)]
+          pt-24 pb-16
           bg-[var(--color-surface)]
         ">
           <div className="
             w-full max-w-[var(--container-max)]
-            mx-auto px-[var(--space-lg)]
+            mx-auto px-6 lg:px-8
           ">
             {/* Breadcrumb */}
-            <nav aria-label="Breadcrumb" className="mb-[var(--space-xl)]">
+            <nav aria-label="Breadcrumb" className="mb-8">
               <ol className="flex items-center gap-[var(--space-sm)] text-[var(--text-sm)]">
                 <li>
                   <a
                     href="/"
-                    className="text-[var(--color-ink-muted)] hover:text-[var(--color-accent)]"
+                    className="text-[var(--color-ink-muted)] hover:text-[var(--color-primary)]"
                   >
                     Home
                   </a>
@@ -56,18 +55,19 @@ export default function HowItWorksPage() {
             </nav>
 
             {/* Page title */}
-            <div className="max-w-[var(--container-content)]">
+            <div className="max-w-3xl mx-auto text-center">
               <h1 className="
                 font-display
-                text-[var(--text-3xl)]
+                text-4xl lg:text-5xl
+                font-semibold
                 text-[var(--color-ink)]
-                mb-[var(--space-lg)]
+                mb-4
               ">
                 How Quorum works
               </h1>
               <p className="
                 text-[var(--color-ink-muted)]
-                text-[var(--text-lg)]
+                text-lg
                 leading-relaxed
               ">
                 A complete guide to threshold-based tour confirmation. How tours form,

@@ -33,18 +33,13 @@ export function CommitmentsSection({ commitments }: CommitmentsSectionProps) {
     <section aria-labelledby="commitments-heading">
       <h2
         id="commitments-heading"
-        className="
-          font-display
-          text-[var(--text-xl)]
-          text-[var(--color-ink)]
-          mb-[var(--space-lg)]
-        "
+        className="font-display text-lg text-[var(--color-ink)] mb-3"
       >
         Your Commitments
       </h2>
 
       {hasCommitments ? (
-        <div className="space-y-[var(--space-md)]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {commitments.map((commitment) => (
             <UserCommitmentCard
               key={commitment.tourId}
@@ -61,73 +56,14 @@ export function CommitmentsSection({ commitments }: CommitmentsSectionProps) {
           ))}
         </div>
       ) : (
-        /* Empty state - no sad illustrations, clear guidance */
-        <div
-          className="
-            bg-[var(--color-surface-raised)]
-            border border-[var(--color-border)]
-            rounded-[var(--radius-lg)]
-            p-[var(--space-xl)] sm:p-[var(--space-2xl)]
-            text-center
-          "
-        >
-          {/* Simple icon - not a sad illustration */}
-          <div
-            className="
-              w-12 h-12 mx-auto mb-[var(--space-lg)]
-              flex items-center justify-center
-              bg-[var(--color-surface-sunken)]
-              rounded-full
-              text-[var(--color-ink-subtle)]
-            "
-            aria-hidden="true"
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <rect x="3" y="4" width="18" height="16" rx="2" />
-              <path d="M3 10h18" />
-              <path d="M8 2v4M16 2v4" />
-            </svg>
-          </div>
-
-          <h3
-            className="
-              font-display
-              text-[var(--text-lg)]
-              text-[var(--color-ink)]
-              mb-[var(--space-sm)]
-            "
-          >
-            No active commitments
-          </h3>
-
-          <p className="text-[var(--color-ink-muted)] mb-[var(--space-lg)] max-w-[40ch] mx-auto">
-            When you commit to tours, they&apos;ll appear here. Your commitments
-            show tour status and confirmation progress.
+        /* Empty state - compact */
+        <div className="bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-6 text-center">
+          <p className="text-[var(--color-ink-muted)] mb-3">
+            No active commitments yet.
           </p>
-
           <a
             href="/tours"
-            className="
-              inline-flex items-center justify-center
-              h-10
-              px-[var(--space-lg)]
-              text-[var(--text-sm)]
-              font-medium
-              text-[var(--color-accent)]
-              bg-transparent
-              border border-[var(--color-accent)]
-              rounded-[var(--radius-md)]
-              hover:bg-[var(--color-accent)] hover:text-white
-              focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2
-              transition-colors duration-[var(--transition-normal)]
-            "
+            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[var(--color-primary)] rounded-[var(--radius-organic)] hover:bg-[var(--color-primary-hover)] transition-colors"
           >
             Browse tours
           </a>

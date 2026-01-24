@@ -32,13 +32,14 @@ export function TourCard({
       className="
         block
         bg-[var(--color-surface-raised)]
-        border border-[var(--color-border)]
-        rounded-[var(--radius-lg)]
+        border-2 border-[var(--color-border)]
+        rounded-[var(--radius-organic)]
+        shadow-[var(--shadow-card)]
         p-6
-        transition-all duration-[var(--transition-normal)]
-        hover:border-[var(--color-accent)]
+        transition-all duration-200
+        hover:border-[var(--color-primary)]
         hover:shadow-[var(--shadow-card-hover)]
-        focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2
+        focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2
         group
       "
     >
@@ -49,10 +50,10 @@ export function TourCard({
 
       {/* Title */}
       <h3 className="
-        font-display text-xl text-[var(--color-ink)]
+        font-display text-xl font-semibold text-[var(--color-ink)]
         mb-2
-        group-hover:text-[var(--color-accent)]
-        transition-colors duration-[var(--transition-normal)]
+        group-hover:text-[var(--color-primary)]
+        transition-colors duration-200
       ">
         {title}
       </h3>
@@ -77,7 +78,7 @@ export function TourCard({
           mb-4
         ">
           <span
-            className="text-[var(--color-accent)]"
+            className="text-[var(--color-primary)]"
             aria-hidden="true"
           >
             ◇

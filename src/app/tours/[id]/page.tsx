@@ -257,13 +257,13 @@ export default function TourDetailPage({ params }: PageProps) {
         <nav className="mb-[var(--space-lg)] text-sm" aria-label="Breadcrumb">
           <ol className="flex items-center gap-[var(--space-sm)]">
             <li>
-              <a href="/" className="text-[var(--color-ink-muted)] hover:text-[var(--color-accent)]">
+              <a href="/" className="text-[var(--color-ink-muted)] hover:text-[var(--color-primary)]">
                 Home
               </a>
             </li>
             <li className="text-[var(--color-ink-subtle)]" aria-hidden="true">/</li>
             <li>
-              <a href="/tours" className="text-[var(--color-ink-muted)] hover:text-[var(--color-accent)]">
+              <a href="/tours" className="text-[var(--color-ink-muted)] hover:text-[var(--color-primary)]">
                 Tours
               </a>
             </li>
@@ -285,7 +285,8 @@ export default function TourDetailPage({ params }: PageProps) {
             <section className="mb-[var(--space-3xl)]">
               <h1 className="
                 font-display
-                text-[var(--text-2xl)]
+                text-4xl lg:text-5xl
+                font-semibold
                 text-[var(--color-ink)]
                 mb-[var(--space-sm)]
               ">
@@ -297,7 +298,7 @@ export default function TourDetailPage({ params }: PageProps) {
                 with{' '}
                 <a
                   href={`/operators/${tour.operatorId}`}
-                  className="text-[var(--color-accent)] hover:underline"
+                  className="text-[var(--color-primary)] font-medium hover:underline"
                 >
                   {tour.operatorName}
                 </a>
@@ -369,9 +370,13 @@ export default function TourDetailPage({ params }: PageProps) {
 
               <div className="
                 bg-[var(--color-surface-raised)]
-                border border-[var(--color-border)]
-                rounded-[var(--radius-lg)]
+                border-2 border-[var(--color-border)]
+                rounded-[var(--radius-organic)]
                 p-[var(--space-lg)]
+                shadow-[var(--shadow-card)]
+                hover:shadow-[var(--shadow-card-hover)]
+                hover:border-[var(--color-primary)]
+                transition-all duration-200
               ">
                 <div className="flex items-start gap-[var(--space-lg)]">
                   {/* Placeholder for operator photo */}
@@ -401,7 +406,8 @@ export default function TourDetailPage({ params }: PageProps) {
                       className="
                         inline-flex items-center gap-[var(--space-xs)]
                         mt-[var(--space-sm)]
-                        text-sm text-[var(--color-accent)]
+                        text-sm text-[var(--color-primary)]
+                        font-medium
                         hover:underline
                       "
                     >

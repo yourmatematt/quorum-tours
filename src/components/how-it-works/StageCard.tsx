@@ -10,8 +10,9 @@ export function StageCard({ number, title, description, clarification }: StageCa
     <div className="relative">
       <div className="
         bg-[var(--color-surface-raised)]
-        border border-[var(--color-border)]
-        rounded-[var(--radius-lg)]
+        border-2 border-[var(--color-border)]
+        rounded-[var(--radius-organic)]
+        shadow-[var(--shadow-card)]
         p-[var(--space-xl)]
         relative
         h-full
@@ -20,7 +21,7 @@ export function StageCard({ number, title, description, clarification }: StageCa
         <div className="
           absolute -top-4 left-[var(--space-xl)]
           w-8 h-8
-          bg-[var(--color-accent)]
+          bg-[var(--color-primary)]
           text-white
           font-mono font-medium
           rounded-full

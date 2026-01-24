@@ -1,18 +1,19 @@
 export function ProblemSection() {
   return (
     <section className="
-      py-[var(--space-section-normal)]
+      py-20
       bg-[var(--color-surface)]
     ">
       <div className="
         w-full max-w-[var(--container-max)]
-        mx-auto px-[var(--space-lg)]
+        mx-auto px-6 lg:px-8
       ">
-        <div className="max-w-[var(--container-content)]">
+        <div className="max-w-4xl mx-auto">
           {/* Section headline - left aligned */}
           <h2 className="
             font-display
-            text-[var(--text-2xl)]
+            text-2xl sm:text-3xl
+            font-semibold
             text-[var(--color-ink)]
             mb-[var(--space-xl)]
           ">
@@ -55,8 +56,8 @@ export function ProblemSection() {
             mt-[var(--space-3xl)]
             p-[var(--space-xl)]
             bg-[var(--color-surface-sunken)]
-            border border-[var(--color-border)]
-            rounded-[var(--radius-lg)]
+            border-2 border-[var(--color-border)]
+            rounded-[var(--radius-organic)]
           " role="img" aria-label="Diagram showing four birders wanting the same tour but unable to see each other's interest">
             <div className="
               flex flex-col md:flex-row

@@ -6,7 +6,7 @@ interface UserCommitmentCardProps {
   tourId: string;
   tourName: string;
   tourDates: string;
-  operatorId: string;
+  operatorId?: string; // unused but kept for API compatibility
   operatorName: string;
   location: string;
   status: CommitmentStatus;
@@ -27,7 +27,6 @@ export function UserCommitmentCard({
   tourId,
   tourName,
   tourDates,
-  operatorId,
   operatorName,
   location,
   status,
@@ -35,121 +34,49 @@ export function UserCommitmentCard({
   threshold,
 }: UserCommitmentCardProps) {
   const isConfirmed = status === 'confirmed';
-  const isNotRunning = status === 'not-running';
 
   return (
-    <div
-      className="
-        bg-[var(--color-surface-raised)]
-        border border-[var(--color-border)]
-        rounded-[var(--radius-lg)]
-        p-[var(--space-lg)]
-        transition-colors duration-[var(--transition-normal)]
-        hover:border-[var(--color-border-strong)]
-      "
+    <a
+      href={`/tours/${tourId}`}
+      className={`
+        block bg-[var(--color-surface-raised)] border-2 rounded-[var(--radius-organic)] p-3
+        transition-colors cursor-pointer
+        ${isConfirmed
+          ? 'border-[var(--color-confirmed)]/30 hover:border-[var(--color-confirmed)]'
+          : 'border-[var(--color-border)] hover:border-[var(--color-primary)]'
+        }
+      `}
     >
-      {/* Tour name and status */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-[var(--space-sm)] mb-[var(--space-md)]">
-        <a
-          href={`/tours/${tourId}`}
-          className="
-            font-display
-            text-[var(--text-lg)]
-            text-[var(--color-ink)]
-            hover:text-[var(--color-accent)]
-            transition-colors duration-[var(--transition-fast)]
-          "
-        >
-          {tourName}
-        </a>
+      {/* Header: Name + Status */}
+      <div className="flex items-start justify-between gap-2 mb-2">
+        <h3 className="font-medium text-[var(--color-ink)] truncate">{tourName}</h3>
         <ConfirmationStatusBadge status={status} />
       </div>
 
-      {/* Tour details */}
-      <div className="space-y-[var(--space-xs)] mb-[var(--space-md)]">
-        <p className="text-[var(--text-sm)] text-[var(--color-ink-muted)]">
-          {tourDates} · {location}
-        </p>
-        <p className="text-[var(--text-sm)] text-[var(--color-ink-muted)]">
-          <a
-            href={`/operators/${operatorId}`}
-            className="hover:text-[var(--color-accent)] transition-colors duration-[var(--transition-fast)]"
-          >
-            {operatorName}
-          </a>
-        </p>
-      </div>
+      {/* Details */}
+      <p className="text-sm text-[var(--color-ink-muted)] mb-2">
+        {tourDates} · {location}
+      </p>
+      <p className="text-xs text-[var(--color-ink-muted)] mb-3">
+        {operatorName}
+      </p>
 
-      {/* Participant count - human readable, not percentage */}
-      <div className="mb-[var(--space-md)]">
-        {isConfirmed ? (
-          <p className="text-[var(--text-sm)] text-[var(--color-confirmed)]">
-            Confirmed with {currentParticipants} participants
-          </p>
-        ) : isNotRunning ? (
-          <p className="text-[var(--text-sm)] text-[var(--color-ink-subtle)]">
-            Did not reach threshold
-          </p>
-        ) : (
-          <p className="text-[var(--text-sm)] text-[var(--color-ink-muted)]">
-            <span className="font-mono font-medium text-[var(--color-ink)]">
-              {currentParticipants}
-            </span>{' '}
-            of{' '}
-            <span className="font-mono">{threshold}</span>{' '}
-            participants
-          </p>
-        )}
-      </div>
-
-      {/* Progress bar for forming tours only */}
-      {status === 'forming' && (
-        <div className="mb-[var(--space-md)]">
-          <div
-            className="
-              w-full h-2
-              bg-[var(--color-surface-sunken)]
-              rounded-[var(--radius-pill)]
-              overflow-hidden
-            "
-            role="progressbar"
-            aria-valuenow={currentParticipants}
-            aria-valuemin={0}
-            aria-valuemax={threshold}
-            aria-label={`${currentParticipants} of ${threshold} participants`}
-          >
+      {/* Progress indicator */}
+      {status === 'forming' ? (
+        <div className="flex items-center gap-2">
+          <div className="flex-1 h-2 bg-[var(--color-surface-sunken)] rounded-full overflow-hidden">
             <div
-              className="h-full rounded-[var(--radius-pill)] transition-all duration-500 ease-out"
-              style={{
-                width: `${Math.min((currentParticipants / threshold) * 100, 100)}%`,
-                backgroundColor: 'var(--color-forming)',
-              }}
+              className="h-full bg-[var(--color-forming)] rounded-full"
+              style={{ width: `${Math.min((currentParticipants / threshold) * 100, 100)}%` }}
             />
           </div>
+          <span className="text-xs text-[var(--color-ink-muted)]">{currentParticipants}/{threshold}</span>
         </div>
-      )}
-
-      {/* "What happens next" for non-confirmed tours */}
-      {status === 'forming' && (
-        <p className="text-[var(--text-sm)] text-[var(--color-ink-subtle)]">
-          Your card is not charged until tour confirms.
+      ) : (
+        <p className="text-xs text-[var(--color-confirmed)]">
+          {currentParticipants} participants confirmed
         </p>
       )}
-
-      {/* View tour details link */}
-      <div className="mt-[var(--space-md)] pt-[var(--space-md)] border-t border-[var(--color-border)]">
-        <a
-          href={`/tours/${tourId}`}
-          className="
-            text-[var(--text-sm)]
-            text-[var(--color-accent)]
-            hover:underline
-            focus:outline-none focus:underline
-          "
-        >
-          View tour details →
-        </a>
-      </div>
-    </div>
+    </a>
   );
 }

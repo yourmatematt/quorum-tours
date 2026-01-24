@@ -65,11 +65,11 @@ export function TourManagement() {
 
   const statusStyles = useMemo(
     () => ({
-      forming: 'bg-forming-bg text-forming border-forming',
-      confirmed: 'bg-confirmed-bg text-confirmed border-confirmed',
-      running: 'bg-blue-100 text-blue-800 border-blue-800',
-      completed: 'bg-gray-100 text-gray-600 border-gray-600',
-      cancelled: 'bg-red-100 text-red-800 border-red-800',
+      forming: 'bg-[var(--color-forming-bg)] text-[var(--color-forming)] border-[var(--color-forming)]',
+      confirmed: 'bg-[var(--color-confirmed-bg)] text-[var(--color-confirmed)] border-[var(--color-confirmed)]',
+      running: 'bg-[var(--color-info-bg)] text-[var(--color-info-text)] border-[var(--color-info-border)]',
+      completed: 'bg-[var(--color-surface-sunken)] text-[var(--color-ink-muted)] border-[var(--color-border)]',
+      cancelled: 'bg-[var(--color-destructive-bg)] text-[var(--color-destructive)] border-[var(--color-destructive-border)]',
     }),
     []
   );
@@ -91,21 +91,21 @@ export function TourManagement() {
   );
 
   return (
-    <section className="bg-surface-raised border border-border rounded-lg p-6">
+    <section className="bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] shadow-[var(--shadow-card)] p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-display text-xl font-semibold text-ink">
+        <h2 className="font-display text-xl font-semibold text-[var(--color-ink)]">
           Tour Management
         </h2>
-        <button className="px-4 py-3 text-sm font-medium text-white bg-accent hover:bg-accent-hover rounded-md transition-colors min-h-[48px]">
+        <button className="px-6 py-3 text-sm font-medium text-white bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] rounded-[var(--radius-organic)] transition-colors min-h-[44px]">
           + Create New Tour
         </button>
       </div>
 
       {/* Loading State */}
       {isLoading && (
-        <div className="border border-border rounded-md p-12 text-center">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-accent border-r-transparent mb-4"></div>
-          <p className="text-ink-muted">Loading tours...</p>
+        <div className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-12 text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[var(--color-primary)] border-r-transparent mb-4"></div>
+          <p className="text-[var(--color-ink-muted)]">Loading tours...</p>
         </div>
       )}
 
@@ -114,21 +114,21 @@ export function TourManagement() {
         {tours.map((tour) => (
           <div
             key={tour.id}
-            className="border border-border rounded-lg p-5 bg-surface hover:border-accent transition-colors"
+            className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-4 bg-[var(--color-surface)] hover:border-[var(--color-primary)] transition-colors cursor-pointer"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <h3 className="font-semibold text-ink text-lg">
+                  <h3 className="font-semibold text-[var(--color-ink)] text-lg">
                     {tour.title}
                   </h3>
                   <span
-                    className={`px-3 py-1 text-xs font-medium border rounded-full ${statusStyles[tour.status]}`}
+                    className={`px-3 py-1 text-xs font-medium border rounded-[var(--radius-pill)] ${statusStyles[tour.status]}`}
                   >
                     {statusLabels[tour.status]}
                   </span>
                 </div>
-                <p className="text-sm text-ink-muted">
+                <p className="text-sm text-[var(--color-ink-muted)]">
                   Departs:{' '}
                   {new Date(tour.departureDate).toLocaleDateString('en-US', {
                     year: 'numeric',
@@ -138,8 +138,8 @@ export function TourManagement() {
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-xs text-ink-muted mb-1">Price per person</p>
-                <p className="font-mono text-lg font-semibold text-ink">
+                <p className="text-xs text-[var(--color-ink-muted)] mb-1">Price per person</p>
+                <p className="font-mono text-lg font-semibold text-[var(--color-ink)]">
                   ${tour.price}
                 </p>
               </div>
@@ -148,19 +148,19 @@ export function TourManagement() {
             {/* Threshold Progress */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-ink-muted">
+                <span className="text-sm text-[var(--color-ink-muted)]">
                   Booking Progress
                 </span>
-                <span className="font-mono text-sm font-medium text-ink">
+                <span className="font-mono text-sm font-medium text-[var(--color-ink)]">
                   {tour.currentCommitments} of {tour.threshold} needed
                 </span>
               </div>
-              <div className="w-full bg-surface-sunken rounded-full h-2">
+              <div className="w-full bg-[var(--color-surface-sunken)] rounded-full h-2">
                 <div
                   className={`h-2 rounded-full transition-all ${
                     tour.currentCommitments >= tour.threshold
-                      ? 'bg-confirmed'
-                      : 'bg-forming'
+                      ? 'bg-[var(--color-confirmed)]'
+                      : 'bg-[var(--color-forming)]'
                   }`}
                   style={{
                     width: `${Math.min((tour.currentCommitments / tour.threshold) * 100, 100)}%`,
@@ -168,11 +168,11 @@ export function TourManagement() {
                 />
               </div>
               <div className="flex items-center justify-between mt-2">
-                <span className="text-xs text-ink-muted">
+                <span className="text-xs text-[var(--color-ink-muted)]">
                   Capacity: {tour.capacity} total
                 </span>
                 {tour.status === 'forming' && (
-                  <span className="text-xs text-ink-muted">
+                  <span className="text-xs text-[var(--color-ink-muted)]">
                     Deadline: {tour.daysUntilDeadline} days
                   </span>
                 )}
@@ -180,14 +180,14 @@ export function TourManagement() {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-3 pt-4 border-t border-border">
-              <button className="text-sm font-medium text-accent hover:text-accent-hover py-3 px-2 min-h-[48px]">
+            <div className="flex items-center gap-3 pt-4 border-t-2 border-[var(--color-border)]">
+              <button className="text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] py-2 px-2 min-h-[44px]">
                 View Participants →
               </button>
-              <button className="text-sm font-medium text-accent hover:text-accent-hover py-3 px-2 min-h-[48px]">
+              <button className="text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] py-2 px-2 min-h-[44px]">
                 Edit Tour
               </button>
-              <button className="text-sm font-medium text-ink-muted hover:text-ink py-3 px-2 min-h-[48px]">
+              <button className="text-sm font-medium text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] py-2 px-2 min-h-[44px]">
                 Duplicate
               </button>
             </div>
@@ -197,9 +197,9 @@ export function TourManagement() {
 
       {/* Empty state for no tours */}
       {!isLoading && tours.length === 0 && (
-        <div className="border border-border rounded-md p-12 text-center">
-          <p className="text-ink-muted mb-4">No tours created yet</p>
-          <button className="px-4 py-3 text-sm font-medium text-white bg-accent hover:bg-accent-hover rounded-md transition-colors min-h-[48px]">
+        <div className="border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-12 text-center">
+          <p className="text-[var(--color-ink-muted)] mb-4">No tours created yet</p>
+          <button className="px-6 py-3 text-sm font-medium text-white bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] rounded-[var(--radius-organic)] transition-colors min-h-[44px]">
             Create Your First Tour
           </button>
         </div>

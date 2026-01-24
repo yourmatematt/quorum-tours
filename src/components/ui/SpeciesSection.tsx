@@ -112,7 +112,8 @@ function SpeciesGroup({ group }: { group: SpeciesGroupData }) {
       <div className="
         bg-[var(--color-surface-raised)]
         border border-[var(--color-border)]
-        rounded-[var(--radius-md)]
+        rounded-[var(--radius-organic)]
+        shadow-[var(--shadow-card)]
         px-[var(--space-md)]
       ">
         {visibleSpecies.map((species, index) => (
@@ -129,7 +130,7 @@ function SpeciesGroup({ group }: { group: SpeciesGroupData }) {
             onClick={() => setIsExpanded(!isExpanded)}
             className="
               w-full py-[var(--space-sm)]
-              text-sm text-[var(--color-accent)]
+              text-sm text-[var(--color-primary)]
               hover:underline
               focus:outline-none focus:underline
               flex items-center justify-center gap-[var(--space-xs)]

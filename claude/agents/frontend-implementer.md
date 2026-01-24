@@ -16,6 +16,7 @@ No backend architecture; frontend only.
 - frontend-design@claude-plugins-official
 - typescript-lsp@claude-plugins-official
 - context7@claude-plugins-official
+- ui-ux-pro-max @ ui-ux-pro-max-skill
 
 ## Outputs (Required)
 - src/app routes and page components

@@ -29,8 +29,8 @@ export function ConfirmationStatusBadge({ status }: ConfirmationStatusBadgeProps
     <span
       className="
         inline-flex items-center
-        px-3 py-1
-        text-sm font-medium
+        px-2 py-0.5
+        text-xs font-medium
         rounded-[var(--radius-pill)]
       "
       style={{

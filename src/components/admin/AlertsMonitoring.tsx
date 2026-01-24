@@ -1,7 +1,12 @@
+'use client';
+
 /**
  * Alerts & Monitoring Section
  * System health, fraud detection, payment issues, user-reported issues
  */
+
+import { AdminCollapsible } from './AdminCollapsible';
+import { AdminCard } from './AdminSection';
 
 interface SystemAlert {
   id: string;
@@ -45,62 +50,71 @@ export function AlertsMonitoring() {
     },
   ];
 
-  const severityStyles = {
-    critical: 'border-l-4 border-red-600 bg-red-50',
-    warning: 'border-l-4 border-forming bg-forming-bg',
-    info: 'border-l-4 border-accent bg-blue-50',
+  const severityStyles: Record<string, string> = {
+    critical:
+      'border-l-4 border-[var(--color-destructive-border)] bg-[var(--color-destructive-bg)]',
+    warning:
+      'border-l-4 border-[var(--color-warning-border)] bg-[var(--color-warning-bg)]',
+    info: 'border-l-4 border-[var(--color-info-border)] bg-[var(--color-info-bg)]',
   };
 
-  const categoryLabels = {
+  const categoryLabels: Record<string, string> = {
     system: 'System',
     fraud: 'Fraud Detection',
     payment: 'Payment',
     'user-report': 'User Report',
   };
 
-  return (
-    <section className="bg-surface-raised border border-border rounded-lg p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="font-display text-xl font-semibold text-ink">
-          Alerts & Monitoring
-        </h2>
-        <span className="font-mono text-sm text-ink-muted">
-          {alerts.filter((a) => !a.resolved).length} unresolved
-        </span>
-      </div>
+  const unresolvedCount = alerts.filter((a) => !a.resolved).length;
+  const hasCritical = alerts.some(
+    (a) => a.severity === 'critical' && !a.resolved
+  );
 
+  return (
+    <AdminCollapsible
+      title="Alerts & Monitoring"
+      badge={unresolvedCount}
+      badgeVariant={hasCritical ? 'destructive' : 'warning'}
+      subtitle="System health, fraud detection, and user reports"
+    >
       {alerts.length === 0 ? (
-        <div className="border border-border rounded-md p-8 text-center text-ink-muted">
-          No active alerts
-        </div>
+        <AdminCard>
+          <p className="text-center text-[var(--color-ink-muted)] py-4">
+            No active alerts
+          </p>
+        </AdminCard>
       ) : (
         <div className="space-y-3">
           {alerts.map((alert) => (
             <div
               key={alert.id}
-              className={`${severityStyles[alert.severity]} rounded-md p-4`}
+              className={`${severityStyles[alert.severity]} rounded-[var(--radius-organic)] p-4`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-medium text-ink-muted uppercase">
+                    <span className="text-xs font-medium text-[var(--color-ink-muted)] uppercase">
                       {categoryLabels[alert.category]}
                     </span>
-                    <span className="text-xs text-ink-muted">•</span>
-                    <span className="text-xs text-ink-muted">
+                    <span className="text-xs text-[var(--color-ink-muted)]">
+                      •
+                    </span>
+                    <span className="text-xs text-[var(--color-ink-muted)]">
                       {alert.timestamp}
                     </span>
                   </div>
-                  <h3 className="font-semibold text-ink mb-1">
+                  <h3 className="font-semibold text-[var(--color-ink)] mb-1">
                     {alert.title}
                   </h3>
-                  <p className="text-sm text-ink-muted">{alert.description}</p>
+                  <p className="text-sm text-[var(--color-ink-muted)]">
+                    {alert.description}
+                  </p>
                 </div>
                 <div className="flex flex-col gap-2 ml-4">
-                  <button className="px-3 py-1 text-xs font-medium text-white bg-accent hover:bg-accent-hover rounded transition-colors">
+                  <button className="px-3 py-1 text-xs font-medium text-white bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] rounded-[var(--radius-organic)] transition-colors">
                     Investigate
                   </button>
-                  <button className="px-3 py-1 text-xs font-medium text-ink-muted hover:text-ink">
+                  <button className="px-3 py-1 text-xs font-medium text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]">
                     Mark Resolved
                   </button>
                 </div>
@@ -109,6 +123,6 @@ export function AlertsMonitoring() {
           ))}
         </div>
       )}
-    </section>
+    </AdminCollapsible>
   );
 }

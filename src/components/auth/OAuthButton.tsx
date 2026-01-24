@@ -62,14 +62,15 @@ export function OAuthButton({ provider, onClick }: OAuthButtonProps) {
         h-12
         px-[var(--space-md)]
         flex items-center justify-center gap-[var(--space-sm)]
-        text-[var(--text-base)]
+        text-base
+        font-medium
         text-[var(--color-ink)]
-        bg-[var(--color-surface)]
-        border border-[var(--color-border)]
-        rounded-[var(--radius-md)]
-        hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]
-        focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-1
-        transition-colors duration-[var(--transition-normal)]
+        bg-white
+        border-2 border-[var(--color-border)]
+        rounded-[var(--radius-organic)]
+        hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]
+        focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-1
+        transition-all duration-200
       "
     >
       {config.icon}

@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         display: ['var(--font-display)', 'Georgia', 'serif'],
+        heading: ['var(--font-heading)', 'Georgia', 'serif'],
         body: ['var(--font-body)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-mono)', 'monospace'],
       },
@@ -23,6 +24,14 @@ const config: Config = {
           DEFAULT: 'var(--color-surface)',
           raised: 'var(--color-surface-raised)',
           sunken: 'var(--color-surface-sunken)',
+        },
+        primary: {
+          DEFAULT: 'var(--color-primary)',
+          hover: 'var(--color-primary-hover)',
+        },
+        secondary: {
+          DEFAULT: 'var(--color-secondary)',
+          hover: 'var(--color-secondary-hover)',
         },
         accent: {
           DEFAULT: 'var(--color-accent)',
