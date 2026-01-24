@@ -1,8 +1,22 @@
 # Quorum Tours (Mallacoota Birding) - Complete Database Schema Export
 
 **Generated:** 2026-01-21
-**Schema Version:** 2.9.0
+**Last Updated:** 2026-01-24
+**Schema Version:** 2.10.0
 **Database:** PostgreSQL (Supabase)
+
+### Changelog
+
+**v2.10.0 (2026-01-24)**
+- Added `tour_status` enum type definition (values: forming, payment_pending, confirmed, cancelled, completed)
+- Added `reservation_status` enum type definition (values: interest, reserved, payment_pending, confirmed, cancelled, abandoned, waitlisted, refunded)
+- Fixed tours.status to use enum type instead of TEXT with CHECK
+- Fixed reservations.status to use enum type instead of TEXT with CHECK
+- Updated function references from 'proposed' to 'forming'
+- Added `current_participant_count` column to tours (via migration)
+- Added `payment_events` table (via migration)
+- Added operator Stripe Connect status fields (via migration)
+- Added RLS policies for operator access to tours/reservations (via migration)
 
 ---
 
@@ -114,6 +128,31 @@ CREATE TYPE operator_approval_status AS ENUM (
   'approved',
   'rejected',
   'suspended'
+);
+```
+
+### tour_status
+```sql
+CREATE TYPE tour_status AS ENUM (
+  'forming',        -- Collecting commitments, threshold not yet met
+  'payment_pending', -- Threshold met, payment window open
+  'confirmed',      -- Payments captured, tour will run
+  'cancelled',      -- Tour cancelled (threshold not met or operator cancelled)
+  'completed'       -- Tour has run
+);
+```
+
+### reservation_status
+```sql
+CREATE TYPE reservation_status AS ENUM (
+  'interest',       -- User expressed interest, no payment auth yet
+  'reserved',       -- Payment authorized, commitment made
+  'payment_pending', -- Threshold met, awaiting payment capture
+  'confirmed',      -- Payment captured, booking confirmed
+  'cancelled',      -- User cancelled before threshold
+  'abandoned',      -- User didn't complete payment in window
+  'waitlisted',     -- Tour at capacity, user on waitlist
+  'refunded'        -- Refund processed
 );
 ```
 
@@ -467,10 +506,9 @@ CREATE TABLE public.tours (
   booking_deadline TIMESTAMPTZ NOT NULL,
   payment_window_end TIMESTAMPTZ,
 
-  -- Status
-  status TEXT NOT NULL DEFAULT 'proposed' CHECK (status IN (
-    'proposed', 'payment_pending', 'confirmed', 'cancelled', 'completed'
-  )),
+  -- Status (uses tour_status enum)
+  status tour_status NOT NULL DEFAULT 'forming',
+  -- Valid values: 'forming', 'payment_pending', 'confirmed', 'cancelled', 'completed'
   cancelled_at TIMESTAMPTZ,
   cancellation_reason TEXT,
 
@@ -523,16 +561,10 @@ CREATE TABLE public.reservations (
   tour_id UUID NOT NULL REFERENCES tours(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
 
-  -- Status tracking
-  status TEXT NOT NULL DEFAULT 'reserved' CHECK (status IN (
-    'reserved',
-    'payment_pending',
-    'confirmed',
-    'abandoned',
-    'cancelled',
-    'waitlisted',
-    'refunded'
-  )),
+  -- Status tracking (uses reservation_status enum)
+  status reservation_status NOT NULL DEFAULT 'interest',
+  -- Valid values: 'interest', 'reserved', 'payment_pending', 'confirmed',
+  --               'cancelled', 'abandoned', 'waitlisted', 'refunded'
 
   -- Payment tracking
   stripe_payment_intent_id TEXT,
@@ -2023,7 +2055,7 @@ BEGIN
   WHERE id = NEW.tour_id;
 
   -- Update tour status if threshold reached
-  IF booking_count >= tour_record.threshold AND tour_record.status = 'proposed' THEN
+  IF booking_count >= tour_record.threshold AND tour_record.status = 'forming' THEN
     UPDATE public.tours
     SET
       status = 'payment_pending',
@@ -2411,7 +2443,7 @@ BEGIN
   WHERE t.threshold_deadline IS NOT NULL
     AND t.threshold_deadline <= CURRENT_DATE + INTERVAL '14 days'
     AND t.threshold_deadline > CURRENT_DATE
-    AND t.status IN ('proposed', 'gathering')
+    AND t.status = 'forming'
     AND COALESCE(t.current_bookings, 0) < t.threshold
     AND NOT EXISTS (
       SELECT 1 FROM alerts a
@@ -2602,7 +2634,7 @@ DECLARE
   v_gmv bigint;
 BEGIN
   SELECT
-    COALESCE(SUM(CASE WHEN t.status IN ('proposed', 'gathering') THEN r.total_cents ELSE 0 END), 0),
+    COALESCE(SUM(CASE WHEN t.status = 'forming' THEN r.total_cents ELSE 0 END), 0),
     COALESCE(SUM(CASE WHEN t.status = 'confirmed' THEN r.total_cents ELSE 0 END), 0),
     COALESCE(SUM(CASE WHEN t.status = 'confirmed' THEN (r.total_cents * 0.15)::bigint ELSE 0 END), 0),
     COALESCE(SUM(r.total_cents), 0)

@@ -83,15 +83,32 @@ COMMENT ON COLUMN public.operators.stripe_details_submitted IS
 -- 3. RESERVATION FEE TRACKING
 -- Track platform fees for transparency and accounting
 -- -----------------------------------------------------------------------------
+
+-- First ensure refund_amount_cents exists (might be missing from DB)
+ALTER TABLE public.reservations
+    ADD COLUMN IF NOT EXISTS refund_amount_cents INTEGER DEFAULT 0;
+
+-- Now add fee tracking columns
 ALTER TABLE public.reservations
     ADD COLUMN IF NOT EXISTS platform_fee_cents INTEGER DEFAULT 0,
-    ADD COLUMN IF NOT EXISTS operator_payout_cents INTEGER GENERATED ALWAYS AS (
-        COALESCE(deposit_cents, 0) + COALESCE(balance_cents, 0)
-        - COALESCE(refund_amount_cents, 0)
-        - COALESCE(platform_fee_cents, 0)
-    ) STORED,
     ADD COLUMN IF NOT EXISTS stripe_transfer_id TEXT,
     ADD COLUMN IF NOT EXISTS transferred_at TIMESTAMPTZ;
+
+-- Add computed payout column (separate statement for generated columns)
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'reservations' AND column_name = 'operator_payout_cents'
+    ) THEN
+        ALTER TABLE public.reservations
+            ADD COLUMN operator_payout_cents INTEGER GENERATED ALWAYS AS (
+                COALESCE(deposit_cents, 0) + COALESCE(balance_cents, 0)
+                - COALESCE(refund_amount_cents, 0)
+                - COALESCE(platform_fee_cents, 0)
+            ) STORED;
+    END IF;
+END $$;
 
 COMMENT ON COLUMN public.reservations.platform_fee_cents IS
     'Platform commission (6% of total). Calculated when payment is captured.';
@@ -136,11 +153,12 @@ CREATE POLICY "Operators can view tour payment events"
         reservation_id IN (
             SELECT r.id FROM public.reservations r
             JOIN public.tours t ON t.id = r.tour_id
-            JOIN public.operators o ON o.id = t.operator_id
-            WHERE EXISTS (
+            WHERE t.operator_id IS NOT NULL
+            AND EXISTS (
                 SELECT 1 FROM public.operator_members om
-                WHERE om.operator_id = o.id
-                AND om.user_id = auth.uid()
+                WHERE om.operator_id = t.operator_id
+                AND om.profile_id = auth.uid()
+                AND om.is_active = TRUE
             )
         )
     );

@@ -120,7 +120,7 @@ BEGIN
 
     -- Update tour status if threshold reached
     IF tour_record.current_participant_count >= tour_record.threshold
-       AND tour_record.status = 'proposed' THEN
+       AND tour_record.status = 'forming' THEN
 
         UPDATE public.tours
         SET
@@ -185,9 +185,9 @@ END $$;
 -- -----------------------------------------------------------------------------
 
 -- Index for "proposed tours approaching threshold" queries
+-- Note: Using non-partial index due to enum type differences
 CREATE INDEX IF NOT EXISTS idx_tours_threshold_progress
-    ON public.tours(status, current_participant_count, threshold)
-    WHERE status = 'proposed';
+    ON public.tours(status, current_participant_count, threshold);
 
 -- Index for operator dashboard: their tours with live counts
 CREATE INDEX IF NOT EXISTS idx_tours_operator_status

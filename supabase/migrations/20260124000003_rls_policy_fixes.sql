@@ -96,6 +96,7 @@ COMMENT ON POLICY "Users and operators can view relevant reservations" ON public
 
 -- Drop old inconsistent policy
 DROP POLICY IF EXISTS "Tour owners can manage tour species" ON public.tour_species;
+DROP POLICY IF EXISTS "Operators can manage tour species" ON public.tour_species;
 
 -- Create consistent policy using operator_members
 CREATE POLICY "Operators can manage tour species"
