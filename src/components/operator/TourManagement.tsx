@@ -11,7 +11,7 @@ interface Tour {
   id: string;
   title: string;
   status: 'forming' | 'confirmed' | 'running' | 'completed' | 'cancelled';
-  threshold: number;
+  quorum: number;
   capacity: number;
   currentCommitments: number;
   departureDate: string;
@@ -29,7 +29,7 @@ export function TourManagement() {
       id: 'tour-001',
       title: 'Patagonian Endemics - March 2026',
       status: 'forming',
-      threshold: 6,
+      quorum: 6,
       capacity: 10,
       currentCommitments: 4,
       departureDate: '2026-03-15',
@@ -41,7 +41,7 @@ export function TourManagement() {
       id: 'tour-002',
       title: 'Spring Migration - Gulf Coast',
       status: 'confirmed',
-      threshold: 8,
+      quorum: 8,
       capacity: 12,
       currentCommitments: 10,
       departureDate: '2026-04-10',
@@ -53,7 +53,7 @@ export function TourManagement() {
       id: 'tour-003',
       title: 'Arizona Desert Specialties',
       status: 'running',
-      threshold: 5,
+      quorum: 5,
       capacity: 8,
       currentCommitments: 6,
       departureDate: '2026-02-05',
@@ -145,25 +145,25 @@ export function TourManagement() {
               </div>
             </div>
 
-            {/* Threshold Progress */}
+            {/* Quorum Progress */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-[var(--color-ink-muted)]">
                   Booking Progress
                 </span>
                 <span className="font-mono text-sm font-medium text-[var(--color-ink)]">
-                  {tour.currentCommitments} of {tour.threshold} needed
+                  {tour.currentCommitments} of {tour.quorum} needed
                 </span>
               </div>
               <div className="w-full bg-[var(--color-surface-sunken)] rounded-full h-2">
                 <div
                   className={`h-2 rounded-full transition-all ${
-                    tour.currentCommitments >= tour.threshold
+                    tour.currentCommitments >= tour.quorum
                       ? 'bg-[var(--color-confirmed)]'
                       : 'bg-[var(--color-forming)]'
                   }`}
                   style={{
-                    width: `${Math.min((tour.currentCommitments / tour.threshold) * 100, 100)}%`,
+                    width: `${Math.min((tour.currentCommitments / tour.quorum) * 100, 100)}%`,
                   }}
                 />
               </div>

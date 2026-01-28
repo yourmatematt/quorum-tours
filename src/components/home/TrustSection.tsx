@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import { OperatorPreviewCard } from '../OperatorPreviewCard';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 
 interface TrustSignal {
   icon: string;
@@ -19,12 +20,12 @@ export function TrustSection() {
     {
       icon: '○',
       title: 'No charge until confirmed',
-      description: 'Your payment method is not charged until the tour threshold is met and the tour is guaranteed to run.',
+      description: 'Your payment method is not charged until the tour reaches quorum and is guaranteed to run.',
     },
     {
       icon: '◊',
       title: 'Transparent conditions',
-      description: 'Thresholds, dates, and refund conditions are visible upfront. No hidden fees. No surprise cancellations.',
+      description: 'Quorum requirements, dates, and refund conditions are visible upfront. No hidden fees. No surprise cancellations.',
     },
   ], []);
 
@@ -51,23 +52,25 @@ export function TrustSection() {
         mx-auto px-[var(--space-lg)]
       ">
         {/* Section header */}
-        <div className="mb-[var(--space-3xl)] max-w-[var(--container-content)]">
-          <h2 className="
-            font-display
-            text-[clamp(1.75rem,4vw,2.5rem)]
-            leading-tight
-            text-[var(--color-ink)]
-            mb-[var(--space-md)]
-          ">
-            Built on trust, not persuasion.
-          </h2>
-          <p className="
-            text-[var(--color-ink-muted)]
-            text-[var(--text-base)]
-          ">
-            Every part of Quorum is designed to reduce uncertainty, not to sell you something.
-          </p>
-        </div>
+        <ScrollReveal variant="fade-up" duration={500}>
+          <div className="mb-[var(--space-3xl)] max-w-[var(--container-content)]">
+            <h2 className="
+              font-display
+              text-[clamp(1.75rem,4vw,2.5rem)]
+              leading-tight
+              text-[var(--color-ink)]
+              mb-[var(--space-md)]
+            ">
+              Built on trust, not persuasion.
+            </h2>
+            <p className="
+              text-[var(--color-ink-muted)]
+              text-[var(--text-base)]
+            ">
+              Every part of Quorum is designed to reduce uncertainty, not to sell you something.
+            </p>
+          </div>
+        </ScrollReveal>
 
         {/* Asymmetric grid layout */}
         <div className="
@@ -77,82 +80,90 @@ export function TrustSection() {
           {/* Trust signals - 3 columns */}
           <div className="lg:col-span-3 space-y-[var(--space-xl)]">
             {trustSignals.map((signal, index) => (
-              <div
+              <ScrollReveal
                 key={index}
-                className="
-                  flex gap-[var(--space-lg)]
-                  p-[var(--space-lg)]
-                  bg-[var(--color-surface-raised)]
-                  border border-[var(--color-border)]
-                  rounded-[var(--radius-lg)]
-                "
+                variant="fade-up"
+                delay={index * 100}
+                duration={500}
               >
-                {/* Icon - custom, not default Lucide */}
-                <div className="
-                  w-10 h-10
-                  flex items-center justify-center
-                  bg-[var(--color-confirmed-bg)]
-                  text-[var(--color-confirmed)]
-                  rounded-[var(--radius-md)]
-                  font-mono font-bold
-                  flex-shrink-0
-                ">
-                  {signal.icon}
-                </div>
+                <div
+                  className="
+                    flex gap-[var(--space-lg)]
+                    p-[var(--space-lg)]
+                    bg-[var(--color-surface-raised)]
+                    border border-[var(--color-border)]
+                    rounded-[var(--radius-lg)]
+                  "
+                >
+                  {/* Icon - custom, not default Lucide */}
+                  <div className="
+                    w-10 h-10
+                    flex items-center justify-center
+                    bg-[var(--color-confirmed-bg)]
+                    text-[var(--color-confirmed)]
+                    rounded-[var(--radius-md)]
+                    font-mono font-bold
+                    flex-shrink-0
+                  ">
+                    {signal.icon}
+                  </div>
 
-                {/* Content */}
-                <div>
-                  <h3 className="
-                    font-medium
-                    text-[var(--color-ink)]
-                    mb-[var(--space-xs)]
-                  ">
-                    {signal.title}
-                  </h3>
-                  <p className="
-                    text-[var(--color-ink-muted)]
-                    text-[var(--text-sm)]
-                    leading-relaxed
-                  ">
-                    {signal.description}
-                  </p>
+                  {/* Content */}
+                  <div>
+                    <h3 className="
+                      font-medium
+                      text-[var(--color-ink)]
+                      mb-[var(--space-xs)]
+                    ">
+                      {signal.title}
+                    </h3>
+                    <p className="
+                      text-[var(--color-ink-muted)]
+                      text-[var(--text-sm)]
+                      leading-relaxed
+                    ">
+                      {signal.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
 
           {/* Operator previews - 2 columns */}
-          <div className="lg:col-span-2 space-y-[var(--space-lg)]">
-            <h3 className="
-              text-sm font-medium uppercase tracking-wide
-              text-[var(--color-ink-subtle)]
-              mb-[var(--space-md)]
-            ">
-              Featured operators
-            </h3>
+          <ScrollReveal variant="fade-up" delay={200} duration={500} className="lg:col-span-2">
+            <div className="space-y-[var(--space-lg)]">
+              <h3 className="
+                text-sm font-medium uppercase tracking-wide
+                text-[var(--color-ink-subtle)]
+                mb-[var(--space-md)]
+              ">
+                Featured operators
+              </h3>
 
-            {featuredOperators.map((operator, index) => (
-              <OperatorPreviewCard
-                key={index}
-                {...operator}
-              />
-            ))}
+              {featuredOperators.map((operator, index) => (
+                <OperatorPreviewCard
+                  key={index}
+                  {...operator}
+                />
+              ))}
 
-            <a
-              href="/operators"
-              className="
-                inline-flex items-center gap-2
-                text-[var(--color-accent)]
-                text-sm font-medium
-                hover:underline
-                mt-[var(--space-md)]
-                py-3 px-2 min-h-[48px]
-              "
-            >
-              View all operators
-              <span aria-hidden="true">&rarr;</span>
-            </a>
-          </div>
+              <a
+                href="/operators"
+                className="
+                  inline-flex items-center gap-2
+                  text-[var(--color-accent)]
+                  text-sm font-medium
+                  hover:underline
+                  mt-[var(--space-md)]
+                  py-3 px-2 min-h-[48px]
+                "
+              >
+                View all operators
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

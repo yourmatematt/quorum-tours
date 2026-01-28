@@ -5,7 +5,7 @@
  *
  * Visualizes the quorum formation mechanic that defines Quorum Tours.
  * Each circle represents a participant slot. Filled = committed, empty = needed.
- * When threshold is met, the indicator transforms to show "Confirmed" state.
+ * When quorum is met, the indicator transforms to show "Confirmed" state.
  *
  * This is NOT a generic progress bar. It shows individual commitments
  * building toward a collective goal - the core product differentiator.
@@ -14,8 +14,8 @@
 interface QuorumIndicatorProps {
   /** Current number of committed participants */
   current: number;
-  /** Minimum participants needed to confirm the tour (quorum threshold) */
-  threshold: number;
+  /** Minimum participants needed to confirm the tour (quorum) */
+  quorum: number;
   /** Maximum participants allowed (optional, for showing additional capacity) */
   max?: number;
   /** Size variant */
@@ -30,14 +30,14 @@ interface QuorumIndicatorProps {
 
 export function QuorumIndicator({
   current,
-  threshold,
+  quorum,
   max,
   size = 'md',
   showLabel = true,
   showStatus = true,
   compact = false,
 }: QuorumIndicatorProps) {
-  const isConfirmed = current >= threshold;
+  const isConfirmed = current >= quorum;
   const isFull = max ? current >= max : false;
 
   // Size configurations (all on 4px grid)
@@ -50,15 +50,15 @@ export function QuorumIndicator({
   const config = sizeConfig[size];
 
   // Generate dots for visualization
-  // Show threshold dots (the quorum requirement)
-  // Plus any additional capacity if max > threshold and we want to show it
-  const displayCount = max && max > threshold ? max : threshold;
+  // Show quorum dots (the quorum requirement)
+  // Plus any additional capacity if max > quorum and we want to show it
+  const displayCount = max && max > quorum ? max : quorum;
 
   const dots = [];
   for (let i = 0; i < displayCount; i++) {
     const isFilled = i < current;
-    const isThresholdDot = i < threshold;
-    const isExtraCapacity = i >= threshold;
+    const isQuorumDot = i < quorum;
+    const isExtraCapacity = i >= quorum;
 
     dots.push(
       <span
@@ -82,8 +82,8 @@ export function QuorumIndicator({
 
   // Accessibility label
   const ariaLabel = isConfirmed
-    ? `Quorum confirmed: ${current} of ${threshold} participants committed${isFull ? ', tour is full' : ''}`
-    : `Quorum forming: ${current} of ${threshold} participants needed`;
+    ? `Quorum confirmed: ${current} of ${quorum} participants committed${isFull ? ', tour is full' : ''}`
+    : `Quorum forming: ${current} of ${quorum} participants needed`;
 
   return (
     <div
@@ -92,7 +92,7 @@ export function QuorumIndicator({
       aria-label={ariaLabel}
       aria-valuenow={current}
       aria-valuemin={0}
-      aria-valuemax={threshold}
+      aria-valuemax={quorum}
     >
       {/* Dots visualization */}
       <div className={`flex ${config.gap} ${compact ? '' : 'flex-wrap'}`}>
@@ -104,7 +104,7 @@ export function QuorumIndicator({
         <div className={`flex items-center justify-between mt-2 ${config.text}`}>
           {showLabel && (
             <span className="text-[var(--color-ink-muted)]">
-              {current}/{threshold} participants
+              {current}/{quorum} participants
               {isFull && <span className="ml-1 font-medium">(Full)</span>}
             </span>
           )}
@@ -132,22 +132,22 @@ export function QuorumIndicator({
  */
 export function QuorumIndicatorCompact({
   current,
-  threshold,
+  quorum,
 }: {
   current: number;
-  threshold: number;
+  quorum: number;
 }) {
-  const isConfirmed = current >= threshold;
+  const isConfirmed = current >= quorum;
 
   // For compact view, limit to 8 dots max, use proportional representation if needed
   const maxDots = 8;
-  const displayThreshold = threshold <= maxDots ? threshold : maxDots;
-  const displayCurrent = threshold <= maxDots
+  const displayQuorum = quorum <= maxDots ? quorum : maxDots;
+  const displayCurrent = quorum <= maxDots
     ? current
-    : Math.round((current / threshold) * maxDots);
+    : Math.round((current / quorum) * maxDots);
 
   const dots = [];
-  for (let i = 0; i < displayThreshold; i++) {
+  for (let i = 0; i < displayQuorum; i++) {
     const isFilled = i < displayCurrent;
     dots.push(
       <span
@@ -170,10 +170,10 @@ export function QuorumIndicatorCompact({
     <div
       className="inline-flex items-center gap-2"
       role="meter"
-      aria-label={`${current} of ${threshold} participants`}
+      aria-label={`${current} of ${quorum} participants`}
       aria-valuenow={current}
       aria-valuemin={0}
-      aria-valuemax={threshold}
+      aria-valuemax={quorum}
     >
       <div className="flex gap-1">
         {dots}
@@ -183,7 +183,7 @@ export function QuorumIndicatorCompact({
           ? 'text-[var(--color-confirmed)]'
           : 'text-[var(--color-forming)]'
       }`}>
-        {current}/{threshold}
+        {current}/{quorum}
       </span>
     </div>
   );
@@ -195,17 +195,17 @@ export function QuorumIndicatorCompact({
  */
 export function QuorumIndicatorRing({
   current,
-  threshold,
+  quorum,
   size = 64,
   showCount = true,
 }: {
   current: number;
-  threshold: number;
+  quorum: number;
   size?: number;
   showCount?: boolean;
 }) {
-  const isConfirmed = current >= threshold;
-  const progress = Math.min(current / threshold, 1);
+  const isConfirmed = current >= quorum;
+  const progress = Math.min(current / quorum, 1);
 
   // SVG circle calculations
   const strokeWidth = size * 0.1;
@@ -218,10 +218,10 @@ export function QuorumIndicatorRing({
       className="relative inline-flex items-center justify-center"
       style={{ width: size, height: size }}
       role="meter"
-      aria-label={`${current} of ${threshold} participants`}
+      aria-label={`${current} of ${quorum} participants`}
       aria-valuenow={current}
       aria-valuemin={0}
-      aria-valuemax={threshold}
+      aria-valuemax={quorum}
     >
       <svg
         className="transform -rotate-90"
@@ -260,7 +260,7 @@ export function QuorumIndicatorRing({
             {current}
           </span>
           <span className="text-xs text-[var(--color-ink-muted)]">
-            /{threshold}
+            /{quorum}
           </span>
         </div>
       )}

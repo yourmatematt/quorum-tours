@@ -59,7 +59,7 @@ export function OAuthButton({ provider, onClick }: OAuthButtonProps) {
       onClick={onClick}
       className="
         w-full
-        h-12
+        h-11
         px-[var(--space-md)]
         flex items-center justify-center gap-[var(--space-sm)]
         text-base
@@ -67,7 +67,7 @@ export function OAuthButton({ provider, onClick }: OAuthButtonProps) {
         text-[var(--color-ink)]
         bg-white
         border-2 border-[var(--color-border)]
-        rounded-[var(--radius-organic)]
+        rounded-[var(--radius-md)]
         hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]
         focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-1
         transition-all duration-200

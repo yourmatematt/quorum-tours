@@ -6,6 +6,7 @@
  */
 
 import { AlertTriangle, CheckCircle } from 'lucide-react';
+import { SystemStatusWidget } from './SystemStatusWidget';
 
 interface Alert {
   id: string;
@@ -41,7 +42,7 @@ export function DashboardOverview() {
       commission: 28475,
     },
     tours: {
-      thresholdRate: 73,
+      quorumRate: 73,
       active: 47,
       completedThisMonth: 12,
     },
@@ -107,9 +108,9 @@ export function DashboardOverview() {
           </h4>
           <div className="space-y-1">
             <div className="flex justify-between items-baseline">
-              <span className="text-xs text-[var(--color-ink-muted)]">Threshold Rate</span>
+              <span className="text-xs text-[var(--color-ink-muted)]">Quorum Rate</span>
               <span className="font-mono text-sm font-semibold text-[var(--color-confirmed)]">
-                {metrics.tours.thresholdRate}%
+                {metrics.tours.quorumRate}%
               </span>
             </div>
             <div className="flex justify-between items-baseline">
@@ -224,32 +225,49 @@ export function DashboardOverview() {
         )}
       </div>
 
-      {/* Quick Actions */}
-      <div className="flex flex-wrap gap-2">
-        <a
-          href="/admin/operators"
-          className="px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
-        >
-          Review Operators
-        </a>
-        <a
-          href="/admin/tours"
-          className="px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
-        >
-          Tour Oversight
-        </a>
-        <a
-          href="/admin/alerts"
-          className="px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
-        >
-          All Alerts
-        </a>
-        <a
-          href="/admin/audit"
-          className="px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
-        >
-          Audit Log
-        </a>
+      {/* System Status + Quick Actions Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {/* System Status Widget */}
+        <SystemStatusWidget />
+
+        {/* Quick Actions */}
+        <div className="bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-3">
+          <h4 className="text-xs font-medium text-[var(--color-ink-muted)] uppercase tracking-wide mb-2">
+            Quick Actions
+          </h4>
+          <div className="flex flex-wrap gap-2">
+            <a
+              href="/admin/operators"
+              className="px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] bg-[var(--color-surface-sunken)] border border-[var(--color-border)] rounded-[var(--radius-organic)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
+            >
+              Review Operators
+            </a>
+            <a
+              href="/admin/tours"
+              className="px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] bg-[var(--color-surface-sunken)] border border-[var(--color-border)] rounded-[var(--radius-organic)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
+            >
+              Tour Oversight
+            </a>
+            <a
+              href="/admin/alerts"
+              className="px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] bg-[var(--color-surface-sunken)] border border-[var(--color-border)] rounded-[var(--radius-organic)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
+            >
+              All Alerts
+            </a>
+            <a
+              href="/admin/audit"
+              className="px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] bg-[var(--color-surface-sunken)] border border-[var(--color-border)] rounded-[var(--radius-organic)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
+            >
+              Audit Log
+            </a>
+            <a
+              href="/admin/system"
+              className="px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] bg-[var(--color-surface-sunken)] border border-[var(--color-border)] rounded-[var(--radius-organic)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
+            >
+              System Health
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );

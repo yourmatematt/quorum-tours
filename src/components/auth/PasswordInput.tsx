@@ -5,6 +5,8 @@ import { useState, type InputHTMLAttributes } from 'react';
 interface PasswordInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label: string;
   error?: string;
+  /** Use compact height (44px vs 52px) */
+  compact?: boolean;
 }
 
 /**
@@ -20,6 +22,7 @@ export function PasswordInput({
   label,
   error,
   id,
+  compact = false,
   ...props
 }: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,13 +34,7 @@ export function PasswordInput({
       {/* Label */}
       <label
         htmlFor={inputId}
-        className="
-          block
-          text-sm
-          font-medium
-          text-[var(--color-ink)]
-          mb-[var(--space-xs)]
-        "
+        className="block text-sm font-medium text-[var(--color-ink)] mb-1"
       >
         {label}
       </label>
@@ -49,13 +46,13 @@ export function PasswordInput({
           id={inputId}
           className={`
             w-full
-            h-12 sm:h-[52px]
+            ${compact ? 'h-11' : 'h-12 sm:h-[52px]'}
             px-[var(--space-md)]
             pr-20
             text-base
             text-[var(--color-ink)]
             bg-white
-            border-2 rounded-[var(--radius-organic)]
+            border-2 rounded-[var(--radius-md)]
             transition-all duration-200
             focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-1
             ${
@@ -126,15 +123,7 @@ export function PasswordInput({
 
       {/* Error message */}
       {error && (
-        <p
-          id={errorId}
-          className="
-            mt-[var(--space-xs)]
-            text-sm
-            text-[var(--color-danger)]
-          "
-          role="alert"
-        >
+        <p id={errorId} className="mt-1 text-xs text-[var(--color-danger)]" role="alert">
           {error}
         </p>
       )}

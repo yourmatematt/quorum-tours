@@ -1,12 +1,46 @@
+'use client';
+
+import { useState } from 'react';
+import Image from 'next/image';
+
 const PRIMARY_CTA_CLASSES = "inline-flex items-center justify-center bg-white text-[var(--color-primary)] hover:bg-white/90 px-8 py-4 text-lg font-semibold rounded-[var(--radius-md)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--color-primary)] transition-colors";
 const SECONDARY_CTA_CLASSES = "inline-flex items-center justify-center bg-transparent text-white border-2 border-white/40 hover:bg-white/10 hover:border-white/60 px-8 py-4 text-lg font-semibold rounded-[var(--radius-md)] focus:outline-none focus:ring-2 focus:ring-white transition-colors";
 
 // TODO: Update with actual Calendly URL before launch
 const CALENDLY_URL = "https://calendly.com/quorumtours/operator-onboarding";
 
+/**
+ * For Operators Hero - Background image with overlay
+ *
+ * Image: Place at /public/images/hero/operators-hero.jpg
+ * Stock search: "wildlife guide binoculars", "birdwatching tour guide", "nature tour group australia"
+ */
 export function OperatorHero(): JSX.Element {
+  const [imageError, setImageError] = useState(false);
+  const heroImage = '/images/hero/operators-hero.jpg';
+
   return (
-    <section className="relative min-h-[85vh] flex items-center py-[var(--space-4xl)] bg-gradient-to-br from-[var(--color-ink)] to-[var(--color-primary)] overflow-hidden">
+    <section className="relative min-h-[85vh] flex items-center py-[var(--space-4xl)] overflow-hidden">
+      {/* Background - Image with fallback gradient */}
+      <div className="absolute inset-0">
+        {!imageError ? (
+          <Image
+            src={heroImage}
+            alt="Wildlife tour guide in Australian bush"
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+            onError={() => setImageError(true)}
+          />
+        ) : null}
+        {/* Gradient overlay - always shown */}
+        <div
+          className="absolute inset-0 bg-gradient-to-br from-[#1B4D3E]/95 via-[#1B4D3E]/85 to-[#1B4D3E]/70"
+          aria-hidden="true"
+        />
+      </div>
+
       <div className="relative z-10 w-full max-w-[var(--container-max)] mx-auto px-[var(--space-lg)]">
         <div className="max-w-[900px]">
           <h1 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-[1.1] text-white mb-[var(--space-xl)]">
@@ -15,7 +49,7 @@ export function OperatorHero(): JSX.Element {
           </h1>
 
           <p className="text-[var(--text-xl)] text-white/90 mb-[var(--space-lg)] leading-relaxed max-w-[50ch]">
-            List your tour with a minimum threshold. We collect deposits,<br />
+            List your tour with a minimum quorum. We collect deposits,<br />
             track progress, and only charge cards when you're ready to run.<br />
             You commit to suppliers when birders commit to you.
           </p>

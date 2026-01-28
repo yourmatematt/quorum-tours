@@ -20,7 +20,7 @@ const FAQ_CATEGORIES = [
     name: 'Tours',
     questions: [
       { q: 'Single-day vs multi-day?', a: 'Single-day has one date. Multi-day spans multiple days with itineraries.' },
-      { q: 'Setting participant threshold?', a: 'In Pricing step - tour confirms when threshold is reached.' },
+      { q: 'Setting participant quorum?', a: 'In Pricing step - tour confirms when quorum is reached.' },
       { q: 'Can I duplicate a tour?', a: 'Yes, click "Duplicate" on any tour card in My Tours.' },
     ],
   },

@@ -5,6 +5,7 @@ interface CommitmentSummaryProps {
   tourName: string;
   tourDate: string;
   price: number;
+  deposit?: number;
   cancellationDeadline?: string;
 }
 
@@ -21,23 +22,27 @@ export function CommitmentSummary({
   tourName,
   tourDate,
   price,
+  deposit = 0,
   cancellationDeadline,
 }: CommitmentSummaryProps) {
   const isConfirmed = status === 'confirmed';
+  const requiresDeposit = deposit > 0;
+  const balance = price - deposit;
 
   return (
     <div
       className="
         bg-[var(--color-surface-sunken)]
-        border border-[var(--color-border)]
-        rounded-[var(--radius-lg)]
+        border-2 border-[var(--color-border)]
+        rounded-[var(--radius-organic)]
         p-[var(--space-lg)]
       "
     >
       <h3
         className="
           font-display
-          text-[var(--text-lg)]
+          text-lg
+          font-semibold
           text-[var(--color-ink)]
           mb-[var(--space-md)]
         "
@@ -48,7 +53,7 @@ export function CommitmentSummary({
       {isConfirmed ? (
         /* Confirmed Tour Summary */
         <div className="space-y-[var(--space-sm)]">
-          <ul className="space-y-[var(--space-sm)] text-[var(--text-sm)] text-[var(--color-ink-muted)]">
+          <ul className="space-y-[var(--space-sm)] text-sm text-[var(--color-ink-muted)]">
             <li className="flex items-start gap-[var(--space-sm)]">
               <span className="text-[var(--color-confirmed)] mt-0.5">•</span>
               <span>
@@ -79,10 +84,10 @@ export function CommitmentSummary({
               border-t border-[var(--color-border)]
             "
           >
-            <p className="text-[var(--text-sm)] font-medium text-[var(--color-ink)] mb-[var(--space-xs)]">
+            <p className="text-sm font-medium text-[var(--color-ink)] mb-[var(--space-xs)]">
               If you need to cancel:
             </p>
-            <ul className="text-[var(--text-sm)] text-[var(--color-ink-muted)] space-y-[var(--space-xs)]">
+            <ul className="text-sm text-[var(--color-ink-muted)] space-y-[var(--space-xs)]">
               {cancellationDeadline && (
                 <li>Before {cancellationDeadline}: Full refund</li>
               )}
@@ -90,32 +95,20 @@ export function CommitmentSummary({
             </ul>
           </div>
         </div>
-      ) : (
-        /* Forming Tour Summary */
+      ) : requiresDeposit ? (
+        /* Forming Tour - Deposit Required */
         <div className="space-y-[var(--space-sm)]">
-          <ul className="space-y-[var(--space-sm)] text-[var(--text-sm)] text-[var(--color-ink-muted)]">
+          <ul className="space-y-[var(--space-sm)] text-sm text-[var(--color-ink-muted)]">
             <li className="flex items-start gap-[var(--space-sm)]">
               <span className="text-[var(--color-forming)] mt-0.5">•</span>
               <span>
-                Your interest in <strong className="text-[var(--color-ink)]">{tourName}</strong> is registered
+                Your commitment to <strong className="text-[var(--color-ink)]">{tourName}</strong> is registered
               </span>
             </li>
             <li className="flex items-start gap-[var(--space-sm)]">
               <span className="text-[var(--color-forming)] mt-0.5">•</span>
               <span>
-                You&apos;ll be notified when the tour reaches its threshold
-              </span>
-            </li>
-            <li className="flex items-start gap-[var(--space-sm)]">
-              <span className="text-[var(--color-forming)] mt-0.5">•</span>
-              <span>
-                You can withdraw your interest anytime before confirmation
-              </span>
-            </li>
-            <li className="flex items-start gap-[var(--space-sm)]">
-              <span className="text-[var(--color-forming)] mt-0.5">•</span>
-              <span>
-                <strong className="text-[var(--color-ink)]">No payment required</strong> until the tour confirms
+                Your <strong className="text-[var(--color-ink)]">${deposit}</strong> deposit secures your spot
               </span>
             </li>
           </ul>
@@ -128,12 +121,79 @@ export function CommitmentSummary({
               border-t border-[var(--color-border)]
             "
           >
-            <p className="text-[var(--text-sm)] font-medium text-[var(--color-ink)] mb-[var(--space-xs)]">
-              If the tour confirms:
-            </p>
-            <ul className="text-[var(--text-sm)] text-[var(--color-ink-muted)] space-y-[var(--space-xs)]">
-              <li>You&apos;ll receive an email to complete your booking</li>
-              <li>You&apos;ll have 48 hours to confirm or release your spot</li>
+            <h4
+              className="
+                font-display
+                text-lg
+                font-semibold
+                text-[var(--color-ink)]
+                mb-[var(--space-md)]
+              "
+            >
+              When the tour reaches quorum:
+            </h4>
+            <ul className="space-y-[var(--space-sm)] text-sm text-[var(--color-ink-muted)]">
+              <li className="flex items-start gap-[var(--space-sm)]">
+                <span className="text-[var(--color-forming)] mt-0.5">•</span>
+                <span>You&apos;ll receive an email with a payment link</span>
+              </li>
+              <li className="flex items-start gap-[var(--space-sm)]">
+                <span className="text-[var(--color-forming)] mt-0.5">•</span>
+                <span>You have <strong className="text-[var(--color-ink)]">24 hours</strong> to pay the remaining ${balance}</span>
+              </li>
+              <li className="flex items-start gap-[var(--space-sm)]">
+                <span className="text-[var(--color-forming)] mt-0.5">•</span>
+                <span>Your ${deposit} deposit is applied to the total</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      ) : (
+        /* Forming Tour - No Deposit (Trusted User) */
+        <div className="space-y-[var(--space-sm)]">
+          <ul className="space-y-[var(--space-sm)] text-sm text-[var(--color-ink-muted)]">
+            <li className="flex items-start gap-[var(--space-sm)]">
+              <span className="text-[var(--color-forming)] mt-0.5">•</span>
+              <span>
+                Your commitment to <strong className="text-[var(--color-ink)]">{tourName}</strong> is registered
+              </span>
+            </li>
+            <li className="flex items-start gap-[var(--space-sm)]">
+              <span className="text-[var(--color-forming)] mt-0.5">•</span>
+              <span>
+                You&apos;ll be notified when the tour reaches quorum
+              </span>
+            </li>
+          </ul>
+
+          {/* What happens next */}
+          <div
+            className="
+              mt-[var(--space-md)]
+              pt-[var(--space-md)]
+              border-t border-[var(--color-border)]
+            "
+          >
+            <h4
+              className="
+                font-display
+                text-lg
+                font-semibold
+                text-[var(--color-ink)]
+                mb-[var(--space-md)]
+              "
+            >
+              When the tour reaches quorum:
+            </h4>
+            <ul className="space-y-[var(--space-sm)] text-sm text-[var(--color-ink-muted)]">
+              <li className="flex items-start gap-[var(--space-sm)]">
+                <span className="text-[var(--color-forming)] mt-0.5">•</span>
+                <span>You&apos;ll receive an email with a payment link</span>
+              </li>
+              <li className="flex items-start gap-[var(--space-sm)]">
+                <span className="text-[var(--color-forming)] mt-0.5">•</span>
+                <span>You have <strong className="text-[var(--color-ink)]">24 hours</strong> to pay the full ${price}</span>
+              </li>
             </ul>
           </div>
         </div>

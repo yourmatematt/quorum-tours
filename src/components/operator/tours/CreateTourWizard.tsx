@@ -751,7 +751,7 @@ function PricingStep({
         {/* Pricing summary info box */}
         <div className="p-3 bg-[var(--color-surface-sunken)] rounded-[var(--radius-organic)] mt-2">
           <p className="text-sm text-[var(--color-ink-muted)]">
-            Quorum uses a confirmation threshold model. Your tour only runs if minimum participants commit. This protects both you and travelers.
+            Quorum uses a quorum-based confirmation model. Your tour only runs if minimum participants commit. This protects both you and travelers.
           </p>
         </div>
       </div>

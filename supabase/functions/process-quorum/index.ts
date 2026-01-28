@@ -53,7 +53,7 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     )
 
-    // Get tour with reservations
+    // Get tour with reservations and operator profile
     const { data: tour, error: tourError } = await supabase
       .from('tours')
       .select(`
@@ -66,7 +66,11 @@ serve(async (req) => {
         price_cents,
         operators (
           id,
-          business_name
+          business_name,
+          profiles (
+            email,
+            display_name
+          )
         )
       `)
       .eq('id', tour_id)
@@ -167,7 +171,7 @@ serve(async (req) => {
         email_type: 'quorum_reached',
         subject: `Great news! "${tour.title}" is confirmed - Complete your payment`,
         recipient_email: profile.email,
-        status: 'sent',
+        status: 'pending',
         metadata: {
           tour_id: tour_id,
           reservation_id: reservation.id,
@@ -176,16 +180,80 @@ serve(async (req) => {
         }
       })
 
-      // TODO: Actually send email via Resend/SendGrid
-      // For now, just log it
-      console.log(`Would send email to ${profile.email}:
-        Tour: ${tour.title}
-        Deadline: ${paymentDeadline.toISOString()}
-        Balance Due: $${(balanceDue / 100).toFixed(2)}
-      `)
+      // Send email via send-email edge function
+      try {
+        const emailResponse = await fetch(
+          `${Deno.env.get('SUPABASE_URL')}/functions/v1/send-email`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              template: 'quorum_reached',
+              to: profile.email,
+              data: {
+                userName: profile.display_name || 'there',
+                tourTitle: tour.title,
+                tourDate: tour.date_start,
+                operatorName: tour.operators?.business_name || 'your guide',
+                paymentDeadline: paymentDeadline.toISOString(),
+                balanceDueCents: balanceDue,
+                paymentUrl: `${Deno.env.get('APP_URL') || 'https://quorumtours.com'}/tours/${tour_id}/pay`,
+              },
+            }),
+          }
+        )
+
+        if (emailResponse.ok) {
+          // Update email log status
+          await supabase.from('email_log')
+            .update({ status: 'sent', sent_at: new Date().toISOString() })
+            .eq('user_id', reservation.user_id)
+            .eq('email_type', 'quorum_reached')
+            .eq('metadata->reservation_id', reservation.id)
+        } else {
+          console.error(`Failed to send email to ${profile.email}:`, await emailResponse.text())
+        }
+      } catch (emailErr) {
+        console.error(`Email send error for ${profile.email}:`, emailErr)
+      }
     })
 
     await Promise.all(emailPromises)
+
+    // Send notification to operator
+    const operatorEmail = tour.operators?.profiles?.email
+    if (operatorEmail) {
+      try {
+        await fetch(
+          `${Deno.env.get('SUPABASE_URL')}/functions/v1/send-email`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              template: 'quorum_reached_operator',
+              to: operatorEmail,
+              data: {
+                operatorName: tour.operators?.profiles?.display_name || tour.operators?.business_name || 'there',
+                tourTitle: tour.title,
+                tourDate: tour.date_start,
+                participantCount: reservations.length,
+                paymentDeadline: paymentDeadline.toISOString(),
+                expectedRevenue: ((tour.price_cents * reservations.length) / 100).toFixed(2),
+                dashboardUrl: `${Deno.env.get('APP_URL') || 'https://quorumtours.com'}/operator/tours`,
+              },
+            }),
+          }
+        )
+      } catch (opEmailErr) {
+        console.error('Failed to send operator notification:', opEmailErr)
+      }
+    }
 
     // Schedule timeout check (via pg_cron or external scheduler)
     // This would be handled by a separate cron job checking for expired payment windows
@@ -196,6 +264,7 @@ serve(async (req) => {
       new_status: 'payment_pending',
       payment_deadline: paymentDeadline.toISOString(),
       users_notified: reservations.length,
+      operator_notified: !!operatorEmail,
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })

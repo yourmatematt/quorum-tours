@@ -1,4 +1,8 @@
+'use client';
+
 import Link from 'next/link';
+import Image from 'next/image';
+import { useState } from 'react';
 
 /**
  * HowItWorksHero - Audience disambiguation hero
@@ -6,33 +10,40 @@ import Link from 'next/link';
  * Two clear paths:
  * - For Birders: scrolls to content below
  * - For Operators: navigates to /for-operators
+ *
+ * Image: Place at /public/images/hero/how-it-works-hero.jpg
+ * Stock search: "small group nature tour", "birdwatchers australia", "wildlife viewing group"
  */
 export function HowItWorksHero() {
+  const [imageError, setImageError] = useState(false);
+  const heroImage = '/images/hero/how-it-works-hero.jpg';
+
   return (
     <section className="
       relative
-      min-h-[70vh]
+      min-h-[calc(100vh-4rem)]
       flex items-center
       py-[var(--space-4xl)]
-      bg-gradient-to-br from-[var(--color-surface)] via-[var(--color-surface-sunken)] to-[var(--color-surface)]
       overflow-hidden
     ">
-      {/* Subtle organic background shapes */}
-      <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div className="
-          absolute top-10 right-[10%]
-          w-[400px] h-[400px]
-          bg-gradient-to-br from-[var(--color-primary)]/5 to-transparent
-          rounded-[60%_40%_30%_70%/40%_70%_30%_60%]
-          blur-3xl
-        " />
-        <div className="
-          absolute bottom-10 left-[5%]
-          w-[500px] h-[500px]
-          bg-gradient-to-tl from-[var(--color-secondary)]/5 to-transparent
-          rounded-[40%_60%_70%_30%/60%_30%_70%_40%]
-          blur-3xl
-        " />
+      {/* Background - Image with light overlay for readability */}
+      <div className="absolute inset-0">
+        {!imageError ? (
+          <Image
+            src={heroImage}
+            alt="Birders on a guided tour"
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+            onError={() => setImageError(true)}
+          />
+        ) : null}
+        {/* Light overlay for text readability - keeps page feeling bright */}
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/85 to-white/95"
+          aria-hidden="true"
+        />
       </div>
 
       <div className="

@@ -1,11 +1,19 @@
-import { type ReactNode, type ButtonHTMLAttributes } from 'react';
+import { type ReactNode, type ButtonHTMLAttributes, type AnchorHTMLAttributes } from 'react';
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+type ButtonAsButton = ButtonHTMLAttributes<HTMLButtonElement> & {
+  href?: never;
+};
+
+type ButtonAsAnchor = AnchorHTMLAttributes<HTMLAnchorElement> & {
+  href: string;
+};
+
+type ButtonProps = (ButtonAsButton | ButtonAsAnchor) & {
   variant?: ButtonVariant;
   children: ReactNode;
-}
+};
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary: `
@@ -37,21 +45,38 @@ export function Button({
   className = '',
   ...props
 }: ButtonProps) {
+  const sharedClasses = `
+    inline-flex items-center justify-center
+    px-6 py-3
+    min-h-[48px]
+    font-medium text-base
+    rounded-[var(--radius-md)]
+    transition-all duration-[var(--transition-normal)]
+    cursor-pointer
+    disabled:opacity-50 disabled:cursor-not-allowed
+    ${variantStyles[variant]}
+    ${className}
+  `;
+
+  // Render as anchor if href is provided
+  if ('href' in props && props.href) {
+    const { href, ...anchorProps } = props as ButtonAsAnchor;
+    return (
+      <a
+        href={href}
+        className={sharedClasses}
+        {...anchorProps}
+      >
+        {children}
+      </a>
+    );
+  }
+
+  // Otherwise render as button
   return (
     <button
-      className={`
-        inline-flex items-center justify-center
-        px-6 py-3
-        min-h-[48px]
-        font-medium text-base
-        rounded-[var(--radius-md)]
-        transition-all duration-[var(--transition-normal)]
-        cursor-pointer
-        disabled:opacity-50 disabled:cursor-not-allowed
-        ${variantStyles[variant]}
-        ${className}
-      `}
-      {...props}
+      className={sharedClasses}
+      {...(props as ButtonAsButton)}
     >
       {children}
     </button>

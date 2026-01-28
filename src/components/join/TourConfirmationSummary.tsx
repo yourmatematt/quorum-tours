@@ -9,7 +9,7 @@ interface TourConfirmationSummaryProps {
   operatorName: string;
   status: ConfirmationStatus;
   currentParticipants: number;
-  threshold: number;
+  quorum: number;
 }
 
 /**
@@ -27,7 +27,7 @@ export function TourConfirmationSummary({
   operatorName,
   status,
   currentParticipants,
-  threshold,
+  quorum,
 }: TourConfirmationSummaryProps) {
   const isConfirmed = status === 'confirmed';
 
@@ -82,7 +82,7 @@ export function TourConfirmationSummary({
                 {currentParticipants}
               </span>{' '}
               of{' '}
-              <span className="font-mono">{threshold}</span>{' '}
+              <span className="font-mono">{quorum}</span>{' '}
               participants needed to confirm
             </p>
             {/* Progress bar */}
@@ -96,13 +96,13 @@ export function TourConfirmationSummary({
               role="progressbar"
               aria-valuenow={currentParticipants}
               aria-valuemin={0}
-              aria-valuemax={threshold}
-              aria-label={`${currentParticipants} of ${threshold} participants`}
+              aria-valuemax={quorum}
+              aria-label={`${currentParticipants} of ${quorum} participants`}
             >
               <div
                 className="h-full rounded-[var(--radius-pill)] transition-all duration-500 ease-out"
                 style={{
-                  width: `${Math.min((currentParticipants / threshold) * 100, 100)}%`,
+                  width: `${Math.min((currentParticipants / quorum) * 100, 100)}%`,
                   backgroundColor: 'var(--color-forming)',
                 }}
               />

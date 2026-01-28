@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { ScrollReveal, StaggerContainer } from '@/components/ui/ScrollReveal';
 
 interface ProcessStep {
   number: number;
@@ -13,7 +14,7 @@ interface ProcessStep {
  * How It Works Section - Organic Biophilic Design
  *
  * Design System: HOME-REDESIGN-DECISIONS.md
- * - 3-step threshold mechanic with flowing layout
+ * - 3-step quorum mechanic with flowing layout
  * - Organic rounded corners (20px) and natural shadows
  * - Forest green accent numbers
  */
@@ -33,7 +34,7 @@ export function HowItWorksSection() {
     {
       number: 2,
       action: 'Commit conditionally',
-      outcome: 'You agree to join if the threshold is met. Still no charge.',
+      outcome: 'You agree to join if quorum is reached. Still no charge.',
       icon: (
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -43,7 +44,7 @@ export function HowItWorksSection() {
     {
       number: 3,
       action: 'Tour confirms',
-      outcome: 'Threshold met. The tour runs. Everyone goes.',
+      outcome: 'Quorum reached. The tour runs. Everyone goes.',
       icon: (
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -62,24 +63,26 @@ export function HowItWorksSection() {
         mx-auto px-6 lg:px-8
       ">
         {/* Section header - center aligned */}
-        <div className="mb-16 text-center max-w-2xl mx-auto">
-          <h2 className="
-            font-display
-            text-[clamp(1.75rem,4vw,2.5rem)]
-            leading-tight
-            text-[var(--color-ink)]
-            mb-[var(--space-md)]
-          ">
-            How confirmation works.
-          </h2>
-          <p className="
-            text-[var(--color-ink-muted)]
-            text-lg
-            leading-relaxed
-          ">
-            Three stages. Zero risk until the tour is guaranteed to run.
-          </p>
-        </div>
+        <ScrollReveal variant="fade-up" duration={500}>
+          <div className="mb-16 text-center max-w-2xl mx-auto">
+            <h2 className="
+              font-display
+              text-[clamp(1.75rem,4vw,2.5rem)]
+              leading-tight
+              text-[var(--color-ink)]
+              mb-[var(--space-md)]
+            ">
+              How confirmation works.
+            </h2>
+            <p className="
+              text-[var(--color-ink-muted)]
+              text-lg
+              leading-relaxed
+            ">
+              Three stages. Zero risk until the tour is guaranteed to run.
+            </p>
+          </div>
+        </ScrollReveal>
 
         {/* Process steps - flowing horizontal layout */}
         <div className="
@@ -98,117 +101,126 @@ export function HowItWorksSection() {
           " aria-hidden="true" />
 
           {steps.map((step, index) => (
-            <div key={step.number} className="relative">
-              {/* Step container - organic rounded corners */}
-              <div className="
-                bg-white
-                border-2 border-[var(--color-border)]
-                rounded-[var(--radius-organic)]
-                p-8
-                shadow-[var(--shadow-card)]
-                hover:shadow-[var(--shadow-card-hover)]
-                hover:border-[var(--color-primary)]
-                transition-all duration-200
-                relative
-              ">
-                {/* Step number - forest green circle */}
+            <ScrollReveal
+              key={step.number}
+              variant="fade-up"
+              delay={index * 150}
+              duration={500}
+            >
+              <div className="relative">
+                {/* Step container - organic rounded corners */}
                 <div className="
-                  absolute -top-6 left-8
-                  w-12 h-12
-                  bg-[var(--color-primary)]
-                  text-white
-                  font-heading font-semibold
-                  rounded-full
-                  flex items-center justify-center
-                  text-xl
+                  bg-white
+                  border-2 border-[var(--color-border)]
+                  rounded-[var(--radius-organic)]
+                  p-8
                   shadow-[var(--shadow-card)]
-                  z-10
+                  hover:shadow-[var(--shadow-card-hover)]
+                  hover:border-[var(--color-primary)]
+                  transition-all duration-200
+                  relative
                 ">
-                  {step.number}
+                  {/* Step number - forest green circle */}
+                  <div className="
+                    absolute -top-6 left-8
+                    w-12 h-12
+                    bg-[var(--color-primary)]
+                    text-white
+                    font-heading font-semibold
+                    rounded-full
+                    flex items-center justify-center
+                    text-xl
+                    shadow-[var(--shadow-card)]
+                    z-10
+                  ">
+                    {step.number}
+                  </div>
+
+                  {/* Icon */}
+                  <div className="
+                    mt-6 mb-4
+                    text-[var(--color-secondary)]
+                  ">
+                    {step.icon}
+                  </div>
+
+                  {/* Action headline - Crimson Pro */}
+                  <h3 className="
+                    font-heading
+                    text-2xl
+                    font-semibold
+                    text-[var(--color-ink)]
+                    mb-3
+                  ">
+                    {step.action}
+                  </h3>
+
+                  {/* Outcome - Atkinson Hyperlegible */}
+                  <p className="
+                    text-[var(--color-ink-muted)]
+                    text-base
+                    leading-relaxed
+                  ">
+                    {step.outcome}
+                  </p>
                 </div>
 
-                {/* Icon */}
-                <div className="
-                  mt-6 mb-4
-                  text-[var(--color-secondary)]
-                ">
-                  {step.icon}
-                </div>
-
-                {/* Action headline - Crimson Pro */}
-                <h3 className="
-                  font-heading
-                  text-2xl
-                  font-semibold
-                  text-[var(--color-ink)]
-                  mb-3
-                ">
-                  {step.action}
-                </h3>
-
-                {/* Outcome - Atkinson Hyperlegible */}
-                <p className="
-                  text-[var(--color-ink-muted)]
-                  text-base
-                  leading-relaxed
-                ">
-                  {step.outcome}
-                </p>
+                {/* Arrow connector on mobile */}
+                {index < steps.length - 1 && (
+                  <div className="
+                    md:hidden
+                    flex justify-center
+                    py-4
+                    text-[var(--color-primary)]
+                  " aria-hidden="true">
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M12 5v14M5 12l7 7 7-7" />
+                    </svg>
+                  </div>
+                )}
               </div>
-
-              {/* Arrow connector on mobile */}
-              {index < steps.length - 1 && (
-                <div className="
-                  md:hidden
-                  flex justify-center
-                  py-4
-                  text-[var(--color-primary)]
-                " aria-hidden="true">
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M12 5v14M5 12l7 7 7-7" />
-                  </svg>
-                </div>
-              )}
-            </div>
+            </ScrollReveal>
           ))}
         </div>
 
         {/* Clarification card - organic styling */}
-        <div className="
-          max-w-3xl mx-auto
-          p-8
-          bg-[var(--color-surface)]
-          border-2 border-[var(--color-border)]
-          rounded-[var(--radius-organic)]
-          shadow-[var(--shadow-card)]
-        ">
-          <div className="flex items-start gap-4">
-            <div className="
-              flex-shrink-0
-              w-12 h-12
-              bg-[var(--color-primary)]/10
-              rounded-full
-              flex items-center justify-center
-            ">
-              <svg className="w-6 h-6 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-lg text-[var(--color-ink)]">
-                <strong className="font-semibold">If the threshold is not met?</strong>
-                {' '}The tour does not run. Your conditional commitment expires. You are not charged.
-              </p>
+        <ScrollReveal variant="fade-up" delay={450} duration={500}>
+          <div className="
+            max-w-3xl mx-auto
+            p-8
+            bg-[var(--color-surface)]
+            border-2 border-[var(--color-border)]
+            rounded-[var(--radius-organic)]
+            shadow-[var(--shadow-card)]
+          ">
+            <div className="flex items-start gap-4">
+              <div className="
+                flex-shrink-0
+                w-12 h-12
+                bg-[var(--color-primary)]/10
+                rounded-full
+                flex items-center justify-center
+              ">
+                <svg className="w-6 h-6 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-lg text-[var(--color-ink)]">
+                  <strong className="font-semibold">If quorum is not reached?</strong>
+                  {' '}The tour does not run. Your conditional commitment expires. You are not charged.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

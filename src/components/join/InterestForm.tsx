@@ -4,17 +4,17 @@ import { useState } from 'react';
 
 interface InterestFormProps {
   defaultEmail?: string;
+  requiresDeposit?: boolean;
 }
 
 /**
  * InterestForm - Minimal form for expressing interest in forming tours
  *
- * Even simpler than JoinForm - only email and notification preference.
- * No payment information required.
- *
- * Per IA: "No payment required until the tour confirms"
+ * Two states:
+ * 1. Deposit required - User pays deposit now to commit
+ * 2. No deposit (trusted user) - No payment until tour confirms
  */
-export function InterestForm({ defaultEmail = '' }: InterestFormProps) {
+export function InterestForm({ defaultEmail = '', requiresDeposit = false }: InterestFormProps) {
   const [email, setEmail] = useState(defaultEmail);
   const [notifyBySms, setNotifyBySms] = useState(false);
   const [phone, setPhone] = useState('');
@@ -34,17 +34,19 @@ export function InterestForm({ defaultEmail = '' }: InterestFormProps) {
     <div
       className="
         bg-[var(--color-surface-raised)]
-        border border-[var(--color-border)]
-        rounded-[var(--radius-lg)]
+        border-2 border-[var(--color-border)]
+        rounded-[var(--radius-organic)]
         p-[var(--space-lg)]
+        shadow-[var(--shadow-card)]
       "
     >
       <h3
         className="
           font-display
-          text-[var(--text-lg)]
+          text-lg
+          font-semibold
           text-[var(--color-ink)]
-          mb-[var(--space-lg)]
+          mb-[var(--space-md)]
         "
       >
         Your information
@@ -56,7 +58,7 @@ export function InterestForm({ defaultEmail = '' }: InterestFormProps) {
           <label
             htmlFor="interest-email"
             className="
-              block text-[var(--text-sm)] font-medium
+              block text-sm font-medium
               text-[var(--color-ink)]
               mb-[var(--space-xs)]
             "
@@ -82,7 +84,7 @@ export function InterestForm({ defaultEmail = '' }: InterestFormProps) {
               transition-colors duration-[var(--transition-fast)]
             "
           />
-          <p className="text-[var(--text-xs)] text-[var(--color-ink-subtle)] mt-1">
+          <p className="text-xs text-[var(--color-ink-subtle)] mt-1">
             We&apos;ll notify you when the tour confirms
           </p>
         </div>
@@ -91,7 +93,7 @@ export function InterestForm({ defaultEmail = '' }: InterestFormProps) {
         <div>
           <p
             className="
-              text-[var(--text-sm)] font-medium
+              text-sm font-medium
               text-[var(--color-ink)]
               mb-[var(--space-sm)]
             "
@@ -114,10 +116,10 @@ export function InterestForm({ defaultEmail = '' }: InterestFormProps) {
                   focus:ring-[var(--color-accent)]
                 "
               />
-              <span className="text-[var(--text-sm)] text-[var(--color-ink)]">
+              <span className="text-sm text-[var(--color-ink)]">
                 Email
               </span>
-              <span className="text-[var(--text-xs)] text-[var(--color-ink-subtle)]">
+              <span className="text-xs text-[var(--color-ink-subtle)]">
                 (always)
               </span>
             </label>
@@ -137,10 +139,10 @@ export function InterestForm({ defaultEmail = '' }: InterestFormProps) {
                   cursor-pointer
                 "
               />
-              <span className="text-[var(--text-sm)] text-[var(--color-ink)]">
+              <span className="text-sm text-[var(--color-ink)]">
                 SMS
               </span>
-              <span className="text-[var(--text-xs)] text-[var(--color-ink-subtle)]">
+              <span className="text-xs text-[var(--color-ink-subtle)]">
                 (optional)
               </span>
             </label>
@@ -152,7 +154,7 @@ export function InterestForm({ defaultEmail = '' }: InterestFormProps) {
               <label
                 htmlFor="interest-phone"
                 className="
-                  block text-[var(--text-sm)] font-medium
+                  block text-sm font-medium
                   text-[var(--color-ink)]
                   mb-[var(--space-xs)]
                 "
@@ -182,34 +184,39 @@ export function InterestForm({ defaultEmail = '' }: InterestFormProps) {
         </div>
       </div>
 
-      {/* No payment info notice */}
-      <div
-        className="
-          mt-[var(--space-lg)]
-          pt-[var(--space-md)]
-          border-t border-[var(--color-border)]
-        "
-      >
-        <div className="flex items-start gap-[var(--space-sm)]">
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            className="text-[var(--color-forming)] flex-shrink-0 mt-0.5"
-            aria-hidden="true"
-          >
-            <circle cx="10" cy="10" r="8" />
-            <path d="M10 6v4l2 2" />
-          </svg>
-          <p className="text-[var(--text-sm)] text-[var(--color-ink-muted)]">
-            No payment information required. You&apos;ll only be asked for payment
-            details if the tour confirms.
-          </p>
+      {/* Trust indicator - only for no-deposit users */}
+      {!requiresDeposit && (
+        <div
+          className="
+            mt-[var(--space-lg)]
+            pt-[var(--space-md)]
+            border-t border-[var(--color-border)]
+          "
+        >
+          <div className="flex items-start gap-[var(--space-sm)]">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              className="text-[var(--color-primary)] flex-shrink-0 mt-0.5"
+              aria-hidden="true"
+            >
+              <path d="M10 2l2.5 5 5.5.8-4 3.9.9 5.3-4.9-2.6-4.9 2.6.9-5.3-4-3.9 5.5-.8z" />
+            </svg>
+            <div>
+              <p className="text-sm font-medium text-[var(--color-ink)]">
+                As a trusted user
+              </p>
+              <p className="text-sm text-[var(--color-ink-muted)]">
+                No deposit required. You&apos;ll only pay when the tour confirms.
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

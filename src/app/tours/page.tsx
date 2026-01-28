@@ -4,14 +4,19 @@ import { useState, useMemo } from 'react';
 import { TourCard } from '@/components/TourCard';
 import { FilterDropdown } from '@/components/ui/FilterDropdown';
 import { FilterChip } from '@/components/ui/FilterChip';
+import { SpeciesFilter } from '@/components/ui/SpeciesFilter';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { PreLaunchEmptyState } from '@/components/ui/PreLaunchEmptyState';
 import { Button } from '@/components/ui/Button';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useAuth } from '@/lib/supabase/useAuth';
+import { useTours, type Tour as DbTour } from '@/lib/supabase/useTours';
 
 type ConfirmationStatus = 'confirmed' | 'forming' | 'not-running';
 
-interface Tour {
+interface DisplayTour {
   id: string;
+  slug: string;
   title: string;
   operatorName: string;
   status: ConfirmationStatus;
@@ -19,8 +24,50 @@ interface Tour {
   threshold: number;
   date: string;
   location: string;
-  region: string;
   speciesHighlight: string;
+  image?: string;
+}
+
+// Map database status to display status
+function mapStatus(dbStatus: string): ConfirmationStatus {
+  switch (dbStatus) {
+    case 'confirmed':
+    case 'completed':
+      return 'confirmed';
+    case 'forming':
+    case 'payment_pending':
+      return 'forming';
+    case 'cancelled':
+    default:
+      return 'not-running';
+  }
+}
+
+// Format date for display
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-AU', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+// Map database tour to display tour
+function mapTourForDisplay(tour: DbTour): DisplayTour {
+  return {
+    id: tour.id,
+    slug: tour.slug,
+    title: tour.title,
+    operatorName: tour.operator?.name || 'Unknown Operator',
+    status: mapStatus(tour.status),
+    currentParticipants: tour.current_participants,
+    threshold: tour.threshold,
+    date: formatDate(tour.date_start),
+    location: tour.operator?.base_location || 'Australia',
+    speciesHighlight: tour.target_species?.join(', ') || '',
+    image: tour.image_url || undefined,
+  };
 }
 
 /**
@@ -31,131 +78,55 @@ interface Tour {
  * attributes must be immediately comparable.
  */
 export default function ToursPage() {
-  // Example data demonstrating different states and filtering (memoized to prevent re-creation)
-  const allTours: Tour[] = useMemo(() => [
-  {
-    id: '1',
-    title: 'Dawn Chorus at Werribee',
-    operatorName: 'Sarah Mitchell',
-    status: 'confirmed',
-    currentParticipants: 8,
-    threshold: 6,
-    date: 'Mar 15, 2026',
-    location: 'Werribee, VIC',
-    region: 'vic',
-    speciesHighlight: 'Brolga, Latham\'s Snipe',
-  },
-  {
-    id: '2',
-    title: 'Shorebird Migration Watch',
-    operatorName: 'David Chen',
-    status: 'forming',
-    currentParticipants: 5,
-    threshold: 8,
-    date: 'Apr 2, 2026',
-    location: 'Cairns, QLD',
-    region: 'qld',
-    speciesHighlight: 'Eastern Curlew, Bar-tailed Godwit',
-  },
-  {
-    id: '3',
-    title: 'Rainforest Endemics Trek',
-    operatorName: 'Maria Santos',
-    status: 'not-running',
-    currentParticipants: 2,
-    threshold: 10,
-    date: 'Feb 28, 2026',
-    location: 'Daintree, QLD',
-    region: 'qld',
-    speciesHighlight: 'Cassowary, Victoria\'s Riflebird',
-  },
-  {
-    id: '4',
-    title: 'Mallee Woodlands Discovery',
-    operatorName: 'James Wilson',
-    status: 'confirmed',
-    currentParticipants: 6,
-    threshold: 6,
-    date: 'Mar 22, 2026',
-    location: 'Murray-Sunset, VIC',
-    region: 'vic',
-    speciesHighlight: 'Malleefowl, Regent Parrot',
-  },
-  {
-    id: '5',
-    title: 'Wetlands at Dusk',
-    operatorName: 'Sarah Mitchell',
-    status: 'forming',
-    currentParticipants: 3,
-    threshold: 8,
-    date: 'Apr 10, 2026',
-    location: 'Bool Lagoon, SA',
-    region: 'sa',
-    speciesHighlight: 'Blue-billed Duck, Freckled Duck',
-  },
-  {
-    id: '6',
-    title: 'Alpine Parrot Expedition',
-    operatorName: 'Emily Roberts',
-    status: 'forming',
-    currentParticipants: 7,
-    threshold: 8,
-    date: 'May 5, 2026',
-    location: 'Kosciuszko, NSW',
-    region: 'nsw',
-    speciesHighlight: 'Gang-gang Cockatoo, Flame Robin',
-  },
-  {
-    id: '7',
-    title: 'Kimberley Endemics',
-    operatorName: 'Tom Baker',
-    status: 'forming',
-    currentParticipants: 4,
-    threshold: 12,
-    date: 'Jun 1, 2026',
-    location: 'Broome, WA',
-    region: 'wa',
-    speciesHighlight: 'Gouldian Finch, Black Grasswren',
-  },
-  {
-    id: '8',
-    title: 'Tasmanian Endemic Circuit',
-    operatorName: 'Lucy Chen',
-    status: 'confirmed',
-    currentParticipants: 10,
-    threshold: 8,
-    date: 'Apr 20, 2026',
-    location: 'Cradle Mountain, TAS',
-    region: 'tas',
-    speciesHighlight: 'Forty-spotted Pardalote, Swift Parrot',
-  },
-  ], []);
+  // Get auth state
+  const { user, isLoading: authLoading } = useAuth();
+
+  // Fetch tours from Supabase
+  const { tours: dbTours, isLoading: toursLoading, error: toursError } = useTours();
+
+  // Map database tours to display format
+  const allTours = useMemo(() => {
+    return dbTours.map(mapTourForDisplay);
+  }, [dbTours]);
 
   const statusOptions = useMemo(() => [
-  { value: 'all', label: 'All tours' },
-  { value: 'confirmed', label: 'Confirmed' },
-  { value: 'forming', label: 'Forming' },
-  { value: 'not-running', label: 'Not running' },
+    { value: 'all', label: 'All tours' },
+    { value: 'confirmed', label: 'Confirmed' },
+    { value: 'forming', label: 'Forming' },
   ], []);
 
   const regionOptions = useMemo(() => [
-  { value: 'all', label: 'All regions' },
-  { value: 'vic', label: 'Victoria' },
-  { value: 'nsw', label: 'New South Wales' },
-  { value: 'qld', label: 'Queensland' },
-  { value: 'sa', label: 'South Australia' },
-  { value: 'wa', label: 'Western Australia' },
-  { value: 'tas', label: 'Tasmania' },
+    { value: 'all', label: 'All regions' },
+    { value: 'Victoria', label: 'Victoria' },
+    { value: 'New South Wales', label: 'New South Wales' },
+    { value: 'Queensland', label: 'Queensland' },
+    { value: 'South Australia', label: 'South Australia' },
+    { value: 'Western Australia', label: 'Western Australia' },
+    { value: 'Tasmania', label: 'Tasmania' },
   ], []);
 
   const sortOptions = useMemo(() => [
-  { value: 'date', label: 'Soonest first' },
-  { value: 'confirmed', label: 'Most confirmed' },
-  { value: 'progress', label: 'Nearest threshold' },
+    { value: 'date', label: 'Soonest first' },
+    { value: 'confirmed', label: 'Most confirmed' },
+    { value: 'progress', label: 'Nearest quorum' },
   ], []);
+
   const [statusFilter, setStatusFilter] = useState('all');
   const [regionFilter, setRegionFilter] = useState('all');
+  const [speciesFilter, setSpeciesFilter] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('date');
+
+  // Extract all unique species from tour data for the autocomplete
+  const availableSpecies = useMemo(() => {
+    const speciesSet = new Set<string>();
+    allTours.forEach(tour => {
+      tour.speciesHighlight.split(',').forEach(species => {
+        const trimmed = species.trim();
+        if (trimmed) speciesSet.add(trimmed);
+      });
+    });
+    return Array.from(speciesSet).sort();
+  }, [allTours]);
 
   // Filter and sort tours
   const filteredTours = useMemo(() => {
@@ -168,31 +139,40 @@ export default function ToursPage() {
 
     // Apply region filter
     if (regionFilter !== 'all') {
-      tours = tours.filter(tour => tour.region === regionFilter);
+      tours = tours.filter(tour =>
+        tour.location.toLowerCase().includes(regionFilter.toLowerCase())
+      );
+    }
+
+    // Apply species/chase list filter
+    if (speciesFilter.length > 0) {
+      tours = tours.filter(tour => {
+        const tourSpecies = tour.speciesHighlight.toLowerCase();
+        return speciesFilter.some(species =>
+          tourSpecies.includes(species.toLowerCase())
+        );
+      });
     }
 
     // Apply sorting
     tours.sort((a, b) => {
       switch (sortBy) {
         case 'confirmed':
-          // Confirmed first, then by progress percentage
           if (a.status === 'confirmed' && b.status !== 'confirmed') return -1;
           if (b.status === 'confirmed' && a.status !== 'confirmed') return 1;
           return (b.currentParticipants / b.threshold) - (a.currentParticipants / a.threshold);
         case 'progress':
-          // Nearest to threshold first
           const aProgress = a.currentParticipants / a.threshold;
           const bProgress = b.currentParticipants / b.threshold;
           return bProgress - aProgress;
         case 'date':
         default:
-          // Simple string comparison for demo (would use actual dates in production)
           return a.date.localeCompare(b.date);
       }
     });
 
     return tours;
-  }, [allTours, statusFilter, regionFilter, sortBy]);
+  }, [allTours, statusFilter, regionFilter, speciesFilter, sortBy]);
 
   // Calculate aggregate stats
   const stats = useMemo(() => {
@@ -212,191 +192,219 @@ export default function ToursPage() {
     });
   }
   if (regionFilter !== 'all') {
-    const option = regionOptions.find(o => o.value === regionFilter);
     activeFilters.push({
       key: 'region',
-      label: option?.label || regionFilter,
+      label: regionFilter,
       onRemove: () => setRegionFilter('all'),
     });
   }
+  speciesFilter.forEach(species => {
+    activeFilters.push({
+      key: `species-${species}`,
+      label: species,
+      onRemove: () => setSpeciesFilter(prev => prev.filter(s => s !== species)),
+    });
+  });
 
   const clearAllFilters = () => {
     setStatusFilter('all');
     setRegionFilter('all');
+    setSpeciesFilter([]);
   };
+
+  // Show loading state
+  if (toursLoading) {
+    return (
+      <main className="min-h-screen bg-[var(--color-surface)]">
+        <div className="w-full max-w-[var(--container-max)] mx-auto px-[var(--space-lg)] py-[var(--space-3xl)]">
+          <div className="animate-pulse space-y-[var(--space-xl)]">
+            <div className="h-10 bg-[var(--color-border)] rounded w-1/3" />
+            <div className="h-6 bg-[var(--color-border)] rounded w-2/3" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[var(--space-xl)]">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="h-64 bg-[var(--color-border)] rounded-[var(--radius-lg)]" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Show error state
+  if (toursError) {
+    return (
+      <main className="min-h-screen bg-[var(--color-surface)]">
+        <div className="w-full max-w-[var(--container-max)] mx-auto px-[var(--space-lg)] py-[var(--space-3xl)]">
+          <EmptyState
+            title="Unable to load tours"
+            description={toursError}
+            actionLabel="Try again"
+            onAction={() => window.location.reload()}
+          />
+        </div>
+      </main>
+    );
+  }
+
+  // Show empty state if no tours in database
+  if (allTours.length === 0) {
+    return (
+      <main className="min-h-screen bg-[var(--color-surface)]">
+        <ErrorBoundary>
+          <div className="w-full max-w-[var(--container-max)] mx-auto px-[var(--space-lg)] py-[var(--space-3xl)]">
+            <header className="mb-[var(--space-md)] text-center">
+              <h1 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--color-ink)] mb-[var(--space-sm)]">
+                Tours
+              </h1>
+            </header>
+            <PreLaunchEmptyState
+              context="tours"
+              isLoggedIn={!!user}
+              userName={user?.email?.split('@')[0]}
+            />
+          </div>
+        </ErrorBoundary>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[var(--color-surface)]">
       <ErrorBoundary>
-        <div className="
-          w-full max-w-[var(--container-max)]
-          mx-auto px-[var(--space-lg)]
-          py-[var(--space-3xl)]
-        ">
+        <div className="w-full max-w-[var(--container-max)] mx-auto px-[var(--space-lg)] py-[var(--space-3xl)]">
           {/* Section 1: Page Header */}
           <header className="mb-[var(--space-2xl)]">
-            <h1 className="
-              font-display
-              text-3xl sm:text-4xl
-              font-semibold
-              text-[var(--color-ink)]
-              mb-[var(--space-sm)]
-            ">
+            <h1 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--color-ink)] mb-[var(--space-sm)]">
               Find Your Next Tour
             </h1>
             <p className="text-[var(--color-ink-muted)]">
-              Compare tours by confirmation status, timing, and region. Every tour shows its current threshold progress.
+              Compare tours by confirmation status, timing, and region. Every tour shows its current quorum progress.
             </p>
           </header>
 
           {/* Section 2: Filtering & Sorting Controls */}
-        <div className="
-          mb-[var(--space-xl)]
-          p-[var(--space-lg)]
-          bg-[var(--color-surface-raised)]
-          border-2 border-[var(--color-border)]
-          rounded-[var(--radius-organic)]
-          shadow-[var(--shadow-card)]
-        ">
-          {/* Filter dropdowns */}
-          <div className="
-            flex flex-wrap items-center gap-[var(--space-md)]
-            mb-[var(--space-md)]
-          ">
-            <FilterDropdown
-              label="Status"
-              options={statusOptions}
-              value={statusFilter}
-              onChange={setStatusFilter}
-            />
-            <FilterDropdown
-              label="Region"
-              options={regionOptions}
-              value={regionFilter}
-              onChange={setRegionFilter}
-            />
-            <div className="
-              hidden sm:block
-              w-px h-8
-              bg-[var(--color-border)]
-            " aria-hidden="true" />
-            <FilterDropdown
-              label="Sort"
-              options={sortOptions}
-              value={sortBy}
-              onChange={setSortBy}
-            />
+          <div className="mb-[var(--space-xl)] p-[var(--space-lg)] bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] shadow-[var(--shadow-card)]">
+            {/* Filter dropdowns row */}
+            <div className="flex flex-wrap items-center gap-[var(--space-md)] mb-[var(--space-md)]">
+              <FilterDropdown
+                label="Status"
+                options={statusOptions}
+                value={statusFilter}
+                onChange={setStatusFilter}
+              />
+              <FilterDropdown
+                label="Region"
+                options={regionOptions}
+                value={regionFilter}
+                onChange={setRegionFilter}
+              />
+              <SpeciesFilter
+                selected={speciesFilter}
+                onChange={setSpeciesFilter}
+                availableSpecies={availableSpecies}
+                maxSelections={5}
+              />
+              <div className="hidden sm:block w-px h-8 bg-[var(--color-border)]" aria-hidden="true" />
+              <FilterDropdown
+                label="Sort"
+                options={sortOptions}
+                value={sortBy}
+                onChange={setSortBy}
+              />
+            </div>
+
+            {/* Active filters and results count */}
+            <div className="flex flex-wrap items-center justify-between gap-[var(--space-md)]">
+              <div className="flex flex-wrap items-center gap-[var(--space-sm)]">
+                {activeFilters.map(filter => (
+                  <FilterChip
+                    key={filter.key}
+                    label={filter.label}
+                    onRemove={filter.onRemove}
+                  />
+                ))}
+                {activeFilters.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={clearAllFilters}
+                    className="text-sm text-[var(--color-primary)] font-medium hover:underline focus:outline-none focus:underline py-3 px-2 min-h-[48px]"
+                  >
+                    Clear all
+                  </button>
+                )}
+              </div>
+
+              {/* Aggregate Signals */}
+              <div className="text-sm text-[var(--color-ink-muted)]" aria-live="polite">
+                <span className="font-mono font-medium text-[var(--color-ink)]">
+                  {stats.total}
+                </span>
+                {' '}tours
+                {stats.confirmed > 0 && (
+                  <>
+                    {' · '}
+                    <span className="text-[var(--color-confirmed)]">
+                      {stats.confirmed} confirmed
+                    </span>
+                  </>
+                )}
+                {stats.forming > 0 && (
+                  <>
+                    {' · '}
+                    <span className="text-[var(--color-forming)]">
+                      {stats.forming} forming
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
 
-          {/* Active filters and results count */}
-          <div className="
-            flex flex-wrap items-center justify-between
-            gap-[var(--space-md)]
-          ">
-            <div className="flex flex-wrap items-center gap-[var(--space-sm)]">
-              {activeFilters.map(filter => (
-                <FilterChip
-                  key={filter.key}
-                  label={filter.label}
-                  onRemove={filter.onRemove}
+          {/* Section 3: Tours List OR Empty State */}
+          {filteredTours.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[var(--space-xl)]">
+              {filteredTours.map(tour => (
+                <TourCard
+                  key={tour.id}
+                  title={tour.title}
+                  operatorName={tour.operatorName}
+                  status={tour.status}
+                  currentParticipants={tour.currentParticipants}
+                  quorum={tour.threshold}
+                  date={tour.date}
+                  location={tour.location}
+                  speciesHighlight={tour.speciesHighlight}
+                  href={`/tours/${tour.slug}`}
+                  image={tour.image}
                 />
               ))}
-              {activeFilters.length > 1 && (
-                <button
-                  type="button"
-                  onClick={clearAllFilters}
-                  className="
-                    text-sm text-[var(--color-primary)]
-                    font-medium
-                    hover:underline
-                    focus:outline-none focus:underline
-                    py-3 px-2 min-h-[48px]
-                  "
-                >
-                  Clear all
-                </button>
-              )}
             </div>
+          ) : (
+            <EmptyState
+              title="No tours match your filters"
+              description="Try adjusting your filters to see more tours."
+              suggestions={[
+                'Broaden the date range',
+                'Select a different region',
+                'Include all confirmation statuses',
+              ]}
+              actionLabel="Clear all filters"
+              onAction={clearAllFilters}
+            />
+          )}
 
-            {/* Section 4: Aggregate Signals */}
-            <div
-              className="text-sm text-[var(--color-ink-muted)]"
-              aria-live="polite"
-            >
-              <span className="font-mono font-medium text-[var(--color-ink)]">
-                {stats.total}
-              </span>
-              {' '}tours
-              {stats.confirmed > 0 && (
-                <>
-                  {' · '}
-                  <span className="text-[var(--color-confirmed)]">
-                    {stats.confirmed} confirmed
-                  </span>
-                </>
-              )}
-              {stats.forming > 0 && (
-                <>
-                  {' · '}
-                  <span className="text-[var(--color-forming)]">
-                    {stats.forming} forming
-                  </span>
-                </>
-              )}
+          {/* Load More */}
+          {filteredTours.length > 0 && filteredTours.length >= 6 && (
+            <div className="mt-[var(--space-3xl)] flex flex-col items-center gap-[var(--space-md)]">
+              <p className="text-sm text-[var(--color-ink-subtle)]">
+                Showing {filteredTours.length} of {filteredTours.length} tours
+              </p>
+              <Button variant="secondary">
+                Load more tours
+              </Button>
             </div>
-          </div>
-        </div>
-
-        {/* Section 3: Tours List OR Section 5: Empty State */}
-        {filteredTours.length > 0 ? (
-          <div className="
-            grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
-            gap-[var(--space-xl)]
-          ">
-            {filteredTours.map(tour => (
-              <TourCard
-                key={tour.id}
-                title={tour.title}
-                operatorName={tour.operatorName}
-                status={tour.status}
-                currentParticipants={tour.currentParticipants}
-                threshold={tour.threshold}
-                date={tour.date}
-                location={tour.location}
-                speciesHighlight={tour.speciesHighlight}
-                href={`/tours/${tour.id}`}
-              />
-            ))}
-          </div>
-        ) : (
-          <EmptyState
-            title="No tours match your filters"
-            description="Try adjusting your filters to see more tours."
-            suggestions={[
-              'Broaden the date range',
-              'Select a different region',
-              'Include all confirmation statuses',
-            ]}
-            actionLabel="Clear all filters"
-            onAction={clearAllFilters}
-          />
-        )}
-
-        {/* Section 6: Load More (shown when there are many results) */}
-        {filteredTours.length > 0 && filteredTours.length >= 6 && (
-          <div className="
-            mt-[var(--space-3xl)]
-            flex flex-col items-center
-            gap-[var(--space-md)]
-          ">
-            <p className="text-sm text-[var(--color-ink-subtle)]">
-              Showing {filteredTours.length} of {filteredTours.length} tours
-            </p>
-            <Button variant="secondary">
-              Load more tours
-            </Button>
-          </div>
-        )}
+          )}
         </div>
       </ErrorBoundary>
     </main>

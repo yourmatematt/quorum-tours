@@ -25,3 +25,5 @@ export { UserManagement } from './UserManagement';
 export { PlatformMetrics } from './PlatformMetrics';
 export { AlertsMonitoring } from './AlertsMonitoring';
 export { AuditLog } from './AuditLog';
+export { SystemHealthDashboard } from './SystemHealthDashboard';
+export { SystemStatusWidget } from './SystemStatusWidget';

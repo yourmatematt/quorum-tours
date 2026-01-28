@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 import { PasswordInput } from './PasswordInput';
-import { PasswordRequirements } from './PasswordRequirements';
 import { FormAlert } from './FormAlert';
-import { AuthDivider } from './AuthDivider';
 import { OAuthButton } from './OAuthButton';
 
 interface SignupFormProps {
@@ -13,23 +13,20 @@ interface SignupFormProps {
 }
 
 /**
- * SignupForm - Redesigned with Organic Biophilic design system
- *
- * Design System: HOME-REDESIGN-DECISIONS.md
- * - Typography: Crimson Pro (display) + Atkinson Hyperlegible (body)
- * - Colors: Forest Green #2E8B57, Gold CTA #FFD700
- * - Style: Organic rounded corners (20px), natural shadows
+ * SignupForm - Compact design for single-viewport auth pages
  *
  * Minimal fields: email, password only (no confirm password)
  * Trust-focused: Privacy assurance, social login, clear feedback
- *
- * UI Shell: No actual account creation implemented.
  */
 export function SignupForm({ redirectTo }: SignupFormProps) {
+  const router = useRouter();
+  const supabase = createClient();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [signupSuccess, setSignupSuccess] = useState(false);
 
   // Field-level errors
   const [emailError, setEmailError] = useState<string | null>(null);
@@ -76,63 +73,114 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
 
     setIsLoading(true);
 
-    // Simulate API call (UI shell only)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const { error: signUpError, data } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTo || '/')}`,
+        },
+      });
 
-    // Log form data for development
-    console.log('Signup form submitted:', {
-      email,
-      passwordLength: password.length,
-      redirectTo: redirectTo || '/',
-    });
+      if (signUpError) {
+        setError(signUpError.message || 'Failed to create account. Please try again.');
+        setIsLoading(false);
+        return;
+      }
 
-    // Simulate success or error for demo purposes
-    setIsLoading(false);
+      // Check if email confirmation is required
+      if (data?.user?.identities?.length === 0) {
+        // User already exists but is unconfirmed
+        setError('An account with this email already exists.');
+        setIsLoading(false);
+        return;
+      }
 
-    // For demo: simulate email already exists error
-    if (email === 'test@example.com') {
-      setError('An account with this email already exists.');
-    } else {
-      // Simulate success - in real app would redirect
-      setError(null);
-      console.log('Account created successfully');
+      // Success - show confirmation message
+      setSignupSuccess(true);
+      setEmail('');
+      setPassword('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
+      setIsLoading(false);
     }
   };
 
-  const handleOAuthClick = (provider: string) => {
-    // UI shell: just log the action
-    console.log(`OAuth signup with ${provider} requested`);
-    console.log('Redirect to:', redirectTo || '/');
+  const handleGoogleSignIn = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTo || '/')}`,
+        },
+      });
+
+      if (error) {
+        setError(error.message || 'Failed to sign up with Google');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
+    }
   };
 
-  return (
-    <div className="space-y-[var(--space-lg)]">
-      {/* Form-level error */}
-      {error && (
-        <FormAlert variant="error">
-          {error}
+  // Show success message after signup
+  if (signupSuccess) {
+    return (
+      <div className="space-y-[var(--space-md)]">
+        <FormAlert variant="success">
+          Account created! Check your email to confirm your account.
         </FormAlert>
-      )}
+        <button
+          onClick={() => router.push('/login')}
+          className="
+            w-full
+            h-11
+            px-[var(--space-md)]
+            text-base
+            font-semibold
+            text-[var(--color-ink)]
+            bg-[var(--color-accent)]
+            rounded-[var(--radius-md)]
+            hover:bg-[var(--color-accent-hover)]
+            shadow-sm
+            focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2
+            transition-all duration-200
+          "
+        >
+          Back to login
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-[var(--space-md)]">
+      {/* Google OAuth - Primary option */}
+      <OAuthButton provider="google" onClick={handleGoogleSignIn} />
+
+      {/* Divider */}
+      <div className="flex items-center gap-[var(--space-sm)]">
+        <div className="flex-1 h-px bg-[var(--color-border)]" />
+        <span className="text-xs text-[var(--color-ink-subtle)]">or continue with email</span>
+        <div className="flex-1 h-px bg-[var(--color-border)]" />
+      </div>
+
+      {/* Form-level error */}
+      {error && <FormAlert variant="error">{error}</FormAlert>}
 
       {/* Signup Form */}
-      <form onSubmit={handleSubmit} className="space-y-[var(--space-md)]">
+      <form onSubmit={handleSubmit} className="space-y-[var(--space-sm)]">
         {/* Email field */}
         <div>
           <label
-            htmlFor="email"
-            className="
-              block
-              text-sm
-              font-medium
-              text-[var(--color-ink)]
-              mb-[var(--space-xs)]
-            "
+            htmlFor="signup-email"
+            className="block text-sm font-medium text-[var(--color-ink)] mb-1"
           >
             Email address
           </label>
           <input
             type="email"
-            id="email"
+            id="signup-email"
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
@@ -143,12 +191,12 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             autoComplete="email"
             className={`
               w-full
-              h-12 sm:h-[52px]
+              h-11
               px-[var(--space-md)]
               text-base
               text-[var(--color-ink)]
               bg-white
-              border-2 rounded-[var(--radius-organic)]
+              border-2 rounded-[var(--radius-md)]
               transition-all duration-200
               focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-1
               ${
@@ -158,18 +206,10 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
               }
             `}
             aria-invalid={emailError ? 'true' : 'false'}
-            aria-describedby={emailError ? 'email-error' : undefined}
+            aria-describedby={emailError ? 'signup-email-error' : undefined}
           />
           {emailError && (
-            <p
-              id="email-error"
-              className="
-                mt-[var(--space-xs)]
-                text-sm
-                text-[var(--color-danger)]
-              "
-              role="alert"
-            >
+            <p id="signup-email-error" className="mt-1 text-xs text-[var(--color-danger)]" role="alert">
               {emailError}
             </p>
           )}
@@ -179,7 +219,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
         <div>
           <PasswordInput
             label="Create a password"
-            id="password"
+            id="signup-password"
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
@@ -188,28 +228,28 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             onBlur={() => password && validatePassword(password)}
             autoComplete="new-password"
             error={passwordError || undefined}
-            aria-describedby="password-requirements"
+            compact
           />
-          {/* Password requirements checklist */}
-          <PasswordRequirements password={password} id="password-requirements" />
+          <p className="mt-1 text-xs text-[var(--color-ink-subtle)]">
+            At least 8 characters
+          </p>
         </div>
 
-        {/* Submit button - Gold CTA */}
+        {/* Submit button */}
         <button
           type="submit"
           disabled={isLoading}
           className="
             w-full
-            h-12 sm:h-[52px]
+            h-11
             px-[var(--space-md)]
             text-base
             font-semibold
             text-[var(--color-ink)]
             bg-[var(--color-accent)]
-            rounded-[var(--radius-organic)]
+            rounded-[var(--radius-md)]
             hover:bg-[var(--color-accent-hover)]
-            shadow-[var(--shadow-card)]
-            hover:shadow-[var(--shadow-card-hover)]
+            shadow-sm
             focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2
             disabled:opacity-50 disabled:cursor-not-allowed
             transition-all duration-200
@@ -220,7 +260,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
           {isLoading ? (
             <>
               <svg
-                className="animate-spin h-5 w-5"
+                className="animate-spin h-4 w-4"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -247,28 +287,6 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
           )}
         </button>
       </form>
-
-      {/* Privacy assurance */}
-      <div className="
-        px-[var(--space-md)]
-        py-[var(--space-sm)]
-        bg-[var(--color-surface)]
-        border border-[var(--color-border)]
-        rounded-[var(--radius-organic)]
-        text-center
-      ">
-        <p className="text-sm text-[var(--color-ink-muted)]">
-          🔒 We never share your data
-        </p>
-      </div>
-
-      {/* Divider */}
-      <AuthDivider />
-
-      {/* OAuth option */}
-      <div>
-        <OAuthButton provider="google" onClick={() => handleOAuthClick('google')} />
-      </div>
     </div>
   );
 }

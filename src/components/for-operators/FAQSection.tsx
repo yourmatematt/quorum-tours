@@ -14,11 +14,11 @@ const faqs: FAQ[] = [
   },
   {
     question: "How do participants know the tour might not run?",
-    answer: "Complete transparency. They see exactly how many spots are filled and how many are needed. They know their card won't be charged until the threshold is met. This builds trust, not anxiety.",
+    answer: "Complete transparency. They see exactly how many spots are filled and how many are needed. They know their card won't be charged until quorum is reached. This builds trust, not anxiety.",
   },
   {
     question: "Can I set my own cancellation policy?",
-    answer: "Yes. You set your minimum threshold, deadline, and what happens if participants cancel after the tour is confirmed. You're in control.",
+    answer: "Yes. You set your minimum quorum, deadline, and what happens if participants cancel after the tour is confirmed. You're in control.",
   },
   {
     question: "How do I get paid?",
@@ -26,7 +26,7 @@ const faqs: FAQ[] = [
   },
   {
     question: "What if I already have my own website and booking system?",
-    answer: "Many operators use Quorum for the threshold mechanics and species-based discovery, then link back to their own site for additional tours. You control how much you use us. We're a tool, not a lock-in.",
+    answer: "Many operators use Quorum for the quorum mechanics and species-based discovery, then link back to their own site for additional tours. You control how much you use us. We're a tool, not a lock-in.",
   },
   {
     question: "How is this different from Viator or GetYourGuide?",

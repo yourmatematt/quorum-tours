@@ -16,6 +16,39 @@ const supabaseAdmin = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 )
 
+const APP_URL = Deno.env.get('APP_URL') || 'https://quorumtours.com'
+
+/**
+ * Send email via the send-email edge function
+ */
+async function sendEmail(
+  template: string,
+  to: string,
+  data: Record<string, unknown>
+): Promise<boolean> {
+  try {
+    const response = await fetch(
+      `${Deno.env.get('SUPABASE_URL')}/functions/v1/send-email`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ template, to, data }),
+      }
+    )
+    if (!response.ok) {
+      console.error(`Failed to send ${template} email to ${to}:`, await response.text())
+      return false
+    }
+    return true
+  } catch (err) {
+    console.error(`Email send error for ${template}:`, err)
+    return false
+  }
+}
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature',
@@ -135,6 +168,31 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     return
   }
 
+  // Get reservation with user, tour, and operator details for emails
+  const { data: reservation } = await supabaseAdmin
+    .from('reservations')
+    .select(`
+      id,
+      user_id,
+      tour_id,
+      deposit_cents,
+      tours (
+        title,
+        date_start,
+        price_cents,
+        current_participant_count,
+        threshold,
+        operators (
+          id,
+          business_name,
+          profiles (email, display_name)
+        )
+      ),
+      profiles (email, display_name)
+    `)
+    .eq('id', reservationId)
+    .single()
+
   if (paymentType === 'deposit') {
     // Deposit payment completed
     await supabaseAdmin
@@ -154,6 +212,34 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       .update({ reservation_id: reservationId })
       .eq('stripe_event_id', session.id)
 
+    // Send tour committed email to user
+    if (reservation?.profiles?.email) {
+      const amountPaid = session.amount_total ? session.amount_total / 100 : 0
+      await sendEmail('tour_committed', reservation.profiles.email, {
+        userName: reservation.profiles.display_name || 'there',
+        tourTitle: reservation.tours?.title || 'the tour',
+        tourDate: reservation.tours?.date_start,
+        depositAmount: amountPaid.toFixed(2),
+        tourUrl: `${APP_URL}/tours/${reservation.tour_id}`,
+        profileUrl: `${APP_URL}/profile`,
+      })
+    }
+
+    // Send new booking email to operator
+    const operatorEmail = reservation?.tours?.operators?.profiles?.email
+    if (operatorEmail) {
+      const tour = reservation.tours
+      await sendEmail('new_booking', operatorEmail, {
+        operatorName: tour.operators.profiles.display_name || tour.operators.business_name,
+        tourTitle: tour.title || 'your tour',
+        userName: reservation.profiles?.display_name || 'A new user',
+        currentCount: (tour.current_participant_count || 0) + 1, // +1 because update may not be reflected yet
+        threshold: tour.threshold,
+        tourUrl: `${APP_URL}/operator/tours`,
+        dashboardUrl: `${APP_URL}/operator`,
+      })
+    }
+
   } else if (paymentType === 'balance') {
     // Full/balance payment completed (after quorum)
     await supabaseAdmin
@@ -166,13 +252,20 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       })
       .eq('id', reservationId)
 
-    // Check if all reservations for this tour are now confirmed
-    const { data: reservation } = await supabaseAdmin
-      .from('reservations')
-      .select('tour_id')
-      .eq('id', reservationId)
-      .single()
+    // Send payment confirmed email
+    if (reservation?.profiles?.email) {
+      const totalPaid = session.amount_total ? session.amount_total / 100 : 0
+      await sendEmail('payment_confirmed', reservation.profiles.email, {
+        userName: reservation.profiles.display_name || 'there',
+        tourTitle: reservation.tours?.title || 'the tour',
+        tourDate: reservation.tours?.date_start,
+        totalAmount: totalPaid.toFixed(2),
+        tourUrl: `${APP_URL}/tours/${reservation.tour_id}`,
+        profileUrl: `${APP_URL}/profile`,
+      })
+    }
 
+    // Check if all reservations for this tour are now confirmed
     if (reservation) {
       await checkTourFullyPaid(reservation.tour_id)
     }
@@ -213,7 +306,27 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
     })
     .eq('raw_payload->id', paymentIntent.id)
 
-  // TODO: Send email notification about failed payment
+  // Get reservation and user details for email
+  const { data: reservation } = await supabaseAdmin
+    .from('reservations')
+    .select(`
+      id,
+      tour_id,
+      profiles (email, display_name),
+      tours (title, date_start)
+    `)
+    .eq('id', reservationId)
+    .single()
+
+  if (reservation?.profiles?.email) {
+    // Send payment failed email
+    await sendEmail('payment_reminder', reservation.profiles.email, {
+      userName: reservation.profiles.display_name || 'there',
+      tourTitle: reservation.tours?.title || 'your tour',
+      errorMessage: paymentIntent.last_payment_error?.message || 'Payment could not be processed',
+      retryUrl: `${Deno.env.get('APP_URL') || 'https://quorumtours.com'}/tours/${reservation.tour_id}/pay`,
+    })
+  }
 }
 
 /**
@@ -245,6 +358,35 @@ async function handleTransferCreated(transfer: Stripe.Transfer) {
       transferred_at: new Date().toISOString(),
     })
     .eq('id', reservationId)
+
+  // Get operator details for email
+  const { data: reservation } = await supabaseAdmin
+    .from('reservations')
+    .select(`
+      id,
+      tour_id,
+      tours (
+        title,
+        operators (
+          id,
+          business_name,
+          profiles (email, display_name)
+        )
+      )
+    `)
+    .eq('id', reservationId)
+    .single()
+
+  const operatorEmail = reservation?.tours?.operators?.profiles?.email
+  if (operatorEmail) {
+    await sendEmail('payout_sent', operatorEmail, {
+      operatorName: reservation.tours.operators.profiles.display_name || reservation.tours.operators.business_name,
+      tourTitle: reservation.tours?.title || 'your tour',
+      payoutAmount: (transfer.amount / 100).toFixed(2),
+      transferId: transfer.id,
+      dashboardUrl: `${APP_URL}/operator/earnings`,
+    })
+  }
 }
 
 /**
@@ -267,5 +409,45 @@ async function checkTourFullyPaid(tourId: string) {
         updated_at: new Date().toISOString(),
       })
       .eq('id', tourId)
+
+    // Get tour details and all confirmed reservations
+    const { data: tour } = await supabaseAdmin
+      .from('tours')
+      .select(`
+        id,
+        title,
+        date_start,
+        location,
+        operators (business_name)
+      `)
+      .eq('id', tourId)
+      .single()
+
+    const { data: reservations } = await supabaseAdmin
+      .from('reservations')
+      .select(`
+        id,
+        user_id,
+        profiles (email, display_name)
+      `)
+      .eq('tour_id', tourId)
+      .eq('status', 'confirmed')
+
+    // Send tour_confirmed email to all participants
+    if (reservations && tour) {
+      for (const reservation of reservations) {
+        if (reservation.profiles?.email) {
+          await sendEmail('tour_confirmed', reservation.profiles.email, {
+            userName: reservation.profiles.display_name || 'there',
+            tourTitle: tour.title,
+            tourDate: tour.date_start,
+            tourLocation: tour.location || 'See tour details',
+            operatorName: tour.operators?.business_name || 'your guide',
+            tourUrl: `${APP_URL}/tours/${tourId}`,
+            profileUrl: `${APP_URL}/profile`,
+          })
+        }
+      }
+    }
   }
 }

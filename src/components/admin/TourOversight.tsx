@@ -2,7 +2,7 @@
 
 /**
  * Tour Oversight Section
- * Monitors all tours with threshold progress and status distribution
+ * Monitors all tours with quorum progress and status distribution
  */
 
 import { StatusBadge } from '@/components/operator';
@@ -19,7 +19,7 @@ interface TourStatus {
   title: string;
   operator: string;
   status: 'forming' | 'confirmed' | 'cancelled';
-  threshold: number;
+  quorum: number;
   currentCommitments: number;
   deadline: string;
   daysUntilDeadline: number;
@@ -39,7 +39,7 @@ export function TourOversight() {
       title: 'Patagonian Endemics - March 2026',
       operator: 'South America Birding Experts',
       status: 'forming',
-      threshold: 6,
+      quorum: 6,
       currentCommitments: 4,
       deadline: '2026-02-15',
       daysUntilDeadline: 25,
@@ -49,7 +49,7 @@ export function TourOversight() {
       title: 'Spring Migration - Gulf Coast',
       operator: 'Coastal Birding Adventures',
       status: 'confirmed',
-      threshold: 8,
+      quorum: 8,
       currentCommitments: 10,
       deadline: '2026-03-01',
       daysUntilDeadline: 39,
@@ -59,7 +59,7 @@ export function TourOversight() {
       title: 'Arizona Desert Specialties',
       operator: 'Desert Birds Inc',
       status: 'forming',
-      threshold: 5,
+      quorum: 5,
       currentCommitments: 2,
       deadline: '2026-01-28',
       daysUntilDeadline: 7,
@@ -163,7 +163,7 @@ export function TourOversight() {
                           Progress:
                         </span>
                         <span className="ml-2 font-mono text-sm font-medium text-[var(--color-ink)]">
-                          {tour.currentCommitments}/{tour.threshold}
+                          {tour.currentCommitments}/{tour.quorum}
                         </span>
                       </div>
                       <div>

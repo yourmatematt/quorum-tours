@@ -73,11 +73,11 @@ export function HowItWorks(): JSX.Element {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--space-md)]">
             <div className="p-[var(--space-sm)] bg-[var(--color-surface-sunken)] rounded-[var(--radius-md)]">
               <p className="text-xs text-[var(--color-ink-subtle)] mb-2 font-medium">Forming (cards held, not charged)</p>
-              <QuorumIndicator current={4} threshold={6} max={8} size="md" showLabel showStatus />
+              <QuorumIndicator current={4} quorum={6} max={8} size="md" showLabel showStatus />
             </div>
             <div className="p-[var(--space-sm)] bg-[var(--color-confirmed-bg)] rounded-[var(--radius-md)]">
               <p className="text-xs text-[var(--color-ink-subtle)] mb-2 font-medium">Quorum reached (cards charged)</p>
-              <QuorumIndicator current={7} threshold={6} max={8} size="md" showLabel showStatus />
+              <QuorumIndicator current={7} quorum={6} max={8} size="md" showLabel showStatus />
             </div>
           </div>
 

@@ -11,7 +11,7 @@ interface Commitment {
   location: string;
   status: CommitmentStatus;
   currentParticipants: number;
-  threshold: number;
+  quorum: number;
 }
 
 interface CommitmentsSectionProps {
@@ -51,7 +51,7 @@ export function CommitmentsSection({ commitments }: CommitmentsSectionProps) {
               location={commitment.location}
               status={commitment.status}
               currentParticipants={commitment.currentParticipants}
-              threshold={commitment.threshold}
+              quorum={commitment.quorum}
             />
           ))}
         </div>

@@ -8,7 +8,7 @@ interface ComparisonRow {
 const comparisonData: ComparisonRow[] = [
   { feature: 'Commission', quorum: '6%', fareharbor: '6%+', diy: '0%' },
   { feature: 'Monthly fee', quorum: '$0', fareharbor: '$0–$199', diy: '$0' },
-  { feature: 'Threshold mechanics', quorum: true, fareharbor: false, diy: false },
+  { feature: 'Quorum mechanics', quorum: true, fareharbor: false, diy: false },
   { feature: 'Species-based discovery', quorum: true, fareharbor: false, diy: false },
   { feature: 'Payment chasing', quorum: 'None', fareharbor: 'Manual', diy: 'All manual' },
   { feature: 'Human support', quorum: true, fareharbor: 'Varies', diy: false },

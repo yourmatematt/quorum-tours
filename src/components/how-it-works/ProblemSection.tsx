@@ -1,3 +1,22 @@
+'use client';
+
+import Image from 'next/image';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
+
+// Placeholder face images - replace with real stock photos
+// Stock search: "australian person portrait", "outdoor enthusiast portrait", "nature guide portrait"
+const birderFaces = [
+  { src: '/images/faces/birder-1.jpg', alt: 'Birder interested in shorebird tour' },
+  { src: '/images/faces/birder-2.jpg', alt: 'Birder interested in shorebird tour' },
+  { src: '/images/faces/birder-3.jpg', alt: 'Birder interested in shorebird tour' },
+  { src: '/images/faces/birder-4.jpg', alt: 'Birder interested in shorebird tour' },
+];
+
+const operatorFace = {
+  src: '/images/faces/operator-1.jpg',
+  alt: 'Tour operator unable to see demand',
+};
+
 export function ProblemSection() {
   return (
     <section className="
@@ -9,17 +28,20 @@ export function ProblemSection() {
         mx-auto px-[var(--space-lg)]
       ">
         {/* Section headline - left aligned */}
-        <h2 className="
-          font-display
-          text-[clamp(1.75rem,4vw,2.5rem)]
-          leading-tight
-          text-[var(--color-ink)]
-          mb-[var(--space-xl)]
-        ">
-          The synchronization problem
-        </h2>
+        <ScrollReveal variant="fade-up" duration={500}>
+          <h2 className="
+            font-display
+            text-[clamp(1.75rem,4vw,2.5rem)]
+            leading-tight
+            text-[var(--color-ink)]
+            mb-[var(--space-xl)]
+          ">
+            The synchronization problem
+          </h2>
+        </ScrollReveal>
 
         {/* Explanation paragraphs */}
+        <ScrollReveal variant="fade-up" delay={100} duration={500}>
         <div className="space-y-[var(--space-lg)]">
           <p className="
             text-[var(--color-ink-muted)]
@@ -49,8 +71,10 @@ export function ProblemSection() {
             because neither side can see the other's intentions.
           </p>
         </div>
+        </ScrollReveal>
 
         {/* Visual representation of the gap */}
+        <ScrollReveal variant="fade-up" delay={200} duration={500}>
         <div className="
           mt-[var(--space-3xl)]
           p-[var(--space-xl)]
@@ -73,33 +97,40 @@ export function ProblemSection() {
                 Birders
               </p>
               <div className="flex gap-[var(--space-sm)]">
-                {[1, 2, 3, 4].map((i) => (
+                {birderFaces.map((face, i) => (
                   <div
                     key={i}
                     className="
-                      w-10 h-10
+                      w-12 h-12
                       bg-[var(--color-surface-raised)]
-                      border border-[var(--color-border)]
+                      border-2 border-[var(--color-border)]
                       rounded-full
-                      flex items-center justify-center
+                      overflow-hidden
+                      relative
                     "
                   >
-                    <svg
-                      width="20"
-                      height="20"
-                      className="w-5 h-5 text-[var(--color-ink-subtle)]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"
-                      />
-                    </svg>
+                    <Image
+                      src={face.src}
+                      alt={face.alt}
+                      fill
+                      className="object-cover"
+                      sizes="48px"
+                      onError={(e) => {
+                        // Hide broken image, show fallback
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    {/* Fallback initial */}
+                    <span className="
+                      absolute inset-0
+                      flex items-center justify-center
+                      text-[var(--color-ink-subtle)]
+                      text-sm font-medium
+                      bg-[var(--color-surface-raised)]
+                      -z-10
+                    ">
+                      {String.fromCharCode(65 + i)}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -136,28 +167,34 @@ export function ProblemSection() {
               </p>
               <div className="flex md:justify-end">
                 <div className="
-                  w-10 h-10
+                  w-14 h-14
                   bg-[var(--color-surface-raised)]
-                  border border-[var(--color-border)]
+                  border-2 border-[var(--color-primary)]/30
                   rounded-full
-                  flex items-center justify-center
+                  overflow-hidden
+                  relative
                 ">
-                  <svg
-                    width="20"
-                    height="20"
-                    className="w-5 h-5 text-[var(--color-ink-subtle)]"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
-                    />
-                  </svg>
+                  <Image
+                    src={operatorFace.src}
+                    alt={operatorFace.alt}
+                    fill
+                    className="object-cover"
+                    sizes="56px"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                  {/* Fallback initial */}
+                  <span className="
+                    absolute inset-0
+                    flex items-center justify-center
+                    text-[var(--color-primary)]
+                    text-base font-medium
+                    bg-[var(--color-primary-subtle)]
+                    -z-10
+                  ">
+                    O
+                  </span>
                 </div>
               </div>
               <p className="
@@ -170,6 +207,7 @@ export function ProblemSection() {
             </div>
           </div>
         </div>
+        </ScrollReveal>
       </div>
     </section>
   );

@@ -11,7 +11,7 @@ export default function AdminToursPage() {
             Tour Oversight
           </h1>
           <p className="text-[var(--color-ink-muted)] mt-2">
-            Monitor tour progress and threshold status
+            Monitor tour progress and quorum status
           </p>
         </div>
 

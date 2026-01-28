@@ -74,7 +74,7 @@ export function RevenueDashboard() {
             ${totalConfirmed.toLocaleString()}
           </p>
           <p className="text-xs text-[var(--color-ink-muted)] mt-1">
-            Charged after threshold met
+            Charged after quorum met
           </p>
         </div>
 
@@ -114,7 +114,7 @@ export function RevenueDashboard() {
                   </div>
                 </div>
                 <p className="text-xs text-[var(--color-ink-muted)] italic">
-                  Will be charged when threshold is reached
+                  Will be charged when quorum is reached
                 </p>
               </div>
             )}

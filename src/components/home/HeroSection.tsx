@@ -1,20 +1,33 @@
+'use client';
+
 import { Button } from '../ui/Button';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useState } from 'react';
 
 interface HeroSectionProps {
   toursConfirmedCount?: number;
+  heroImage?: string;
 }
 
 /**
- * Hero Section - Organic Biophilic Design
+ * Hero Section - Full-bleed imagery with gradient overlay
  *
  * Design System: HOME-REDESIGN-DECISIONS.md
  * - Typography: Crimson Pro (display) + Atkinson Hyperlegible (body)
- * - Colors: Forest Green (#2E8B57), Sky Blue (#87CEEB), Gold (#FFD700)
- * - Style: Organic rounded corners (16-24px), natural shadows
- * - Accessibility: WCAG AAA (12.7:1 text contrast)
+ * - Background: Full-bleed nature photography with gradient overlay
+ * - Accessibility: WCAG AAA contrast maintained via overlay
+ *
+ * Image: Place hero image at /public/images/hero/home-hero.jpg
+ * Recommended: 1920x1080 or larger, Australian birding landscape
+ * Stock search: "Australian wetland sunrise birds", "Kakadu landscape", "Australian bush golden hour"
  */
-export function HeroSection({ toursConfirmedCount = 47 }: HeroSectionProps) {
+export function HeroSection({
+  toursConfirmedCount = 47,
+  heroImage = '/images/hero/home-hero.jpg'
+}: HeroSectionProps) {
+  const [imageError, setImageError] = useState(false);
+
   return (
     <section className="
       relative
@@ -23,25 +36,37 @@ export function HeroSection({ toursConfirmedCount = 47 }: HeroSectionProps) {
       pt-24
       pb-20
       overflow-hidden
-      bg-gradient-to-br from-[#F0FFF4] via-[#E6F9EA] to-[#F0FFF4]
     ">
-      {/* Organic background elements */}
-      <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-        {/* Soft organic shapes - nature-inspired */}
-        <div className="
-          absolute top-20 right-20
-          w-96 h-96
-          bg-gradient-to-br from-[#87CEEB]/10 to-transparent
-          rounded-[40%_60%_70%_30%/60%_30%_70%_40%]
-          blur-3xl
-        " />
-        <div className="
-          absolute bottom-20 left-20
-          w-[500px] h-[500px]
-          bg-gradient-to-tl from-[#2E8B57]/10 to-transparent
-          rounded-[60%_40%_30%_70%/40%_70%_30%_60%]
-          blur-3xl
-        " />
+      {/* Background - Image with fallback to gradient */}
+      <div className="absolute inset-0">
+        {!imageError ? (
+          <Image
+            src={heroImage}
+            alt="Australian birding landscape"
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="100vw"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          /* Fallback gradient when image is missing */
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1B4D3E] via-[#2E5A4A] to-[#1B4D3E]">
+            {/* Decorative organic shapes - responsive sizing to prevent mobile overflow */}
+            <div className="absolute top-10 right-4 w-48 h-48 sm:top-20 sm:right-10 sm:w-64 sm:h-64 md:right-20 md:w-96 md:h-96 bg-[#D4A84B]/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-10 left-4 w-48 h-48 sm:bottom-20 sm:left-10 sm:w-72 sm:h-72 md:left-20 md:w-[500px] md:h-[500px] bg-[#87CEEB]/10 rounded-full blur-3xl" />
+          </div>
+        )}
+        {/* Gradient overlay for text readability */}
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-[#1B4D3E]/90 via-[#1B4D3E]/70 to-[#1B4D3E]/40"
+          aria-hidden="true"
+        />
+        {/* Additional bottom gradient for depth */}
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-[#1B4D3E]/60 via-transparent to-transparent"
+          aria-hidden="true"
+        />
       </div>
 
       <div className="
@@ -57,11 +82,11 @@ export function HeroSection({ toursConfirmedCount = 47 }: HeroSectionProps) {
               inline-flex items-center gap-2
               px-4 py-2
               text-sm font-medium
-              bg-white
-              text-[var(--color-primary)]
+              bg-white/95
+              text-[#1B4D3E]
               rounded-[var(--radius-organic)]
-              shadow-[var(--shadow-card)]
-              border border-[var(--color-border)]
+              shadow-lg
+              backdrop-blur-sm
             ">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.18-.77-6-4.93-6-9V8.3l6-3.11 6 3.11V11c0 4.07-2.82 8.23-6 9z"/>
@@ -75,9 +100,10 @@ export function HeroSection({ toursConfirmedCount = 47 }: HeroSectionProps) {
             font-display
             text-5xl sm:text-6xl lg:text-7xl
             font-semibold
-            text-[var(--color-ink)]
+            text-white
             mb-6
             leading-tight
+            drop-shadow-lg
           ">
             Tours that run when birders commit.
           </h1>
@@ -85,12 +111,13 @@ export function HeroSection({ toursConfirmedCount = 47 }: HeroSectionProps) {
           {/* Subhead - Atkinson Hyperlegible (accessibility-focused) */}
           <p className="
             text-lg sm:text-xl
-            text-[var(--color-ink-muted)]
+            text-white/90
             mb-8
             max-w-2xl mx-auto
             leading-relaxed
+            drop-shadow-md
           ">
-            Quorum aggregates demand before operators schedule. You commit conditionally—if the threshold is met, the tour runs. If not, you owe nothing.
+            Quorum aggregates demand before operators schedule. You commit conditionally—if quorum is reached, the tour runs. If not, you owe nothing.
           </p>
 
           {/* Primary CTA - Gold accent for maximum visibility */}
@@ -99,14 +126,14 @@ export function HeroSection({ toursConfirmedCount = 47 }: HeroSectionProps) {
               <Button
                 variant="primary"
                 className="
-                  !bg-[var(--color-accent)]
-                  !text-[var(--color-ink)]
-                  hover:!bg-[var(--color-accent-hover)]
+                  !bg-[#D4A84B]
+                  !text-[#1B4D3E]
+                  hover:!bg-[#E5B95C]
                   !rounded-[var(--radius-organic)]
                   !px-8 !py-4
                   !text-lg
-                  !font-medium
-                  !shadow-[var(--shadow-card-hover)]
+                  !font-semibold
+                  !shadow-lg
                   transition-all duration-200
                 "
               >
@@ -117,14 +144,16 @@ export function HeroSection({ toursConfirmedCount = 47 }: HeroSectionProps) {
               <Button
                 variant="secondary"
                 className="
-                  !bg-transparent
-                  !text-[var(--color-primary)]
-                  !border-2 !border-[var(--color-primary)]
-                  hover:!bg-[var(--color-primary)]/5
+                  !bg-white/10
+                  !text-white
+                  !border-2 !border-white/50
+                  hover:!bg-white/20
+                  hover:!border-white
                   !rounded-[var(--radius-organic)]
                   !px-8 !py-4
                   !text-lg
                   !font-medium
+                  !backdrop-blur-sm
                   transition-all duration-200
                 "
               >
@@ -137,24 +166,24 @@ export function HeroSection({ toursConfirmedCount = 47 }: HeroSectionProps) {
           <div className="
             inline-flex items-center gap-3
             px-6 py-3
-            bg-white
+            bg-white/95
             rounded-[var(--radius-organic)]
-            shadow-[var(--shadow-card)]
-            border border-[var(--color-border)]
+            shadow-lg
+            backdrop-blur-sm
           ">
             <div className="
               flex items-center justify-center
               w-10 h-10
-              bg-[var(--color-confirmed-bg)]
+              bg-[#1B4D3E]/10
               rounded-full
             ">
-              <svg className="w-5 h-5 text-[var(--color-primary)]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <svg className="w-5 h-5 text-[#1B4D3E]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
               </svg>
             </div>
             <div className="text-left">
-              <div className="text-sm text-[var(--color-ink-muted)]">This season</div>
-              <div className="text-lg font-semibold text-[var(--color-ink)]">
+              <div className="text-sm text-[#1B4D3E]/70">This season</div>
+              <div className="text-lg font-semibold text-[#1B4D3E]">
                 <span className="font-mono">{toursConfirmedCount}</span> tours confirmed
               </div>
             </div>

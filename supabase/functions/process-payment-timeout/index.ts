@@ -13,6 +13,38 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
 })
 
 const PAYMENT_WINDOW_HOURS = 24
+const APP_URL = Deno.env.get('APP_URL') || 'https://quorumtours.com'
+
+/**
+ * Send email via the send-email edge function
+ */
+async function sendEmail(
+  template: string,
+  to: string,
+  data: Record<string, unknown>
+): Promise<boolean> {
+  try {
+    const response = await fetch(
+      `${Deno.env.get('SUPABASE_URL')}/functions/v1/send-email`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ template, to, data }),
+      }
+    )
+    if (!response.ok) {
+      console.error(`Failed to send ${template} email to ${to}:`, await response.text())
+      return false
+    }
+    return true
+  } catch (err) {
+    console.error(`Email send error for ${template}:`, err)
+    return false
+  }
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -247,19 +279,43 @@ async function processExpiredReservation(supabase: any, reservation: any) {
   }
 
   // 4. Send notification email about strike
-  await supabase.from('email_log').insert({
-    user_id: userId,
-    email_type: 'strike_applied',
-    subject: `Payment deadline missed - Strike applied to your account`,
-    recipient_email: reservation.profiles?.email,
-    status: 'sent',
-    metadata: {
-      tour_id: tourId,
-      reservation_id: reservation.id,
-      new_strike_count: newStrikeCount,
-      deposit_forfeited: reservation.deposit_charged,
+  const email = reservation.profiles?.email
+  if (email) {
+    // Log email
+    await supabase.from('email_log').insert({
+      user_id: userId,
+      email_type: 'strike_applied',
+      subject: `Payment deadline missed - Strike applied to your account`,
+      recipient_email: email,
+      status: 'pending',
+      metadata: {
+        tour_id: tourId,
+        reservation_id: reservation.id,
+        new_strike_count: newStrikeCount,
+        deposit_forfeited: reservation.deposit_charged,
+      }
+    })
+
+    // Actually send the email
+    const emailSent = await sendEmail('strike_applied', email, {
+      userName: reservation.profiles?.display_name || 'there',
+      tourTitle: reservation.tours?.title || 'the tour',
+      strikeCount: newStrikeCount,
+      maxStrikes: 3,
+      depositForfeited: reservation.deposit_charged,
+      depositAmount: reservation.deposit_cents ? (reservation.deposit_cents / 100).toFixed(2) : '0',
+      appealUrl: `${APP_URL}/profile/trust`,
+    })
+
+    // Update email log status
+    if (emailSent) {
+      await supabase.from('email_log')
+        .update({ status: 'sent', sent_at: new Date().toISOString() })
+        .eq('user_id', userId)
+        .eq('email_type', 'strike_applied')
+        .eq('metadata->reservation_id', reservation.id)
     }
-  })
+  }
 
   // 5. Offer spot to next waitlist person
   await offerSpotToWaitlist(supabase, tourId)
@@ -334,19 +390,39 @@ async function offerSpotToWaitlist(supabase: any, tourId: string) {
     .eq('id', nextInLine.id)
 
   // Send email to waitlist user
-  await supabase.from('email_log').insert({
-    user_id: nextInLine.user_id,
-    email_type: 'waitlist_spot_available',
-    subject: `A spot opened up! "${tour.title}" - Complete your payment`,
-    recipient_email: nextInLine.profiles?.email,
-    status: 'sent',
-    metadata: {
-      tour_id: tourId,
-      reservation_id: newReservation?.id,
-      payment_deadline: paymentDeadline.toISOString(),
-      price_cents: tour.price_cents,
+  const email = nextInLine.profiles?.email
+  if (email) {
+    await supabase.from('email_log').insert({
+      user_id: nextInLine.user_id,
+      email_type: 'waitlist_spot',
+      subject: `A spot opened up! "${tour.title}" - Complete your payment`,
+      recipient_email: email,
+      status: 'pending',
+      metadata: {
+        tour_id: tourId,
+        reservation_id: newReservation?.id,
+        payment_deadline: paymentDeadline.toISOString(),
+        price_cents: tour.price_cents,
+      }
+    })
+
+    // Actually send the email
+    const emailSent = await sendEmail('waitlist_spot', email, {
+      userName: nextInLine.profiles?.display_name || 'there',
+      tourTitle: tour.title,
+      priceDollars: (tour.price_cents / 100).toFixed(2),
+      paymentDeadline: paymentDeadline.toISOString(),
+      paymentUrl: `${APP_URL}/tours/${tourId}/pay`,
+    })
+
+    if (emailSent) {
+      await supabase.from('email_log')
+        .update({ status: 'sent', sent_at: new Date().toISOString() })
+        .eq('user_id', nextInLine.user_id)
+        .eq('email_type', 'waitlist_spot')
+        .eq('metadata->reservation_id', newReservation?.id)
     }
-  })
+  }
 
   console.log(`Offered spot to waitlist user ${nextInLine.user_id} for tour ${tourId}`)
 }

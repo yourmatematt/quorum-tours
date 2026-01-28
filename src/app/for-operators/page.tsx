@@ -36,11 +36,11 @@ import {
 export const metadata: Metadata = {
   title: 'For Tour Operators | Quorum Tours - Tours That Run When Ready',
   description:
-    'Stop gambling on tour viability. Quorum Tours helps wildlife tour operators list tours with minimum thresholds—cards aren\'t charged until you\'re ready to run. 6% commission only on successful bookings.',
+    'Stop gambling on tour viability. Quorum Tours helps wildlife tour operators list tours with a minimum quorum—cards aren\'t charged until you\'re ready to run. 6% commission only on successful bookings.',
   openGraph: {
     title: 'For Tour Operators | Quorum Tours',
     description:
-      'Stop gambling on tour viability. List tours with minimum thresholds. Cards aren\'t charged until you\'re ready to run.',
+      'Stop gambling on tour viability. List tours with a minimum quorum. Cards aren\'t charged until you\'re ready to run.',
     type: 'website',
   },
 };

@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 import { PasswordInput } from './PasswordInput';
 import { FormAlert } from './FormAlert';
-import { AuthDivider } from './AuthDivider';
 import { OAuthButton } from './OAuthButton';
 
 interface LoginFormProps {
@@ -12,19 +13,15 @@ interface LoginFormProps {
 }
 
 /**
- * LoginForm - Redesigned with Organic Biophilic design system
- *
- * Design System: HOME-REDESIGN-DECISIONS.md
- * - Typography: Crimson Pro (display) + Atkinson Hyperlegible (body)
- * - Colors: Forest Green #2E8B57, Gold CTA #FFD700
- * - Style: Organic rounded corners (20px), natural shadows
+ * LoginForm - Compact design for single-viewport auth pages
  *
  * Fast, frictionless login for returning users.
- * Mirrors SIGNUP layout for visual consistency.
- *
- * UI Shell: No actual authentication implemented.
+ * Includes Google OAuth option.
  */
 export function LoginForm({ redirectTo }: LoginFormProps) {
+  const router = useRouter();
+  const supabase = createClient();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -71,38 +68,66 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
 
     setIsLoading(true);
 
-    // Simulate API call (UI shell only)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    // Simulate error for demo purposes
-    setIsLoading(false);
-    setError('Email or password is incorrect.');
+      if (signInError) {
+        setError(signInError.message || 'Email or password is incorrect.');
+        setIsLoading(false);
+        return;
+      }
+
+      // Successful login - redirect to target page
+      router.push(redirectTo || '/');
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
+      setIsLoading(false);
+    }
   };
 
-  const handleOAuthClick = (provider: string) => {
-    // UI shell: just log the action
-    console.log(`OAuth sign in with ${provider} requested`);
-    console.log('Redirect to:', redirectTo || '/');
+  const handleGoogleSignIn = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTo || '/')}`,
+        },
+      });
+
+      if (error) {
+        setError(error.message || 'Failed to sign in with Google');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
+    }
   };
 
   return (
-    <div className="space-y-[var(--space-lg)]">
+    <div className="space-y-[var(--space-md)]">
+      {/* Google OAuth - Primary option */}
+      <OAuthButton provider="google" onClick={handleGoogleSignIn} />
+
+      {/* Divider */}
+      <div className="flex items-center gap-[var(--space-sm)]">
+        <div className="flex-1 h-px bg-[var(--color-border)]" />
+        <span className="text-xs text-[var(--color-ink-subtle)]">or continue with email</span>
+        <div className="flex-1 h-px bg-[var(--color-border)]" />
+      </div>
+
       {/* Form-level error */}
       {error && <FormAlert variant="error">{error}</FormAlert>}
 
       {/* Email/Password Form */}
-      <form onSubmit={handleSubmit} className="space-y-[var(--space-md)]">
+      <form onSubmit={handleSubmit} className="space-y-[var(--space-sm)]">
         {/* Email field */}
         <div>
           <label
             htmlFor="email"
-            className="
-              block
-              text-sm
-              font-medium
-              text-[var(--color-ink)]
-              mb-[var(--space-xs)]
-            "
+            className="block text-sm font-medium text-[var(--color-ink)] mb-1"
           >
             Email address
           </label>
@@ -119,12 +144,12 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             autoComplete="email"
             className={`
               w-full
-              h-12 sm:h-[52px]
+              h-11
               px-[var(--space-md)]
               text-base
               text-[var(--color-ink)]
               bg-white
-              border-2 rounded-[var(--radius-organic)]
+              border-2 rounded-[var(--radius-md)]
               transition-all duration-200
               focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-1
               ${
@@ -137,15 +162,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             aria-describedby={emailError ? 'email-error' : undefined}
           />
           {emailError && (
-            <p
-              id="email-error"
-              className="
-                mt-[var(--space-xs)]
-                text-sm
-                text-[var(--color-danger)]
-              "
-              role="alert"
-            >
+            <p id="email-error" className="mt-1 text-xs text-[var(--color-danger)]" role="alert">
               {emailError}
             </p>
           )}
@@ -164,41 +181,35 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
             onBlur={() => password && validatePassword(password)}
             autoComplete="current-password"
             error={passwordError || undefined}
+            compact
           />
 
           {/* Forgot password link */}
-          <div className="mt-[var(--space-xs)] text-right">
+          <div className="mt-1 text-right">
             <a
               href="/reset-password"
-              className="
-                text-sm
-                text-[var(--color-ink-muted)]
-                hover:text-[var(--color-primary)]
-                focus:outline-none focus:text-[var(--color-primary)] focus:underline
-                transition-colors duration-200
-              "
+              className="text-xs text-[var(--color-ink-muted)] hover:text-[var(--color-primary)] transition-colors"
             >
-              Forgot your password?
+              Forgot password?
             </a>
           </div>
         </div>
 
-        {/* Submit button - Gold CTA */}
+        {/* Submit button */}
         <button
           type="submit"
           disabled={isLoading}
           className="
             w-full
-            h-12 sm:h-[52px]
+            h-11
             px-[var(--space-md)]
             text-base
             font-semibold
             text-[var(--color-ink)]
             bg-[var(--color-accent)]
-            rounded-[var(--radius-organic)]
+            rounded-[var(--radius-md)]
             hover:bg-[var(--color-accent-hover)]
-            shadow-[var(--shadow-card)]
-            hover:shadow-[var(--shadow-card-hover)]
+            shadow-sm
             focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2
             disabled:opacity-50 disabled:cursor-not-allowed
             transition-all duration-200
@@ -209,7 +220,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           {isLoading ? (
             <>
               <svg
-                className="animate-spin h-5 w-5"
+                className="animate-spin h-4 w-4"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -226,7 +237,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
                 <path
                   className="opacity-75"
                   fill="currentColor"
-                  d="M4 12a8 8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 />
               </svg>
               Signing in...
@@ -236,14 +247,6 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
           )}
         </button>
       </form>
-
-      {/* Divider */}
-      <AuthDivider />
-
-      {/* OAuth option */}
-      <div>
-        <OAuthButton provider="google" onClick={() => handleOAuthClick('google')} />
-      </div>
     </div>
   );
 }

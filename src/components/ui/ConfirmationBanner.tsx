@@ -1,11 +1,11 @@
-import { ThresholdProgressBar } from './ThresholdProgressBar';
+import { QuorumProgressBar } from './QuorumProgressBar';
 
 type ConfirmationStatus = 'confirmed' | 'forming' | 'not-running';
 
 interface ConfirmationBannerProps {
   status: ConfirmationStatus;
   currentParticipants: number;
-  threshold: number;
+  quorum: number;
 }
 
 const statusConfig: Record<ConfirmationStatus, {
@@ -13,8 +13,8 @@ const statusConfig: Record<ConfirmationStatus, {
   bgColor: string;
   borderColor: string;
   textColor: string;
-  getExplanation: (current: number, threshold: number) => string;
-  getNextStep: (current: number, threshold: number) => string;
+  getExplanation: (current: number, quorum: number) => string;
+  getNextStep: (current: number, quorum: number) => string;
 }> = {
   confirmed: {
     title: 'This tour is confirmed',
@@ -29,15 +29,15 @@ const statusConfig: Record<ConfirmationStatus, {
     bgColor: 'var(--color-forming-bg)',
     borderColor: 'var(--color-forming)',
     textColor: 'var(--color-forming)',
-    getExplanation: (current, threshold) => `${current} of ${threshold} birders committed`,
-    getNextStep: (current, threshold) => `${threshold - current} more needed to confirm`,
+    getExplanation: (current, quorum) => `${current} of ${quorum} birders committed`,
+    getNextStep: (current, quorum) => `${quorum - current} more needed to confirm`,
   },
   'not-running': {
-    title: 'This tour did not reach threshold',
+    title: 'This tour did not reach quorum',
     bgColor: 'var(--color-not-running-bg)',
     borderColor: 'var(--color-not-running)',
     textColor: 'var(--color-not-running)',
-    getExplanation: (current, threshold) => `${current} of ${threshold} needed`,
+    getExplanation: (current, quorum) => `${current} of ${quorum} needed`,
     getNextStep: () => 'This tour is closed',
   },
 };
@@ -45,7 +45,7 @@ const statusConfig: Record<ConfirmationStatus, {
 export function ConfirmationBanner({
   status,
   currentParticipants,
-  threshold,
+  quorum,
 }: ConfirmationBannerProps) {
   const config = statusConfig[status];
 
@@ -83,9 +83,9 @@ export function ConfirmationBanner({
 
         {/* Progress Bar (larger variant) */}
         <div className="max-w-md">
-          <ThresholdProgressBar
+          <QuorumProgressBar
             current={currentParticipants}
-            threshold={threshold}
+            quorum={quorum}
             showLabel={false}
           />
         </div>
@@ -93,13 +93,13 @@ export function ConfirmationBanner({
         {/* Explanation and Next Step */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-[var(--space-xs)] sm:gap-[var(--space-lg)]">
           <span className="text-sm font-mono text-[var(--color-ink)]">
-            {config.getExplanation(currentParticipants, threshold)}
+            {config.getExplanation(currentParticipants, quorum)}
           </span>
           <span
             className="text-sm font-medium"
             style={{ color: config.textColor }}
           >
-            {config.getNextStep(currentParticipants, threshold)}
+            {config.getNextStep(currentParticipants, quorum)}
           </span>
         </div>
       </div>

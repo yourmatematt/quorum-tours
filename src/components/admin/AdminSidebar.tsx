@@ -10,6 +10,7 @@ import {
   BarChart3,
   AlertTriangle,
   ScrollText,
+  Activity,
   LogOut,
 } from 'lucide-react';
 
@@ -28,6 +29,7 @@ const navItems: NavItem[] = [
   { label: 'Metrics', href: '/admin/metrics', icon: BarChart3 },
   { label: 'Alerts', href: '/admin/alerts', icon: AlertTriangle },
   { label: 'Audit Log', href: '/admin/audit', icon: ScrollText },
+  { label: 'System Health', href: '/admin/system', icon: Activity },
 ];
 
 export function AdminSidebar({

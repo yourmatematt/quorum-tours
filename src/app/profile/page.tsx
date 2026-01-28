@@ -2,29 +2,33 @@ import { Metadata } from 'next';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import {
   ProfileHeader,
-  CommitmentsSection,
+  TrustStatusCard,
+  EnhancedTourCard,
+  ChaseListSection,
   PastToursSection,
   SettingsSection,
 } from '@/components/profile';
 
 export const metadata: Metadata = {
-  title: 'Your Profile — Quorum Tours',
-  description: 'Manage your tour commitments and account settings.',
+  title: 'Your Dashboard — Quorum Tours',
+  description: 'Manage your tour commitments, chase list, and account settings.',
 };
 
 /**
- * Profile Page - User dashboard
+ * Profile Page - User Dashboard (No-scroll desktop)
  *
- * Primary job: Calm, functional dashboard to manage tour
- * commitments and account. Not a social profile or achievement display.
+ * Primary job: At-a-glance control room for birders
+ * - Active tour commitments with full context
+ * - Chase list with eBird import
+ * - Quick access to settings
+ *
+ * Layout: Viewport-height dashboard, no scroll on desktop
+ * Scrolling contained within individual panels where needed.
  *
  * Per IA:
  * - Profile exists to manage commitments, not display status
- * - No progression bars, levels, XP, or achievement badges
- * - No social comparison or peer visibility
- * - Institutional, understated visual treatment
- *
- * UI Shell: All data is placeholder/example for Phase 2.
+ * - Social connections: fellow travelers visible on tour cards
+ * - Chase list integration for trip relevance
  */
 
 // Example user data (UI shell - would come from auth in production)
@@ -32,9 +36,12 @@ const exampleUser = {
   displayName: 'Sarah Mitchell',
   email: 'sarah.mitchell@email.com',
   memberSince: 'January 2025',
+  trustTier: 'trusted' as const,
+  completedTours: 2,
+  strikeCount: 0,
 };
 
-// Example commitments (UI shell - would come from API in production)
+// Enhanced commitment data with new fields
 const exampleCommitments = [
   {
     tourId: 'kakadu-wetlands-2026',
@@ -45,7 +52,24 @@ const exampleCommitments = [
     location: 'Northern Territory',
     status: 'confirmed' as const,
     currentParticipants: 8,
-    threshold: 6,
+    quorum: 6,
+    paymentStatus: 'paid' as const,
+    departureDate: new Date('2026-03-15'),
+    fellowTravelers: [
+      { id: 'user-1', name: 'Michael Chen', initials: 'MC' },
+      { id: 'user-2', name: 'Emma Watson', initials: 'EW' },
+      { id: 'user-3', name: 'David Park', initials: 'DP' },
+      { id: 'user-4', name: 'Lisa Thompson', initials: 'LT' },
+      { id: 'user-5', name: 'James Miller', initials: 'JM' },
+      { id: 'user-6', name: 'Anna Rodriguez', initials: 'AR' },
+      { id: 'user-7', name: 'Chris Lee', initials: 'CL' },
+    ],
+    itinerarySummary: [
+      'Arrive Darwin, transfer to Kakadu',
+      'Yellow Water cruise, Mamukala Wetlands',
+      'Gunlom Falls, savanna woodlands',
+      'East Alligator region, departure',
+    ],
   },
   {
     tourId: 'tasmania-raptors-2026',
@@ -56,8 +80,30 @@ const exampleCommitments = [
     location: 'Tasmania',
     status: 'forming' as const,
     currentParticipants: 4,
-    threshold: 6,
+    quorum: 6,
+    paymentStatus: 'deposit-paid' as const,
+    departureDate: new Date('2026-04-22'),
+    fellowTravelers: [
+      { id: 'user-8', name: 'Robert Kim', initials: 'RK' },
+      { id: 'user-9', name: 'Sophie Brown', initials: 'SB' },
+      { id: 'user-10', name: 'Andrew White', initials: 'AW' },
+    ],
+    itinerarySummary: [
+      'Hobart arrival, Mount Wellington',
+      'Bruny Island pelagic day',
+      'Tasman Peninsula, sea cliffs',
+      'Central highlands, departure',
+    ],
   },
+];
+
+// Example chase list (UI shell)
+const exampleChaseList = [
+  { id: 'bird-1', commonName: 'Gouldian Finch', scientificName: 'Chloebia gouldiae', region: 'NT', addedDate: '2025-12-01' },
+  { id: 'bird-2', commonName: 'Regent Honeyeater', scientificName: 'Anthochaera phrygia', region: 'NSW', addedDate: '2025-11-15' },
+  { id: 'bird-3', commonName: 'Plains-wanderer', scientificName: 'Pedionomus torquatus', region: 'VIC', addedDate: '2025-10-20' },
+  { id: 'bird-4', commonName: 'Night Parrot', scientificName: 'Pezoporus occidentalis', region: 'QLD', addedDate: '2025-09-05' },
+  { id: 'bird-5', commonName: 'Helmeted Honeyeater', scientificName: 'Lichenostomus melanops cassidix', region: 'VIC', addedDate: '2025-08-10' },
 ];
 
 // Example past tours (UI shell)
@@ -76,46 +122,91 @@ const examplePastTours = [
     outcome: 'completed' as const,
     participantCount: 6,
   },
-  {
-    id: 'phillip-island-2025',
-    title: 'Phillip Island Pelagic',
-    date: 'May 20, 2025',
-    outcome: 'cancelled' as const,
-  },
 ];
 
 export default function ProfilePage() {
   return (
     <ErrorBoundary>
-      <main className="min-h-screen bg-[var(--color-surface)]">
-      <div
-        className="
-          w-full max-w-[1000px] mx-auto
-          px-4 sm:px-6
-          py-6 sm:py-8
-        "
-      >
-        {/* Profile Header */}
-        <div className="mb-6">
-          <ProfileHeader
-            displayName={exampleUser.displayName}
-            email={exampleUser.email}
-            memberSince={exampleUser.memberSince}
-          />
-        </div>
+      {/* Dashboard: Full viewport height, no scroll on desktop */}
+      <main className="bg-[var(--color-surface)] lg:h-[calc(100vh-65px)] lg:overflow-hidden">
+        <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 py-4 lg:py-6 h-full flex flex-col">
 
-        {/* Active Commitments - Primary section */}
-        <div className="mb-6">
-          <CommitmentsSection commitments={exampleCommitments} />
-        </div>
+          {/* Top Row: Profile + Trust Status */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4 flex-shrink-0">
+            <div className="lg:col-span-3">
+              <ProfileHeader
+                displayName={exampleUser.displayName}
+                email={exampleUser.email}
+                memberSince={exampleUser.memberSince}
+              />
+            </div>
+            <TrustStatusCard
+              trustTier={exampleUser.trustTier}
+              completedTours={exampleUser.completedTours}
+              strikeCount={exampleUser.strikeCount}
+            />
+          </div>
 
-        {/* Past Tours + Account Settings - Side by side on desktop */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <PastToursSection tours={examplePastTours} />
-          <SettingsSection />
+          {/* Main Dashboard Grid - Takes remaining height */}
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 min-h-0">
+
+            {/* Left Column: My Tours (2/3 width on desktop) */}
+            <section
+              aria-labelledby="my-tours-heading"
+              className="lg:col-span-8 flex flex-col min-h-0"
+            >
+              <h2
+                id="my-tours-heading"
+                className="font-display text-xl font-semibold text-[var(--color-ink)] mb-3 flex-shrink-0"
+              >
+                My Tours
+              </h2>
+
+              {exampleCommitments.length > 0 ? (
+                <div className="flex-1 overflow-y-auto min-h-0 space-y-4 pr-1">
+                  {exampleCommitments.map((commitment) => (
+                    <EnhancedTourCard
+                      key={commitment.tourId}
+                      {...commitment}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex-1 flex items-center justify-center bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)]">
+                  <div className="text-center p-6">
+                    <p className="text-[var(--color-ink-muted)] mb-3">
+                      No active commitments yet.
+                    </p>
+                    <a
+                      href="/tours"
+                      className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[var(--color-primary)] rounded-[var(--radius-organic)] hover:bg-[var(--color-primary-hover)] transition-colors"
+                    >
+                      Browse tours
+                    </a>
+                  </div>
+                </div>
+              )}
+            </section>
+
+            {/* Right Column: Chase List + Settings (1/3 width on desktop) */}
+            <div className="lg:col-span-4 flex flex-col gap-4 min-h-0">
+
+              {/* Chase List - Takes available height */}
+              <div className="flex-1 min-h-0 bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-4 flex flex-col">
+                <ChaseListSection
+                  birds={exampleChaseList}
+                />
+              </div>
+
+              {/* Collapsible sections at bottom */}
+              <div className="flex-shrink-0 space-y-3">
+                <PastToursSection tours={examplePastTours} />
+                <SettingsSection />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
     </ErrorBoundary>
   );
 }

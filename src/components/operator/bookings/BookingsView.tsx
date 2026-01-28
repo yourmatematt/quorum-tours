@@ -4,20 +4,45 @@ import { useState } from 'react';
 import { Eye, Mail, Download } from 'lucide-react';
 import { DashboardViewContainer, DashboardViewHeader, DashboardScrollArea, StatusBadge } from '@/components/operator';
 
+type TrustTier = 'new' | 'trusted' | 'strike-1' | 'strike-2';
+
 interface Booking {
   id: string;
   tour_name: string;
   participant_name: string;
   participant_email: string;
-  status: 'held' | 'paid' | 'cancelled';
+  status: 'held' | 'paid' | 'cancelled' | 'forfeited';
   booking_date: string;
   amount: number;
+  deposit_amount?: number;
+  trust_tier: TrustTier;
 }
+
+// Trust tier badge config
+const trustTierConfig: Record<TrustTier, { label: string; className: string }> = {
+  'new': {
+    label: 'New',
+    className: 'bg-[var(--color-surface-sunken)] text-[var(--color-ink)]',
+  },
+  'trusted': {
+    label: 'Trusted',
+    className: 'bg-[var(--color-primary-subtle)] text-[var(--color-primary)]',
+  },
+  'strike-1': {
+    label: '1 Strike',
+    className: 'bg-[var(--color-surface-sunken)] text-[var(--color-ink-muted)]',
+  },
+  'strike-2': {
+    label: '2 Strikes',
+    className: 'bg-[var(--color-surface-sunken)] text-[var(--color-ink-muted)]',
+  },
+};
 
 const FILTER_OPTIONS = [
   { id: 'all', label: 'All' },
   { id: 'held', label: 'Held' },
   { id: 'paid', label: 'Paid' },
+  { id: 'forfeited', label: 'Forfeited' },
   { id: 'cancelled', label: 'Cancelled' },
 ] as const;
 
@@ -30,6 +55,7 @@ const STUBBED_BOOKINGS: Booking[] = [
     status: 'paid',
     booking_date: '2026-01-15',
     amount: 4200,
+    trust_tier: 'trusted',
   },
   {
     id: '2',
@@ -39,6 +65,8 @@ const STUBBED_BOOKINGS: Booking[] = [
     status: 'held',
     booking_date: '2026-01-18',
     amount: 3200,
+    deposit_amount: 640,
+    trust_tier: 'new',
   },
   {
     id: '3',
@@ -48,6 +76,18 @@ const STUBBED_BOOKINGS: Booking[] = [
     status: 'paid',
     booking_date: '2026-01-20',
     amount: 180,
+    trust_tier: 'trusted',
+  },
+  {
+    id: '4',
+    tour_name: 'Costa Rica Cloud Forest',
+    participant_name: 'James Wilson',
+    participant_email: 'jwilson@email.com',
+    status: 'forfeited',
+    booking_date: '2026-01-10',
+    amount: 3200,
+    deposit_amount: 640,
+    trust_tier: 'strike-1',
   },
 ];
 
@@ -91,6 +131,27 @@ export function BookingsView() {
         </button>
       </div>
 
+      {/* Deposit System Explainer */}
+      <div className="mb-6 p-4 bg-[var(--color-surface-sunken)] border border-[var(--color-border)] rounded-[var(--radius-organic)]">
+        <div className="flex items-start gap-3">
+          <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white text-xs">
+            ?
+          </div>
+          <div>
+            <p className="text-sm font-medium text-[var(--color-ink)] mb-1">
+              How deposits protect your tours
+            </p>
+            <p className="text-sm text-[var(--color-ink-muted)]">
+              New users and those with strikes pay a deposit you set. If they miss the 24-hour payment window after quorum,
+              you receive 97% of their deposit as compensation. &quot;Forfeited&quot; bookings show this income.{' '}
+              <a href="/operator/help#deposits" className="text-[var(--color-primary)] hover:underline">
+                Learn more
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Scrollable Content Area */}
       <DashboardScrollArea>
         {/* Desktop: Table */}
@@ -101,6 +162,7 @@ export function BookingsView() {
                 <tr>
                   <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Tour</th>
                   <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Participant</th>
+                  <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Trust</th>
                   <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Status</th>
                   <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Booking Date</th>
                   <th scope="col" className="px-6 py-4 text-left text-sm font-semibold text-[var(--color-ink)]">Amount</th>
@@ -117,13 +179,30 @@ export function BookingsView() {
                         <div className="text-xs text-[var(--color-ink-muted)]">{booking.participant_email}</div>
                       </td>
                       <td className="px-6 py-4">
+                        <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${trustTierConfig[booking.trust_tier].className}`}>
+                          {trustTierConfig[booking.trust_tier].label}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
                         <StatusBadge.Booking status={booking.status} />
                       </td>
                       <td className="px-6 py-4 text-sm text-[var(--color-ink-muted)]">
                         {new Date(booking.booking_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </td>
-                      <td className="px-6 py-4 text-sm font-medium text-[var(--color-ink)]">
-                        ${booking.amount.toLocaleString()}
+                      <td className="px-6 py-4">
+                        <div className="text-sm font-medium text-[var(--color-ink)]">
+                          ${booking.amount.toLocaleString()}
+                        </div>
+                        {booking.deposit_amount && booking.status !== 'forfeited' && (
+                          <div className="text-xs text-[var(--color-ink-muted)]">
+                            ${booking.deposit_amount} deposit
+                          </div>
+                        )}
+                        {booking.status === 'forfeited' && booking.deposit_amount && (
+                          <div className="text-xs text-[var(--color-primary)]">
+                            +${Math.round(booking.deposit_amount * 0.97)} received
+                          </div>
+                        )}
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
@@ -147,7 +226,7 @@ export function BookingsView() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-[var(--color-ink-muted)]">
+                    <td colSpan={7} className="px-6 py-12 text-center text-[var(--color-ink-muted)]">
                       No bookings found
                     </td>
                   </tr>
@@ -171,11 +250,18 @@ export function BookingsView() {
                   <p className="font-medium text-[var(--color-ink)]">{booking.tour_name}</p>
                 </div>
 
-                {/* Participant */}
+                {/* Participant + Trust */}
                 <div className="mb-3">
                   <p className="text-xs text-[var(--color-ink-muted)] mb-1">Participant</p>
-                  <p className="font-medium text-[var(--color-ink)]">{booking.participant_name}</p>
-                  <p className="text-sm text-[var(--color-ink-muted)]">{booking.participant_email}</p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-[var(--color-ink)]">{booking.participant_name}</p>
+                      <p className="text-sm text-[var(--color-ink-muted)]">{booking.participant_email}</p>
+                    </div>
+                    <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${trustTierConfig[booking.trust_tier].className}`}>
+                      {trustTierConfig[booking.trust_tier].label}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Status and Amount Row */}
@@ -189,6 +275,16 @@ export function BookingsView() {
                     <p className="text-lg font-semibold text-[var(--color-ink)]">
                       ${booking.amount.toLocaleString()}
                     </p>
+                    {booking.deposit_amount && booking.status !== 'forfeited' && (
+                      <p className="text-xs text-[var(--color-ink-muted)]">
+                        ${booking.deposit_amount} deposit
+                      </p>
+                    )}
+                    {booking.status === 'forfeited' && booking.deposit_amount && (
+                      <p className="text-xs text-[var(--color-primary)]">
+                        +${Math.round(booking.deposit_amount * 0.97)} received
+                      </p>
+                    )}
                   </div>
                 </div>
 

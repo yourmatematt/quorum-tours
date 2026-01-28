@@ -1,3 +1,7 @@
+'use client';
+
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
+
 export function FailureCaseSection() {
   const outcomes = [
     {
@@ -61,7 +65,7 @@ export function FailureCaseSection() {
       ),
     },
     {
-      text: 'You can immediately commit to other forming tours',
+      text: 'Your commitment slot is freed up—you can immediately commit to other forming tours',
       icon: (
         <svg
           width="20"
@@ -92,68 +96,79 @@ export function FailureCaseSection() {
         mx-auto px-[var(--space-lg)]
       ">
           {/* Direct question as headline */}
-          <h2 className="
-            font-display
-            text-[clamp(1.75rem,4vw,2.5rem)]
-            leading-tight
-            text-[var(--color-ink)]
-            mb-[var(--space-xl)]
-          ">
-            What if the tour doesn't reach its threshold?
-          </h2>
+          <ScrollReveal variant="fade-up" duration={500}>
+            <h2 className="
+              font-display
+              text-[clamp(1.75rem,4vw,2.5rem)]
+              leading-tight
+              text-[var(--color-ink)]
+              mb-[var(--space-xl)]
+            ">
+              What if the tour doesn't reach quorum?
+            </h2>
 
-          {/* Direct answer */}
-          <p className="
-            text-[var(--color-ink-muted)]
-            text-[var(--text-base)]
-            leading-relaxed
-            mb-[var(--space-2xl)]
-          ">
-            Each tour has a commitment deadline—typically 7 days before the scheduled date.
-            If the threshold isn't reached by that deadline, here's exactly what happens:
-          </p>
+            {/* Direct answer */}
+            <p className="
+              text-[var(--color-ink-muted)]
+              text-[var(--text-base)]
+              leading-relaxed
+              mb-[var(--space-2xl)]
+            ">
+              Each tour has a commitment deadline—typically 7 days before the scheduled date.
+              If quorum isn't reached by that deadline, here's exactly what happens:
+            </p>
+          </ScrollReveal>
 
           {/* Outcome list */}
           <ul className="space-y-[var(--space-lg)]">
             {outcomes.map((outcome, index) => (
-              <li key={index} className="flex items-start gap-[var(--space-md)]">
-                <span className="
-                  flex-shrink-0
-                  w-8 h-8
-                  bg-[var(--color-surface-sunken)]
-                  rounded-full
-                  flex items-center justify-center
-                  text-[var(--color-ink-subtle)]
-                " aria-hidden="true">
-                  {outcome.icon}
-                </span>
-                <span className="
-                  text-[var(--color-ink)]
-                  text-[var(--text-base)]
-                  pt-[var(--space-xs)]
-                ">
-                  {outcome.text}
-                </span>
-              </li>
+              <ScrollReveal
+                key={index}
+                variant="fade-up"
+                delay={index * 100}
+                duration={500}
+              >
+                <li className="flex items-start gap-[var(--space-md)]">
+                  <span className="
+                    flex-shrink-0
+                    w-8 h-8
+                    bg-[var(--color-surface-sunken)]
+                    rounded-full
+                    flex items-center justify-center
+                    text-[var(--color-ink-subtle)]
+                  " aria-hidden="true">
+                    {outcome.icon}
+                  </span>
+                  <span className="
+                    text-[var(--color-ink)]
+                    text-[var(--text-base)]
+                    pt-[var(--space-xs)]
+                  ">
+                    {outcome.text}
+                  </span>
+                </li>
+              </ScrollReveal>
             ))}
           </ul>
 
           {/* Timeline note */}
-          <div className="
-            mt-[var(--space-2xl)]
-            p-[var(--space-lg)]
-            bg-[var(--color-surface-sunken)]
-            border-l-4 border-[var(--color-primary)]
-            rounded-r-[var(--radius-organic)]
-          ">
-            <p className="
-              text-[var(--color-ink)]
-              text-[var(--text-sm)]
+          <ScrollReveal variant="fade-up" delay={400} duration={500}>
+            <div className="
+              mt-[var(--space-2xl)]
+              p-[var(--space-lg)]
+              bg-[var(--color-surface-sunken)]
+              border-l-4 border-[var(--color-primary)]
+              rounded-r-[var(--radius-organic)]
             ">
-              <strong>The deadline is visible on every tour page.</strong> You'll always
-              know exactly when the threshold needs to be met, so there are no surprises.
-            </p>
-          </div>
+              <p className="
+                text-[var(--color-ink)]
+                text-[var(--text-sm)]
+              ">
+                <strong>The deadline is visible on every tour page.</strong> You'll always
+                know exactly when quorum needs to be reached, so there are no surprises.
+              </p>
+            </div>
+          </ScrollReveal>
       </div>
     </section>
   );

@@ -537,7 +537,7 @@ export default function OperatorProfilePage({ params }: PageProps) {
                       operatorName={operator.name}
                       status={tour.status}
                       currentParticipants={tour.currentParticipants}
-                      threshold={tour.threshold}
+                      quorum={tour.threshold}
                       date={tour.date}
                       location={tour.location}
                       href={`/tours/${tour.id}`}

@@ -23,6 +23,7 @@ export type StatusVariant =
   | 'paid'
   | 'pending'
   | 'cancelled'
+  | 'forfeited'
   // Generic states
   | 'info'
   | 'neutral';
@@ -105,6 +106,13 @@ const statusConfig: Record<StatusVariant, {
     bgColor: 'bg-[var(--color-destructive-bg)]',
     textColor: 'text-[var(--color-destructive-text)]',
     borderColor: 'border-[var(--color-destructive-border)]',
+  },
+  forfeited: {
+    label: 'Forfeited',
+    icon: '⚠',
+    bgColor: 'bg-[var(--color-warning-bg)]',
+    textColor: 'text-[var(--color-warning-text)]',
+    borderColor: 'border-[var(--color-warning-border)]',
   },
 
   // Generic states
@@ -197,7 +205,7 @@ StatusBadge.Booking = function BookingStatusBadge({
   status,
   className = '',
 }: {
-  status: 'held' | 'paid' | 'cancelled';
+  status: 'held' | 'paid' | 'cancelled' | 'forfeited';
   className?: string;
 }) {
   return (

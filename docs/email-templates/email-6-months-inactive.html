@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You missed {{sightings.lifers_count}} lifers. Here's proof.</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Atkinson Hyperlegible', 'Segoe UI', Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #d63031 0%, #e84c3d 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .opening-stat {
+            font-size: 16px;
+            text-align: center;
+            background-color: #fff5f5;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .opening-stat .big {
+            font-size: 32px;
+            color: #d63031;
+            font-weight: bold;
+        }
+
+        .opening-stat .subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        h2 {
+            font-family: 'Crimson Pro', Georgia, serif;
+            color: #d63031;
+            font-size: 22px;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .sighting-card {
+            background-color: #fef9f5;
+            border-left: 4px solid #d63031;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .sighting-bird {
+            font-size: 20px;
+            color: #d63031;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .sighting-details {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .body-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .emphasis-red {
+            color: #d63031;
+            font-weight: bold;
+        }
+
+        .bold-statement {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d63031;
+            line-height: 1.8;
+            margin: 25px 0;
+        }
+
+        .reality-check {
+            background-color: #fff5f5;
+            border: 2px solid #d63031;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #444;
+            line-height: 1.7;
+        }
+
+        .reality-check strong {
+            color: #d63031;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #d63031;
+            color: white;
+            padding: 16px 40px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            margin: 35px 0;
+            font-size: 16px;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .cta-button:hover {
+            background-color: #b82828;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .ps {
+            font-size: 14px;
+            color: #666;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-style: italic;
+        }
+
+        .footer {
+            background-color: #f5f5f5;
+            padding: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-links {
+            margin: 10px 0;
+        }
+
+        .footer-links a {
+            color: #d63031;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100%;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .cta-button {
+                display: block;
+                width: 100%;
+            }
+
+            .opening-stat .big {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>What You Missed</h1>
+            <p>Six months on Quorum Tours</p>
+        </div>
+
+        <div class="content">
+            <div class="opening-stat">
+                <div class="big">{{tours.missed_count}} tours</div>
+                <div>{{tours.region_count}} in {{user.region}}</div>
+                <div class="subtitle">And they all found birds.</div>
+            </div>
+
+            <p class="body-text">Hi {{user.first_name}},</p>
+
+            <p class="body-text">Six months. That's how long it's been since you signed up for Quorum Tours.</p>
+
+            <p class="body-text">In that time, <span class="emphasis-red">{{tours.missed_count}} tours ran successfully</span> across the platform. <span class="emphasis-red">{{tours.region_count}} of them were in {{user.region}}</span>—your region. And they all found birds.</p>
+
+            <h2>Here's what actually got spotted:</h2>
+
+            <div class="sighting-card">
+                <div class="sighting-bird">{{sightings.region_examples[0].bird_name}}</div>
+                <div class="sighting-details">
+                    <p>Documented on <strong>{{sightings.region_examples[0].tour_date}}</strong> on the <strong>{{sightings.region_examples[0].tour_title}}</strong>.</p>
+                    <p><strong style="color: #d63031; font-size: 16px;">{{sightings.region_examples[0].participants}} birders were there.</strong></p>
+                    <p style="margin-top: 10px;"><em>You weren't.</em></p>
+                </div>
+            </div>
+
+            <p class="body-text" style="text-align: center;">
+                <a href="https://quorumtours.com/tours/[tour-id]/reviews" style="color: #d63031; font-weight: 600; text-decoration: none;">VIEW SIGHTING REPORT</a>
+            </p>
+
+            <div class="sighting-card">
+                <div class="sighting-bird">{{sightings.region_examples[1].bird_name}}</div>
+                <div class="sighting-details">
+                    <p>Spotted in {{user.region}} another month later.</p>
+                    <p><strong>{{sightings.region_examples[1].participants}} participants documented it.</strong> Real photos. Real notes. All there.</p>
+                </div>
+            </div>
+
+            <p class="body-text" style="margin-top: 30px;">If you had been on either of these tours—if you had a spot and had committed—you would have seen these birds firsthand.</p>
+
+            <p class="bold-statement">Your chase list could have grown.</p>
+
+            <div class="reality-check">
+                <strong>This is real.</strong> We don't know your specific target species, but if you had a chase list when you signed up, birds from it were almost certainly spotted on tours you could have joined. Not hypothetical tours. Not "might-happen" tours. Tours that <em>ran</em>. Sightings that are <em>documented</em>. Right now, live on our platform.
+            </div>
+
+            <h2>The numbers:</h2>
+
+            <p class="body-text">
+                <strong>{{tours.missed_count}}</strong> tours ran across all regions.<br>
+                <strong>{{tours.region_count}}</strong> of those were in {{user.region}}.<br>
+                <strong>{{sightings.lifers_count}}</strong> potential lifers spotted.<br>
+                <strong>0</strong> of them with you.
+            </p>
+
+            <p class="body-text" style="margin-top: 30px;">This isn't about tours that might happen. This is about tours that did happen. The sightings are real. The photos are there. The participants' notes are live on the platform.</p>
+
+            <p class="body-text" style="color: #d63031; font-size: 16px; font-weight: 600;">And you weren't there.</p>
+
+            <h2>What happens next is up to you.</h2>
+
+            <p class="body-text">You can log back in right now. Browse tours in {{user.region}}. Read what people saw. Check upcoming trips.</p>
+
+            <p class="body-text">The quorum system means you're never paying for a tour that won't happen—only tours with confirmed participant numbers go forward. Zero financial risk until the group is real.</p>
+
+            <p class="body-text">Or you can keep checking your email in another six months, wondering what you missed this time.</p>
+
+            <div class="button-container">
+                <a href="https://quorumtours.com/login" class="cta-button">LOG IN AND SEE WHAT YOU MISSED</a>
+            </div>
+
+            <p class="body-text">Questions? <a href="https://quorumtours.com/how-it-works" style="color: #d63031; text-decoration: none; font-weight: 600;">How It Works</a> explains everything.</p>
+
+            <p class="body-text" style="margin-top: 30px;">Happy birding,<br><strong>The Quorum Tours Team</strong></p>
+
+            <p class="ps">P.S. — If you're still interested but uncertain about the platform, reach out. We're happy to explain how the quorum system works and why it actually means better birding trips for everyone.</p>
+        </div>
+
+        <div class="footer">
+            <p>Quorum Tours | Birding Tour Platform</p>
+            <div class="footer-links">
+                <a href="https://quorumtours.com/how-it-works">How It Works</a>
+                <a href="https://quorumtours.com/tours">Explore Tours</a>
+                <a href="mailto:support@quorumtours.com">Contact Us</a>
+            </div>
+            <p style="margin-top: 15px;">
+                <a href="{{unsubscribe_link}}" style="color: #999; text-decoration: none; font-size: 11px;">Unsubscribe</a>
+            </p>
+            <p style="margin-top: 10px; color: #999; font-size: 11px;">
+                This email was sent to {{user.email}}<br>
+                Quorum Tours | tours@quorumtours.com
+            </p>
+        </div>
+    </div>
+</body>
+</html>

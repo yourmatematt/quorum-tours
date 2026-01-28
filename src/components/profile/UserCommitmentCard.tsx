@@ -11,7 +11,7 @@ interface UserCommitmentCardProps {
   location: string;
   status: CommitmentStatus;
   currentParticipants: number;
-  threshold: number;
+  quorum: number;
 }
 
 /**
@@ -31,7 +31,7 @@ export function UserCommitmentCard({
   location,
   status,
   currentParticipants,
-  threshold,
+  quorum,
 }: UserCommitmentCardProps) {
   const isConfirmed = status === 'confirmed';
 
@@ -67,10 +67,10 @@ export function UserCommitmentCard({
           <div className="flex-1 h-2 bg-[var(--color-surface-sunken)] rounded-full overflow-hidden">
             <div
               className="h-full bg-[var(--color-forming)] rounded-full"
-              style={{ width: `${Math.min((currentParticipants / threshold) * 100, 100)}%` }}
+              style={{ width: `${Math.min((currentParticipants / quorum) * 100, 100)}%` }}
             />
           </div>
-          <span className="text-xs text-[var(--color-ink-muted)]">{currentParticipants}/{threshold}</span>
+          <span className="text-xs text-[var(--color-ink-muted)]">{currentParticipants}/{quorum}</span>
         </div>
       ) : (
         <p className="text-xs text-[var(--color-confirmed)]">

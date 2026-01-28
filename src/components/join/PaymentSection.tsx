@@ -221,7 +221,7 @@ export function PaymentSection({ price, priceNote }: PaymentSectionProps) {
             </p>
             <p>
               Your card is charged when the tour runs. If the tour doesn&apos;t reach
-              its threshold, your hold is released automatically.
+              quorum, your hold is released automatically.
             </p>
           </div>
         </div>

@@ -1,4 +1,7 @@
+'use client';
+
 import { BoundaryItem } from './BoundaryItem';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 
 interface Boundary {
   title: string;
@@ -24,7 +27,7 @@ const boundaries: Boundary[] = [
   {
     title: 'a discount aggregator',
     explanation:
-      'Prices reflect the operator\'s costs and expertise, not bulk discounts. Reaching a threshold gets a tour to run, not a lower price.',
+      'Prices reflect the operator\'s costs and expertise, not bulk discounts. Reaching quorum gets a tour to run, not a lower price.',
   },
 ];
 
@@ -39,34 +42,42 @@ export function BoundariesSection() {
         mx-auto px-[var(--space-lg)]
       ">
           {/* Section headline */}
-          <h2 className="
-            font-display
-            text-[clamp(1.75rem,4vw,2.5rem)]
-            leading-tight
-            text-[var(--color-ink)]
-            mb-[var(--space-md)]
-          ">
-            What Quorum does not do
-          </h2>
+          <ScrollReveal variant="fade-up" duration={500}>
+            <h2 className="
+              font-display
+              text-[clamp(1.75rem,4vw,2.5rem)]
+              leading-tight
+              text-[var(--color-ink)]
+              mb-[var(--space-md)]
+            ">
+              What Quorum does not do
+            </h2>
 
-          <p className="
-            text-[var(--color-ink-muted)]
-            text-[var(--text-base)]
-            leading-relaxed
-            mb-[var(--space-2xl)]
-          ">
-            Setting clear boundaries prevents misunderstandings. Here is what you will not
-            find on Quorum:
-          </p>
+            <p className="
+              text-[var(--color-ink-muted)]
+              text-[var(--text-base)]
+              leading-relaxed
+              mb-[var(--space-2xl)]
+            ">
+              Setting clear boundaries prevents misunderstandings. Here is what you will not
+              find on Quorum:
+            </p>
+          </ScrollReveal>
 
           {/* Boundary list */}
           <div className="space-y-[var(--space-xl)]">
             {boundaries.map((boundary, index) => (
-              <BoundaryItem
+              <ScrollReveal
                 key={index}
-                title={boundary.title}
-                explanation={boundary.explanation}
-              />
+                variant="fade-up"
+                delay={index * 100}
+                duration={500}
+              >
+                <BoundaryItem
+                  title={boundary.title}
+                  explanation={boundary.explanation}
+                />
+              </ScrollReveal>
             ))}
           </div>
       </div>

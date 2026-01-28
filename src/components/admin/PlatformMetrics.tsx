@@ -17,7 +17,7 @@ export function PlatformMetrics() {
       commission: 28475,
     },
     tours: {
-      thresholdReachedRate: 73,
+      quorumReachedRate: 73,
       totalActive: 47,
       completedThisMonth: 12,
     },
@@ -88,10 +88,10 @@ export function PlatformMetrics() {
           <div className="space-y-3">
             <div className="flex justify-between items-baseline">
               <span className="text-sm text-[var(--color-ink-muted)]">
-                Threshold Reached
+                Quorum Reached
               </span>
               <span className="font-mono text-lg font-semibold text-[var(--color-confirmed)]">
-                {metrics.tours.thresholdReachedRate}%
+                {metrics.tours.quorumReachedRate}%
               </span>
             </div>
             <div className="flex justify-between items-baseline">

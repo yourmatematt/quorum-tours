@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12 lifers. 47 tours. 0 with you.</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Atkinson Hyperlegible', 'Segoe UI', Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .opening {
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .opening p {
+            margin-bottom: 15px;
+        }
+
+        .year-stats {
+            background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
+            border-left: 5px solid #d63031;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 4px;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .year-stats strong {
+            color: #d63031;
+            font-size: 18px;
+        }
+
+        .year-stats .stat-line {
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            font-family: 'Crimson Pro', Georgia, serif;
+            color: #1a1a1a;
+            font-size: 22px;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .sighting-card {
+            background-color: #fff5f5;
+            border-left: 4px solid #d63031;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .sighting-bird {
+            font-size: 18px;
+            color: #d63031;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .sighting-details {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .body-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .callout-red {
+            background-color: #fff5f5;
+            border: 2px solid #d63031;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #444;
+            line-height: 1.7;
+        }
+
+        .callout-red strong {
+            color: #d63031;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .chase-list-stat {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d63031;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #d63031;
+            color: white;
+            padding: 16px 40px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            margin: 35px 0;
+            font-size: 16px;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .cta-button:hover {
+            background-color: #b82828;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .secondary-text {
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .secondary-text a {
+            color: #d63031;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .ps {
+            font-size: 14px;
+            color: #666;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-style: italic;
+        }
+
+        .footer {
+            background-color: #f5f5f5;
+            padding: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-links {
+            margin: 10px 0;
+        }
+
+        .footer-links a {
+            color: #d63031;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .critical-stat {
+            font-size: 28px;
+            color: #d63031;
+            font-weight: bold;
+            text-align: center;
+            margin: 25px 0;
+            font-family: 'Crimson Pro', Georgia, serif;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100%;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .cta-button {
+                display: block;
+                width: 100%;
+            }
+
+            .critical-stat {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>12 Lifers. 47 Tours. 0 With You.</h1>
+            <p>Your year in review</p>
+        </div>
+
+        <div class="content">
+            <div class="opening">
+                <p>Hi {{user.first_name}},</p>
+                <p>Exactly one year ago today, you signed up for Quorum Tours.</p>
+                <p><strong>You never came back.</strong></p>
+            </div>
+
+            <h2>Here's what happened in the year you were gone:</h2>
+
+            <div class="year-stats">
+                <div class="stat-line"><strong>{{stats.year_in_review.total_tours}}</strong> tours ran across the platform.</div>
+                <div class="stat-line"><strong>{{stats.year_in_review.total_sightings}}</strong> birds were spotted by participants.</div>
+                <div class="stat-line"><strong>{{stats.year_in_review.new_lifers}}</strong> of them were lifers.</div>
+            </div>
+
+            <p class="body-text" style="margin-top: 30px;">In {{user.region}}?</p>
+
+            <div class="critical-stat">
+                {{tours.region_count}} tours
+                <br>{{sightings.lifers_count}} lifers spotted
+                <br>0 with you
+            </div>
+
+            <h2>The specific birds you could have seen:</h2>
+
+            <div class="sighting-card">
+                <div class="sighting-bird">{{sightings.region_examples[0].bird_name}}</div>
+                <div class="sighting-details">
+                    <p>Spotted <strong>{{sightings.region_examples[0].tour_date}}</strong> on the <strong>{{sightings.region_examples[0].tour_title}}</strong>.</p>
+                    <p><strong>{{sightings.region_examples[0].participants}} people saw it in person.</strong></p>
+                    <p style="margin-top: 8px; color: #d63031; font-weight: 600;">Reviewed and documented on our platform. You weren't there.</p>
+                </div>
+            </div>
+
+            <div class="sighting-card">
+                <div class="sighting-bird">{{sightings.region_examples[1].bird_name}}</div>
+                <div class="sighting-details">
+                    <p><strong>{{sightings.region_examples[1].tour_date}}</strong>, {{user.region}}, <strong>{{sightings.region_examples[1].participants}} participants.</strong></p>
+                    <p>Real sightings. Real photos. Real memories you don't have.</p>
+                </div>
+            </div>
+
+            <h2>The bigger picture:</h2>
+
+            <p class="body-text">If you had a chase list when you signed up:</p>
+
+            <div class="chase-list-stat">
+                {{chase_list.spotted}} species from it were spotted on tours between now and then.
+            </div>
+
+            <p class="body-text">That's {{chase_list.spotted}} ticks you don't have.</p>
+
+            <p class="callout-red">
+                <strong>{{chase_list.spotted}} reasons you might be frustrated with yourself right now.</strong> Not because the platform failed you. But because you failed to use it.
+            </p>
+
+            <h2>Why am I sending this?</h2>
+
+            <p class="body-text">Because a year is a long time. Because you clearly had interest in birding when you signed up. And because the platform is genuinely better than when you joined—more tours, better reviews, real data on what gets spotted where.</p>
+
+            <p class="body-text" style="color: #d63031; font-weight: 600; font-size: 16px;">And because you're missing out on real experiences with real birders in real places.</p>
+
+            <h2>One more option:</h2>
+
+            <p class="body-text">Log in. Browse what's coming next. See a tour that speaks to you. Commit. That's it.</p>
+
+            <p class="body-text">The quorum system means the tour only charges you when it reaches minimum participants. You're never stuck paying for something that might not happen.</p>
+
+            <p class="body-text" style="font-size: 16px; font-weight: 600; color: #1a1a1a;">You've been away a year. The platform is ready whenever you are.</p>
+
+            <div class="button-container">
+                <a href="https://quorumtours.com/login" class="cta-button">LOG IN AND GET BACK IN THE FIELD</a>
+            </div>
+
+            <div class="secondary-text">
+                <p>Or if you'd rather not come back—that's okay too. <a href="mailto:support@quorumtours.com?subject=Remove from mailing list">Hit reply</a> and let us know. We'll remove you from future emails.</p>
+            </div>
+
+            <p class="body-text" style="margin-top: 30px;">Happy birding (or at least, the chance to go),<br><strong>The Quorum Tours Team</strong></p>
+
+            <p class="ps">P.S. — No hard feelings. We know life happens. But you signed up for a reason. That reason probably hasn't changed. Log back in.</p>
+        </div>
+
+        <div class="footer">
+            <p>Quorum Tours | Birding Tour Platform</p>
+            <div class="footer-links">
+                <a href="https://quorumtours.com/how-it-works">How It Works</a>
+                <a href="https://quorumtours.com/tours">Explore Tours</a>
+                <a href="mailto:support@quorumtours.com">Contact Us</a>
+            </div>
+            <p style="margin-top: 15px;">
+                <a href="{{unsubscribe_link}}" style="color: #999; text-decoration: none; font-size: 11px;">Unsubscribe</a>
+            </p>
+            <p style="margin-top: 10px; color: #999; font-size: 11px;">
+                This email was sent to {{user.email}}<br>
+                Quorum Tours | tours@quorumtours.com
+            </p>
+        </div>
+    </div>
+</body>
+</html>

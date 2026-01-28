@@ -25,7 +25,7 @@ interface Tour {
   price_per_person: number;
   status: 'forming' | 'confirmed' | 'past' | 'cancelled';
   participants_current: number;
-  participants_threshold: number;
+  participants_quorum: number;
   participants_max: number;
   target_species: string[];
   days_until_departure: number;
@@ -43,7 +43,7 @@ const STUBBED_TOURS: Tour[] = [
     price_per_person: 4200,
     status: 'forming',
     participants_current: 4,
-    participants_threshold: 6,
+    participants_quorum: 6,
     participants_max: 8,
     target_species: ['Andean Condor', 'Magellanic Woodpecker', 'Austral Parakeet', 'Black-necked Swan'],
     days_until_departure: 80,
@@ -58,7 +58,7 @@ const STUBBED_TOURS: Tour[] = [
     price_per_person: 3200,
     status: 'confirmed',
     participants_current: 8,
-    participants_threshold: 6,
+    participants_quorum: 6,
     participants_max: 8,
     target_species: ['Resplendent Quetzal', 'Three-wattled Bellbird', 'Keel-billed Toucan'],
     days_until_departure: 24,
@@ -73,7 +73,7 @@ const STUBBED_TOURS: Tour[] = [
     price_per_person: 180,
     status: 'confirmed',
     participants_current: 6,
-    participants_threshold: 4,
+    participants_quorum: 4,
     participants_max: 10,
     target_species: ['Southern Lapwing', 'Rufous Hornero', 'Chalk-browed Mockingbird'],
     days_until_departure: 8,
@@ -88,7 +88,7 @@ const STUBBED_TOURS: Tour[] = [
     price_per_person: 3800,
     status: 'past',
     participants_current: 7,
-    participants_threshold: 6,
+    participants_quorum: 6,
     participants_max: 8,
     target_species: ['Red-ruffed Fruitcrow', 'Black-fronted Piping Guan', 'Blue Manakin'],
     days_until_departure: -64,
@@ -103,7 +103,7 @@ const STUBBED_TOURS: Tour[] = [
     price_per_person: 4500,
     status: 'forming',
     participants_current: 2,
-    participants_threshold: 6,
+    participants_quorum: 6,
     participants_max: 8,
     target_species: ['Hyacinth Macaw', 'Jabiru', 'Greater Rhea', 'Helmeted Manakin'],
     days_until_departure: 116,
@@ -216,7 +216,7 @@ function TourCard({ tour }: { tour: Tour }) {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const isUrgent = tour.status === 'forming' && tour.days_until_departure < 14;
-  const needed = tour.participants_threshold - tour.participants_current;
+  const needed = tour.participants_quorum - tour.participants_current;
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -284,7 +284,7 @@ function TourCard({ tour }: { tour: Tour }) {
           {(tour.status === 'forming' || tour.status === 'confirmed') ? (
             <QuorumIndicatorRing
               current={tour.participants_current}
-              threshold={tour.participants_threshold}
+              quorum={tour.participants_quorum}
               size={48}
             />
           ) : (

@@ -266,7 +266,7 @@ function NotificationsTab() {
           </label>
           <label className="flex items-center gap-2">
             <input type="checkbox" defaultChecked className="w-4 h-4" />
-            <span className="text-sm text-[var(--color-ink)]">Threshold reached</span>
+            <span className="text-sm text-[var(--color-ink)]">Quorum reached</span>
           </label>
         </div>
       </div>

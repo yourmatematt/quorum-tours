@@ -1,13 +1,13 @@
 /**
  * Booking Progress Dashboard Section
- * Real-time threshold visualization and commitment activity
+ * Real-time quorum visualization and commitment activity
  */
 
 interface ProgressMetric {
   tourId: string;
   tourTitle: string;
   current: number;
-  threshold: number;
+  quorum: number;
   recentActivity: string;
   trend: 'up' | 'stable' | 'down';
 }
@@ -19,7 +19,7 @@ export function BookingProgressDashboard() {
       tourId: 'tour-001',
       tourTitle: 'Patagonian Endemics',
       current: 4,
-      threshold: 6,
+      quorum: 6,
       recentActivity: '2 commitments in last 48 hours',
       trend: 'up',
     },
@@ -27,7 +27,7 @@ export function BookingProgressDashboard() {
       tourId: 'tour-004',
       tourTitle: 'Costa Rica Cloud Forest',
       current: 2,
-      threshold: 8,
+      quorum: 8,
       recentActivity: 'No recent activity',
       trend: 'stable',
     },
@@ -72,14 +72,14 @@ export function BookingProgressDashboard() {
                   {metric.current}
                 </span>
                 <span className="text-sm text-[var(--color-ink-muted)]">
-                  of {metric.threshold} needed
+                  of {metric.quorum} needed
                 </span>
               </div>
               <div className="w-full bg-[var(--color-surface-sunken)] rounded-full h-2">
                 <div
                   className="h-2 rounded-full bg-[var(--color-forming)]"
                   style={{
-                    width: `${(metric.current / metric.threshold) * 100}%`,
+                    width: `${(metric.current / metric.quorum) * 100}%`,
                   }}
                 />
               </div>

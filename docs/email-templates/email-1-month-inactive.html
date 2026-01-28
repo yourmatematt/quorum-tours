@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your birding app is waiting</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Atkinson Hyperlegible', 'Segoe UI', Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2E8B57 0%, #3aa668 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .greeting {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .greeting strong {
+            color: #2E8B57;
+        }
+
+        h2 {
+            font-family: 'Crimson Pro', Georgia, serif;
+            color: #2E8B57;
+            font-size: 20px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .highlights {
+            background-color: #f0f9f5;
+            border-left: 4px solid #2E8B57;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .highlights ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .highlights li {
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+            font-size: 15px;
+        }
+
+        .highlights li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2E8B57;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #2E8B57;
+            color: white;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            margin: 30px 0;
+            font-size: 16px;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .cta-button:hover {
+            background-color: #1f5f3f;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .body-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .ps {
+            font-size: 14px;
+            color: #666;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-style: italic;
+        }
+
+        .footer {
+            background-color: #f5f5f5;
+            padding: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-links {
+            margin: 10px 0;
+        }
+
+        .footer-links a {
+            color: #2E8B57;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .stat-box {
+            background-color: #f0f9f5;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            font-size: 15px;
+        }
+
+        .stat-number {
+            color: #2E8B57;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100%;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            .cta-button {
+                display: block;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome Back to Quorum Tours</h1>
+            <p>You've been missed</p>
+        </div>
+
+        <div class="content">
+            <p class="greeting">Hi <strong>{{user.first_name}}</strong>,</p>
+
+            <p class="body-text">We noticed you haven't logged into Quorum Tours since {{user.signup_date}}. No judgment—we know life gets busy. But a lot has happened since you signed up.</p>
+
+            <h2>Here's what's new:</h2>
+
+            <p class="body-text">Since you joined, we've added <span class="stat-number">{{tours.new_count}}</span> tours across your region. <span class="stat-number">{{tours.region_count}}</span> of them are in {{user.region}}—the exact area you'd want to explore.</p>
+
+            <div class="highlights">
+                <ul>
+                    <li><strong>Search by species.</strong> You can now filter tours by the exact birds you're chasing. If you're looking for a Scarlet Tanager, Prothonotary Warbler, or any other target, you can find tours specifically designed around them.</li>
+                    <li><strong>Real sightings.</strong> Every tour comes with a review showing exactly what was spotted. You can see participant reviews and photos—real data from real tours.</li>
+                    <li><strong>Your region's schedule.</strong> {{tours.region_count}} tours are planned for {{user.region}} over the next few months. That's {{tours.region_count}} opportunities to get out there.</li>
+                </ul>
+            </div>
+
+            <h2>What can you do right now?</h2>
+
+            <p class="body-text">Log back in and browse tours in your area. When you commit to a tour, that's when the commitment system kicks in—but you can explore, filter, and plan without any pressure.</p>
+
+            <div class="button-container">
+                <a href="https://quorumtours.com/tours" class="cta-button">LOG IN AND EXPLORE TOURS</a>
+            </div>
+
+            <p class="body-text">Questions about how the platform works? Check out our <a href="https://quorumtours.com/how-it-works" style="color: #2E8B57; text-decoration: none;">How It Works</a> page.</p>
+
+            <p class="body-text" style="margin-top: 30px;">Happy birding,<br><strong>The Quorum Tours Team</strong></p>
+
+            <p class="ps">P.S. — You can check the tours running in {{user.region}} without logging in. Browse first, commit when you find something you love.</p>
+        </div>
+
+        <div class="footer">
+            <p>Quorum Tours | Birding Tour Platform</p>
+            <div class="footer-links">
+                <a href="https://quorumtours.com/how-it-works">How It Works</a>
+                <a href="https://quorumtours.com">Explore Tours</a>
+                <a href="mailto:support@quorumtours.com">Contact Us</a>
+            </div>
+            <p style="margin-top: 15px;">
+                <a href="{{unsubscribe_link}}" style="color: #999; text-decoration: none; font-size: 11px;">Unsubscribe</a>
+            </p>
+            <p style="margin-top: 10px; color: #999; font-size: 11px;">
+                This email was sent to {{user.email}}<br>
+                Quorum Tours | tours@quorumtours.com
+            </p>
+        </div>
+    </div>
+</body>
+</html>

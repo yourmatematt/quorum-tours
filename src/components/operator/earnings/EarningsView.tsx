@@ -50,8 +50,8 @@ export function EarningsView() {
 
   const tourRevenue = [
     { name: 'Andean Condor Quest', dates: 'Feb 10-17, 2026', bookings: 6, price: 4200, total: 25200, stage: 'confirmed' as const, payoutDate: 'Feb 25, 2026' },
-    { name: 'Jaguar Tracking Pantanal', dates: 'Mar 5-12, 2026', bookings: 4, price: 5800, total: 23200, stage: 'forming' as const, threshold: 6 },
-    { name: 'Costa Rica Highlands', dates: 'Apr 1-8, 2026', bookings: 2, price: 3200, total: 6400, stage: 'forming' as const, threshold: 8 },
+    { name: 'Jaguar Tracking Pantanal', dates: 'Mar 5-12, 2026', bookings: 4, price: 5800, total: 23200, stage: 'forming' as const, quorum: 6 },
+    { name: 'Costa Rica Highlands', dates: 'Apr 1-8, 2026', bookings: 2, price: 3200, total: 6400, stage: 'forming' as const, quorum: 8 },
   ];
 
   const monthGrowth = ((earningsData.paidThisMonth.amount - earningsData.paidThisMonth.prevMonth) / earningsData.paidThisMonth.prevMonth * 100).toFixed(0);
@@ -89,7 +89,7 @@ export function EarningsView() {
             sublabel="Forming tours"
             amount={earningsData.escrowed.amount}
             detail={`${earningsData.escrowed.bookings} commitments across ${earningsData.escrowed.tours} tours`}
-            hint="Held until threshold met"
+            hint="Held until quorum reached"
           />
 
           {/* Confirmed - Certain, stronger treatment */}
@@ -300,7 +300,7 @@ function TourRevenueCard({
   bookings,
   total,
   stage,
-  threshold
+  quorum
 }: {
   name: string;
   dates: string;
@@ -309,7 +309,7 @@ function TourRevenueCard({
   total: number;
   stage: 'forming' | 'confirmed';
   payoutDate?: string;
-  threshold?: number;
+  quorum?: number;
 }) {
   const isConfirmed = stage === 'confirmed';
 
@@ -328,7 +328,7 @@ function TourRevenueCard({
 
       {/* Bookings count or progress */}
       <p className="text-xs text-[var(--color-ink-muted)]">
-        {isConfirmed ? `${bookings} bookings` : `${bookings}/${threshold} participants`}
+        {isConfirmed ? `${bookings} bookings` : `${bookings}/${quorum} participants`}
       </p>
     </div>
   );

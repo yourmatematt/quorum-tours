@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real tours, real birds in {{user.region}}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Atkinson Hyperlegible', 'Segoe UI', Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2E8B57 0%, #3aa668 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .greeting {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-family: 'Crimson Pro', Georgia, serif;
+            color: #2E8B57;
+            font-size: 20px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .sighting-card {
+            background-color: #f0f9f5;
+            border-left: 4px solid #2E8B57;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .sighting-bird {
+            font-size: 18px;
+            color: #2E8B57;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .sighting-details {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #2E8B57;
+            color: white;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            margin: 30px 0;
+            font-size: 16px;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .cta-button:hover {
+            background-color: #1f5f3f;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .body-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .emphasis {
+            color: #2E8B57;
+            font-weight: 600;
+        }
+
+        .callout {
+            background-color: #fef9f0;
+            border-left: 4px solid #e67e22;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .ps {
+            font-size: 14px;
+            color: #666;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-style: italic;
+        }
+
+        .footer {
+            background-color: #f5f5f5;
+            padding: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-links {
+            margin: 10px 0;
+        }
+
+        .footer-links a {
+            color: #2E8B57;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100%;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            .cta-button {
+                display: block;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{user.region}}: What Happened</h1>
+            <p>Real tours, real sightings</p>
+        </div>
+
+        <div class="content">
+            <p class="greeting">Hi {{user.first_name}},</p>
+
+            <p class="body-text">Three months ago, you signed up for Quorum Tours. Since then, <span class="emphasis">{{tours.region_count}} tours</span> have run successfully in {{user.region}}. And they all produced real sightings from real birders.</p>
+
+            <h2>What ran while you were away:</h2>
+
+            <div class="sighting-card">
+                <div class="sighting-bird">{{sightings.region_examples[0].bird_name}}</div>
+                <div class="sighting-details">
+                    <p>Spotted on <strong>{{sightings.region_examples[0].tour_date}}</strong> on the <strong>{{sightings.region_examples[0].tour_title}}</strong>.</p>
+                    <p><strong>{{sightings.region_examples[0].participants}} birders saw it.</strong></p>
+                </div>
+            </div>
+
+            <div class="sighting-card">
+                <div class="sighting-bird">{{sightings.region_examples[1].bird_name}}</div>
+                <div class="sighting-details">
+                    <p>Spotted in {{user.region}} last month on another successful tour.</p>
+                    <p><strong>{{sightings.region_examples[1].participants}} participants documented it.</strong> Photos posted. Notes available. All live on our platform.</p>
+                </div>
+            </div>
+
+            <p class="body-text">These aren't theoretical tours. These are <span class="emphasis">real trips that ran with real birders who found real birds</span>—in the area you're interested in.</p>
+
+            <h2>How the quorum system works (a reminder):</h2>
+
+            <p class="body-text">Quorum Tours is different from typical booking platforms. Tours only confirm when enough birders commit. This solves a real problem: small groups (4-5 people) rarely happen on traditional platforms, but they're actually when good birding <em>happens</em>. You see more, discuss more, move more deliberately.</p>
+
+            <p class="body-text">When you commit to a tour, you're joining a group that <em>will</em> go. No tour leaves if it doesn't have enough people. That's the quorum: the minimum number of participants needed to make a tour viable.</p>
+
+            <h2>Why this matters for {{user.region}}:</h2>
+
+            <p class="body-text">{{user.region}} is a prime birding zone right now, and tours are filling up. <span class="emphasis">{{tours.region_count}} have run successfully since you joined.</span> More are scheduled for the coming months.</p>
+
+            <p class="body-text">If you're serious about adding {{user.region}} birds to your list, now's the time to get back in.</p>
+
+            <div class="callout">
+                <strong>Question:</strong> Wondering if the quorum system is right for you? It's designed to create small, intentional groups where better birding actually happens. Not for everyone, but for serious birders, it's usually better than the alternative.
+            </div>
+
+            <div class="button-container">
+                <a href="https://quorumtours.com/tours?region={{user.region}}" class="cta-button">BROWSE TOURS IN {{user.region}}</a>
+            </div>
+
+            <p class="body-text">Have questions about how commitments work? Read our <a href="https://quorumtours.com/how-it-works" style="color: #2E8B57; text-decoration: none; font-weight: 600;">How It Works</a> guide.</p>
+
+            <p class="body-text" style="margin-top: 30px;">Happy birding,<br><strong>The Quorum Tours Team</strong></p>
+
+            <p class="ps">P.S. — If you're waiting for a specific tour in {{user.region}}, reach out. We can help you find (or request) exactly what you're looking for.</p>
+        </div>
+
+        <div class="footer">
+            <p>Quorum Tours | Birding Tour Platform</p>
+            <div class="footer-links">
+                <a href="https://quorumtours.com/how-it-works">How It Works</a>
+                <a href="https://quorumtours.com/tours">Explore Tours</a>
+                <a href="mailto:support@quorumtours.com">Contact Us</a>
+            </div>
+            <p style="margin-top: 15px;">
+                <a href="{{unsubscribe_link}}" style="color: #999; text-decoration: none; font-size: 11px;">Unsubscribe</a>
+            </p>
+            <p style="margin-top: 10px; color: #999; font-size: 11px;">
+                This email was sent to {{user.email}}<br>
+                Quorum Tours | tours@quorumtours.com
+            </p>
+        </div>
+    </div>
+</body>
+</html>

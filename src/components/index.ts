@@ -1,7 +1,8 @@
 // UI Components
 export { Button } from './ui/Button';
 export { ConfirmationStatusBadge } from './ui/ConfirmationStatusBadge';
-export { ThresholdProgressBar } from './ui/ThresholdProgressBar';
+export { QuorumProgressBar } from './ui/QuorumProgressBar';
+export { ScrollReveal, StaggerContainer } from './ui/ScrollReveal';
 export { FilterChip } from './ui/FilterChip';
 export { FilterDropdown } from './ui/FilterDropdown';
 export { EmptyState } from './ui/EmptyState';

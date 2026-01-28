@@ -165,7 +165,7 @@ interface FormingTour {
   title: string;
   daysUntil: number;
   current: number;
-  threshold: number;
+  quorum: number;
   needed: number;
 }
 
@@ -186,7 +186,7 @@ function FormingTourCard({ tour }: { tour: FormingTour }) {
       <div className="flex items-start gap-4">
         <QuorumIndicatorRing
           current={tour.current}
-          threshold={tour.threshold}
+          quorum={tour.quorum}
           size={52}
         />
         <div className="flex-1 min-w-0">
@@ -328,7 +328,7 @@ export function DashboardHome() {
       title: 'Patagonian Birding Adventure',
       daysUntil: 14,
       current: 3,
-      threshold: 6,
+      quorum: 6,
       needed: 3,
     },
     {
@@ -336,7 +336,7 @@ export function DashboardHome() {
       title: 'Pantanal Wetlands Safari',
       daysUntil: 45,
       current: 2,
-      threshold: 6,
+      quorum: 6,
       needed: 4,
     },
   ];

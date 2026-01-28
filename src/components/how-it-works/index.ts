@@ -6,4 +6,5 @@ export { FailureCaseSection } from './FailureCaseSection';
 export { ConfirmationSection } from './ConfirmationSection';
 export { BoundaryItem } from './BoundaryItem';
 export { BoundariesSection } from './BoundariesSection';
+export { TrustSystemSection } from './TrustSystemSection';
 export { ClosingCTA } from './ClosingCTA';

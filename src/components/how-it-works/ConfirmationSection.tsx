@@ -1,3 +1,7 @@
+'use client';
+
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
+
 export function ConfirmationSection() {
   const guaranteed = [
     'The tour runs on the scheduled date',
@@ -9,7 +13,7 @@ export function ConfirmationSection() {
   const notGuaranteed = [
     'Specific species sightings—nature is nature',
     'Perfect weather conditions',
-    'Exact group size above the threshold',
+    'Exact group size above the quorum',
     'Specific photography opportunities',
   ];
 
@@ -23,27 +27,29 @@ export function ConfirmationSection() {
         mx-auto px-[var(--space-lg)]
       ">
           {/* Section headline */}
-          <h2 className="
-            font-display
-            text-[clamp(1.75rem,4vw,2.5rem)]
-            leading-tight
-            text-[var(--color-ink)]
-            mb-[var(--space-xl)]
-          ">
-            What confirmation means
-          </h2>
+          <ScrollReveal variant="fade-up" duration={500}>
+            <h2 className="
+              font-display
+              text-[clamp(1.75rem,4vw,2.5rem)]
+              leading-tight
+              text-[var(--color-ink)]
+              mb-[var(--space-xl)]
+            ">
+              What confirmation means
+            </h2>
 
-          {/* Definition */}
-          <p className="
-            text-[var(--color-ink-muted)]
-            text-[var(--text-base)]
-            leading-relaxed
-            mb-[var(--space-2xl)]
-          ">
-            A confirmed tour is one where the threshold has been met. The operator has
-            committed to run it, and all participants have committed to attend. It's a
-            mutual agreement: certainty for everyone.
-          </p>
+            {/* Definition */}
+            <p className="
+              text-[var(--color-ink-muted)]
+              text-[var(--text-base)]
+              leading-relaxed
+              mb-[var(--space-2xl)]
+            ">
+              A confirmed tour is one where quorum has been reached. The operator has
+              committed to run it, and all participants have committed to attend. It's a
+              mutual agreement: certainty for everyone.
+            </p>
+          </ScrollReveal>
 
           {/* Two-column layout for guarantees */}
           <div className="
@@ -51,6 +57,7 @@ export function ConfirmationSection() {
             gap-[var(--space-xl)]
           ">
             {/* Guaranteed column */}
+            <ScrollReveal variant="fade-up" delay={100} duration={500}>
             <div className="
               p-[var(--space-xl)]
               bg-[var(--color-confirmed-bg)]
@@ -120,8 +127,10 @@ export function ConfirmationSection() {
                 ))}
               </ul>
             </div>
+            </ScrollReveal>
 
             {/* Not guaranteed column */}
+            <ScrollReveal variant="fade-up" delay={200} duration={500}>
             <div className="
               p-[var(--space-xl)]
               bg-[var(--color-surface-raised)]
@@ -190,19 +199,22 @@ export function ConfirmationSection() {
                 ))}
               </ul>
             </div>
+            </ScrollReveal>
           </div>
 
           {/* Expectation setter */}
-          <p className="
-            mt-[var(--space-2xl)]
-            text-[var(--color-ink-muted)]
-            text-[var(--text-sm)]
-            leading-relaxed
-          ">
-            Confirmation means the tour runs—it doesn't mean perfect conditions or
-            guaranteed sightings. Birding has inherent uncertainty, and we're honest about
-            that. What we can guarantee is that everyone shows up and the experience happens.
-          </p>
+          <ScrollReveal variant="fade-up" delay={300} duration={500}>
+            <p className="
+              mt-[var(--space-2xl)]
+              text-[var(--color-ink-muted)]
+              text-[var(--text-sm)]
+              leading-relaxed
+            ">
+              Confirmation means the tour runs—it doesn't mean perfect conditions or
+              guaranteed sightings. Birding has inherent uncertainty, and we're honest about
+              that. What we can guarantee is that everyone shows up and the experience happens.
+            </p>
+          </ScrollReveal>
       </div>
     </section>
   );

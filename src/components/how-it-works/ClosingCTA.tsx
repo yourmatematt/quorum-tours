@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 
 export function ClosingCTA() {
   return (
@@ -11,17 +14,20 @@ export function ClosingCTA() {
         mx-auto px-[var(--space-lg)]
       ">
           {/* Closing text */}
-          <p className="
-            text-[var(--color-ink)]
-            text-[var(--text-lg)]
-            leading-relaxed
-            mb-[var(--space-2xl)]
-          ">
-            Now you know how it works. Tours form when enough birders commit. Until then,
-            there's no risk and no obligation.
-          </p>
+          <ScrollReveal variant="fade-up" duration={500}>
+            <p className="
+              text-[var(--color-ink)]
+              text-[var(--text-lg)]
+              leading-relaxed
+              mb-[var(--space-2xl)]
+            ">
+              Now you know how it works. Tours form when enough birders commit. Until then,
+              there's no risk and no obligation.
+            </p>
+          </ScrollReveal>
 
           {/* CTAs */}
+          <ScrollReveal variant="fade-up" delay={100} duration={500}>
           <div className="flex flex-col sm:flex-row gap-[var(--space-md)]">
             {/* Primary CTA */}
             <Link
@@ -60,6 +66,7 @@ export function ClosingCTA() {
               Return to home
             </Link>
           </div>
+          </ScrollReveal>
       </div>
     </section>
   );

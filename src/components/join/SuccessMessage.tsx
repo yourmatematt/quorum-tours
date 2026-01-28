@@ -8,7 +8,7 @@ interface SuccessMessageProps {
   tourDate: string;
   email: string;
   currentParticipants?: number;
-  threshold?: number;
+  quorum?: number;
 }
 
 /**
@@ -25,7 +25,7 @@ export function SuccessMessage({
   tourDate,
   email,
   currentParticipants,
-  threshold,
+  quorum,
 }: SuccessMessageProps) {
   const isJoin = flowType === 'join';
 
@@ -119,11 +119,11 @@ export function SuccessMessage({
               <span className="text-[var(--color-forming)] mt-0.5">•</span>
               <span>We&apos;ll email you at <strong className="text-[var(--color-ink)]">{email}</strong> when the tour confirms</span>
             </li>
-            {currentParticipants !== undefined && threshold !== undefined && (
+            {currentParticipants !== undefined && quorum !== undefined && (
               <li className="flex items-start gap-[var(--space-sm)]">
                 <span className="text-[var(--color-forming)] mt-0.5">•</span>
                 <span>
-                  Current progress: <strong className="text-[var(--color-ink)]">{currentParticipants}</strong> of <strong className="text-[var(--color-ink)]">{threshold}</strong> participants
+                  Current progress: <strong className="text-[var(--color-ink)]">{currentParticipants}</strong> of <strong className="text-[var(--color-ink)]">{quorum}</strong> participants
                 </span>
               </li>
             )}
