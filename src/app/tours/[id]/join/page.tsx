@@ -129,14 +129,18 @@ export default function JoinTourPage() {
     status: mapStatus(dbTour.status),
     currentParticipants: dbTour.current_participants,
     threshold: dbTour.threshold,
+    capacity: dbTour.capacity,
     price: dbTour.price_cents / 100,
     deposit: dbTour.deposit_cents / 100,
     cancellationDeadline: formatCancellationDeadline(dbTour.booking_deadline),
     included: dbTour.included || ['Transport', 'Guide fees'],
   };
 
-  const isConfirmed = tour.status === 'confirmed';
-  const requiresDeposit = tour.deposit > 0;
+  // Quorum logic: if current participants >= threshold, tour is "confirmed" for booking purposes
+  // New users joining a confirmed tour pay full price immediately
+  const hasReachedQuorum = tour.currentParticipants >= tour.threshold;
+  const isConfirmed = tour.status === 'confirmed' || hasReachedQuorum;
+  const requiresDeposit = tour.deposit > 0 && !hasReachedQuorum;
   const userEmail = user?.email || '';
 
   // Handle form submission
@@ -383,6 +387,7 @@ export default function JoinTourPage() {
                       <QuorumProgressBar
                         current={tour.currentParticipants}
                         quorum={tour.threshold}
+                        capacity={tour.capacity}
                       />
                       <p className="text-xs text-[var(--color-ink-subtle)] mt-[var(--space-sm)]">
                         {tour.threshold - tour.currentParticipants} more commitments needed

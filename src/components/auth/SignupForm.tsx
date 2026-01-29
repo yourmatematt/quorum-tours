@@ -22,6 +22,8 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
   const router = useRouter();
   const supabase = createClient();
 
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -29,8 +31,28 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
   const [signupSuccess, setSignupSuccess] = useState(false);
 
   // Field-level errors
+  const [firstNameError, setFirstNameError] = useState<string | null>(null);
+  const [lastNameError, setLastNameError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+
+  const validateFirstName = (value: string): boolean => {
+    if (!value.trim()) {
+      setFirstNameError('First name is required');
+      return false;
+    }
+    setFirstNameError(null);
+    return true;
+  };
+
+  const validateLastName = (value: string): boolean => {
+    if (!value.trim()) {
+      setLastNameError('Last name is required');
+      return false;
+    }
+    setLastNameError(null);
+    return true;
+  };
 
   const validateEmail = (value: string): boolean => {
     if (!value) {
@@ -64,10 +86,12 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
     setError(null);
 
     // Validate all fields
+    const isFirstNameValid = validateFirstName(firstName);
+    const isLastNameValid = validateLastName(lastName);
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
 
-    if (!isEmailValid || !isPasswordValid) {
+    if (!isFirstNameValid || !isLastNameValid || !isEmailValid || !isPasswordValid) {
       return;
     }
 
@@ -79,6 +103,11 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTo || '/')}`,
+          data: {
+            first_name: firstName.trim(),
+            last_name: lastName.trim(),
+            name: `${firstName.trim()} ${lastName.trim()}`,
+          },
         },
       });
 
@@ -98,6 +127,8 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
 
       // Success - show confirmation message
       setSignupSuccess(true);
+      setFirstName('');
+      setLastName('');
       setEmail('');
       setPassword('');
     } catch (err) {
@@ -170,6 +201,97 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
 
       {/* Signup Form */}
       <form onSubmit={handleSubmit} className="space-y-[var(--space-sm)]">
+        {/* Name fields - side by side */}
+        <div className="grid grid-cols-2 gap-[var(--space-sm)]">
+          <div>
+            <label
+              htmlFor="signup-first-name"
+              className="block text-sm font-medium text-[var(--color-ink)] mb-1"
+            >
+              First name
+            </label>
+            <input
+              type="text"
+              id="signup-first-name"
+              value={firstName}
+              onChange={(e) => {
+                setFirstName(e.target.value);
+                if (firstNameError) validateFirstName(e.target.value);
+              }}
+              onBlur={() => firstName && validateFirstName(firstName)}
+              placeholder="Jane"
+              autoComplete="given-name"
+              className={`
+                w-full
+                h-11
+                px-[var(--space-md)]
+                text-base
+                text-[var(--color-ink)]
+                bg-white
+                border-2 rounded-[var(--radius-md)]
+                transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-1
+                ${
+                  firstNameError
+                    ? 'border-[var(--color-danger)] focus:ring-[var(--color-danger)]'
+                    : 'border-[var(--color-border)] hover:border-[var(--color-primary)]'
+                }
+              `}
+              aria-invalid={firstNameError ? 'true' : 'false'}
+              aria-describedby={firstNameError ? 'signup-first-name-error' : undefined}
+            />
+            {firstNameError && (
+              <p id="signup-first-name-error" className="mt-1 text-xs text-[var(--color-danger)]" role="alert">
+                {firstNameError}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="signup-last-name"
+              className="block text-sm font-medium text-[var(--color-ink)] mb-1"
+            >
+              Last name
+            </label>
+            <input
+              type="text"
+              id="signup-last-name"
+              value={lastName}
+              onChange={(e) => {
+                setLastName(e.target.value);
+                if (lastNameError) validateLastName(e.target.value);
+              }}
+              onBlur={() => lastName && validateLastName(lastName)}
+              placeholder="Smith"
+              autoComplete="family-name"
+              className={`
+                w-full
+                h-11
+                px-[var(--space-md)]
+                text-base
+                text-[var(--color-ink)]
+                bg-white
+                border-2 rounded-[var(--radius-md)]
+                transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-1
+                ${
+                  lastNameError
+                    ? 'border-[var(--color-danger)] focus:ring-[var(--color-danger)]'
+                    : 'border-[var(--color-border)] hover:border-[var(--color-primary)]'
+                }
+              `}
+              aria-invalid={lastNameError ? 'true' : 'false'}
+              aria-describedby={lastNameError ? 'signup-last-name-error' : undefined}
+            />
+            {lastNameError && (
+              <p id="signup-last-name-error" className="mt-1 text-xs text-[var(--color-danger)]" role="alert">
+                {lastNameError}
+              </p>
+            )}
+          </div>
+        </div>
+
         {/* Email field */}
         <div>
           <label

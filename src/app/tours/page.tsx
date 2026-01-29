@@ -22,6 +22,7 @@ interface DisplayTour {
   status: ConfirmationStatus;
   currentParticipants: number;
   threshold: number;
+  capacity: number;
   date: string;
   location: string;
   speciesHighlight: string;
@@ -63,6 +64,7 @@ function mapTourForDisplay(tour: DbTour): DisplayTour {
     status: mapStatus(tour.status),
     currentParticipants: tour.current_participants,
     threshold: tour.threshold,
+    capacity: tour.capacity,
     date: formatDate(tour.date_start),
     location: tour.operator?.base_location || 'Australia',
     speciesHighlight: tour.target_species?.join(', ') || '',
@@ -372,6 +374,7 @@ export default function ToursPage() {
                   status={tour.status}
                   currentParticipants={tour.currentParticipants}
                   quorum={tour.threshold}
+                  capacity={tour.capacity}
                   date={tour.date}
                   location={tour.location}
                   speciesHighlight={tour.speciesHighlight}

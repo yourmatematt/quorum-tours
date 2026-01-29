@@ -13,6 +13,7 @@ interface TourCardProps {
   status: ConfirmationStatus;
   currentParticipants: number;
   quorum: number;
+  capacity: number;
   date: string;
   location: string;
   href?: string;
@@ -27,6 +28,7 @@ export function TourCard({
   status,
   currentParticipants,
   quorum,
+  capacity,
   date,
   location,
   href = '#',
@@ -122,6 +124,7 @@ export function TourCard({
         <QuorumProgressBar
           current={currentParticipants}
           quorum={quorum}
+          capacity={capacity}
         />
       </div>
     </a>

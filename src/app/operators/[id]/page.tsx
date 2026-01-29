@@ -47,6 +47,7 @@ interface TourPreview {
   status: 'confirmed' | 'forming' | 'not-running';
   currentParticipants: number;
   threshold: number;
+  capacity: number;
   date: string;
   location: string;
   speciesHighlight?: string;
@@ -198,6 +199,7 @@ I believe the best birding experiences come from patience and attention to habit
         status: 'confirmed',
         currentParticipants: 8,
         threshold: 6,
+        capacity: 12,
         date: 'Saturday, March 15, 2026',
         location: 'Werribee, VIC',
         speciesHighlight: 'Brolga, Latham\'s Snipe',
@@ -313,6 +315,7 @@ I've documented over 380 species in the Cairns region and maintain detailed reco
         status: 'forming',
         currentParticipants: 5,
         threshold: 8,
+        capacity: 12,
         date: 'Thursday, April 2, 2026',
         location: 'Cairns, QLD',
         speciesHighlight: 'Eastern Curlew, Bar-tailed Godwit',
@@ -538,6 +541,7 @@ export default function OperatorProfilePage({ params }: PageProps) {
                       status={tour.status}
                       currentParticipants={tour.currentParticipants}
                       quorum={tour.threshold}
+                      capacity={tour.capacity}
                       date={tour.date}
                       location={tour.location}
                       href={`/tours/${tour.id}`}

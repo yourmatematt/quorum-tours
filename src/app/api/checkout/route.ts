@@ -25,7 +25,7 @@ import stripe from '@/lib/stripe';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { tourId, amount, tourName, userId, userEmail } = body;
+    const { tourId, amount, tourName, userId, userEmail, isDeposit } = body;
 
     // Validate required fields
     if (!tourId || !amount || !tourName) {
@@ -63,7 +63,9 @@ export async function POST(request: NextRequest) {
             currency: 'aud', // Australian Dollars for Quorum Tours
             product_data: {
               name: tourName,
-              description: `Tour commitment for ${tourName}`,
+              description: isDeposit 
+                ? `Refundable deposit for ${tourName.replace(' - Deposit', '')}`
+                : `Tour commitment for ${tourName}`,
               metadata: {
                 tourId,
                 userId: userId || 'guest',
@@ -83,6 +85,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         tourId,
         userId: userId || 'guest',
+        paymentType: isDeposit ? 'deposit' : 'full_payment',
       },
     });
 

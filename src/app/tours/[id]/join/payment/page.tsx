@@ -197,6 +197,9 @@ export default function PaymentPage() {
     );
   }
 
+  // Check if quorum has been reached (tour is effectively confirmed for new joiners)
+  const hasReachedQuorum = dbTour.current_participants >= dbTour.threshold;
+
   const tour = {
     id: dbTour.id,
     slug: dbTour.slug,
@@ -206,7 +209,9 @@ export default function PaymentPage() {
     operatorName: dbTour.operator?.name || 'Unknown Operator',
     currentParticipants: dbTour.current_participants,
     threshold: dbTour.threshold,
-    isConfirmed: dbTour.status === 'confirmed',
+    capacity: dbTour.capacity,
+    // Tour is "confirmed" if status is confirmed OR quorum has been reached
+    isConfirmed: dbTour.status === 'confirmed' || hasReachedQuorum,
   };
 
   return (
@@ -454,6 +459,7 @@ export default function PaymentPage() {
                     <QuorumProgressBar
                       current={tour.currentParticipants}
                       quorum={tour.threshold}
+                      capacity={tour.capacity}
                     />
                     <p className="text-xs text-[var(--color-ink-subtle)] mt-[var(--space-sm)]">
                       {tour.threshold - tour.currentParticipants > 0

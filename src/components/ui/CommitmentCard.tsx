@@ -13,6 +13,7 @@ interface CommitmentCardProps {
   deposit: number; // Actual deposit amount from database
   currentParticipants: number;
   quorum: number;
+  capacity: number;
   tourId: string;
   isLoggedIn?: boolean;
 }
@@ -45,6 +46,7 @@ export function CommitmentCard({
   deposit,
   currentParticipants,
   quorum,
+  capacity,
   tourId,
   isLoggedIn = false,
 }: CommitmentCardProps) {
@@ -127,6 +129,7 @@ export function CommitmentCard({
           <QuorumProgressBar
             current={currentParticipants}
             quorum={quorum}
+            capacity={capacity}
           />
         </div>
       )}

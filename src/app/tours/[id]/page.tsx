@@ -434,6 +434,7 @@ export default function TourDetailPage() {
                   deposit={tour.deposit}
                   currentParticipants={tour.currentParticipants}
                   quorum={tour.threshold}
+                  capacity={tour.capacity}
                   isLoggedIn={!!user}
                 />
               </div>

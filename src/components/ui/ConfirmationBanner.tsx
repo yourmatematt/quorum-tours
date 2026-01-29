@@ -6,6 +6,7 @@ interface ConfirmationBannerProps {
   status: ConfirmationStatus;
   currentParticipants: number;
   quorum: number;
+  capacity: number;
 }
 
 const statusConfig: Record<ConfirmationStatus, {
@@ -46,6 +47,7 @@ export function ConfirmationBanner({
   status,
   currentParticipants,
   quorum,
+  capacity,
 }: ConfirmationBannerProps) {
   const config = statusConfig[status];
 
@@ -86,6 +88,7 @@ export function ConfirmationBanner({
           <QuorumProgressBar
             current={currentParticipants}
             quorum={quorum}
+            capacity={capacity}
             showLabel={false}
           />
         </div>
