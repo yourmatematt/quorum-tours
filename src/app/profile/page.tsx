@@ -129,12 +129,12 @@ const examplePastTours = [
 export default function ProfilePage() {
   return (
     <ErrorBoundary>
-      {/* Dashboard: Full viewport height, no scroll on desktop */}
-      <main className="bg-[var(--color-surface)] lg:h-[calc(100vh-65px)] lg:overflow-hidden">
-        <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 py-4 lg:py-6 h-full flex flex-col">
+      {/* Dashboard: Normal page scrolling */}
+      <main className="bg-[var(--color-surface)] min-h-screen">
+        <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 py-4 lg:py-6">
 
           {/* Top Row: Profile + Trust Status */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4 flex-shrink-0">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 mb-4">
             <div className="lg:col-span-3">
               <ProfileHeader
                 displayName={exampleUser.displayName}
@@ -149,23 +149,23 @@ export default function ProfilePage() {
             />
           </div>
 
-          {/* Main Dashboard Grid - Takes remaining height */}
-          <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 min-h-0">
+          {/* Main Dashboard Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
             {/* Left Column: My Tours (2/3 width on desktop) */}
             <section
               aria-labelledby="my-tours-heading"
-              className="lg:col-span-8 flex flex-col min-h-0"
+              className="lg:col-span-8"
             >
               <h2
                 id="my-tours-heading"
-                className="font-display text-xl font-semibold text-[var(--color-ink)] mb-3 flex-shrink-0"
+                className="font-display text-lg font-semibold text-[var(--color-ink)] mb-3"
               >
                 My Tours
               </h2>
 
               {exampleCommitments.length > 0 ? (
-                <div className="flex-1 overflow-y-auto min-h-0 space-y-4 pr-1">
+                <div className="space-y-3">
                   {exampleCommitments.map((commitment) => (
                     <EnhancedTourCard
                       key={commitment.tourId}
@@ -174,8 +174,8 @@ export default function ProfilePage() {
                   ))}
                 </div>
               ) : (
-                <div className="flex-1 flex items-center justify-center bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)]">
-                  <div className="text-center p-6">
+                <div className="bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)]">
+                  <div className="text-center py-12 px-6">
                     <p className="text-[var(--color-ink-muted)] mb-3">
                       No active commitments yet.
                     </p>
@@ -190,8 +190,8 @@ export default function ProfilePage() {
               )}
             </section>
 
-            {/* Right Column: Stacked cards with clear boundaries */}
-            <div className="lg:col-span-4 space-y-4 lg:overflow-y-auto lg:max-h-[calc(100vh-200px)]">
+            {/* Right Column: Stacked cards - no nested scrolling */}
+            <div className="lg:col-span-4 space-y-3">
               <ChaseListSection birds={exampleChaseList} />
               <PastToursSection tours={examplePastTours} />
               <SettingsSection />

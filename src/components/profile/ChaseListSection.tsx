@@ -13,15 +13,18 @@ interface ChaseListBird {
 interface ChaseListSectionProps {
   birds: ChaseListBird[];
   onImport?: (file: File) => void;
+  onRemove?: (id: string) => void;
 }
 
 /**
  * ChaseListSection - Compact chase list with eBird import
  *
- * Self-contained card component with proper overflow handling.
- * All content stays within the card boundaries.
+ * Features:
+ * - Import from eBird CSV
+ * - Remove individual species
+ * - No nested scrolling - expands naturally
  */
-export function ChaseListSection({ birds, onImport }: ChaseListSectionProps) {
+export function ChaseListSection({ birds, onImport, onRemove }: ChaseListSectionProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [importStatus, setImportStatus] = useState<'idle' | 'importing' | 'success' | 'error'>('idle');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -61,11 +64,15 @@ export function ChaseListSection({ birds, onImport }: ChaseListSectionProps) {
     }, 1500);
   };
 
+  const handleRemove = (id: string) => {
+    onRemove?.(id);
+  };
+
   return (
-    <div className="bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] overflow-hidden">
+    <div className="bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)]">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 pb-3 border-b border-[var(--color-border)]">
-        <h2 className="font-display text-base font-semibold text-[var(--color-ink)]">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-[var(--color-border)]">
+        <h2 className="font-display text-sm font-semibold text-[var(--color-ink)]">
           Chase List
         </h2>
         <span className="text-xs text-[var(--color-ink-muted)]">
@@ -73,20 +80,20 @@ export function ChaseListSection({ birds, onImport }: ChaseListSectionProps) {
         </span>
       </div>
 
-      {/* Content */}
-      <div className="p-4 pt-3">
-        {/* eBird Import - Compact */}
+      {/* Content - no internal scrolling */}
+      <div className="p-3">
+        {/* eBird Import - Minimal */}
         <div
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
           className={`
-            mb-3 p-3 border-2 border-dashed rounded-[var(--radius-sm)] cursor-pointer
-            transition-colors text-center
+            mb-2 py-2 px-3 border border-dashed rounded-[var(--radius-sm)] cursor-pointer
+            transition-colors
             ${isDragging
               ? 'border-[var(--color-primary)] bg-[var(--color-primary-subtle)]'
-              : 'border-[var(--color-border)] hover:border-[var(--color-primary)] hover:bg-[var(--color-surface-sunken)]'
+              : 'border-[var(--color-border)] hover:border-[var(--color-primary)]'
             }
             ${importStatus === 'success' ? 'border-[var(--color-confirmed)] bg-[var(--color-confirmed-bg)]' : ''}
           `}
@@ -100,84 +107,83 @@ export function ChaseListSection({ birds, onImport }: ChaseListSectionProps) {
             aria-label="Import eBird CSV file"
           />
 
-          {importStatus === 'idle' && (
-            <div className="flex items-center justify-center gap-2">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--color-ink-muted)]">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
-              <span className="text-xs text-[var(--color-ink-muted)]">
-                Import from eBird
-              </span>
-            </div>
-          )}
-
-          {importStatus === 'importing' && (
-            <div className="flex items-center justify-center gap-2">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--color-primary)] animate-spin">
-                <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
-                <path d="M12 2a10 10 0 0 1 10 10" />
-              </svg>
-              <span className="text-xs text-[var(--color-primary)]">Importing...</span>
-            </div>
-          )}
-
-          {importStatus === 'success' && (
-            <div className="flex items-center justify-center gap-2">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--color-confirmed)]">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              <span className="text-xs text-[var(--color-confirmed)]">Imported!</span>
-            </div>
-          )}
+          <div className="flex items-center justify-center gap-2">
+            {importStatus === 'idle' && (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--color-ink-muted)]">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                <span className="text-xs text-[var(--color-ink-muted)]">Import from eBird</span>
+              </>
+            )}
+            {importStatus === 'importing' && (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--color-primary)] animate-spin">
+                  <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
+                  <path d="M12 2a10 10 0 0 1 10 10" />
+                </svg>
+                <span className="text-xs text-[var(--color-primary)]">Importing...</span>
+              </>
+            )}
+            {importStatus === 'success' && (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--color-confirmed)]">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span className="text-xs text-[var(--color-confirmed)]">Imported!</span>
+              </>
+            )}
+          </div>
         </div>
 
-        {/* Species List - Scrollable with max-height */}
-        <div className="max-h-[200px] overflow-y-auto">
-          {birds.length > 0 ? (
-            <ul className="space-y-1">
-              {birds.map((bird) => (
-                <li
-                  key={bird.id}
-                  className="flex items-center justify-between py-1.5 px-2 bg-[var(--color-surface-sunken)] rounded-[var(--radius-sm)] text-sm"
-                >
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm text-[var(--color-ink)] truncate">
-                      {bird.commonName}
-                    </p>
-                  </div>
+        {/* Species List - NO max-height, expands naturally */}
+        {birds.length > 0 ? (
+          <ul className="space-y-1">
+            {birds.map((bird) => (
+              <li
+                key={bird.id}
+                className="group flex items-center justify-between py-1.5 px-2 bg-[var(--color-surface-sunken)] rounded-[var(--radius-sm)]"
+              >
+                <span className="text-sm text-[var(--color-ink)] truncate flex-1">
+                  {bird.commonName}
+                </span>
+                <div className="flex items-center gap-2">
                   {bird.region && (
-                    <span className="ml-2 text-xs text-[var(--color-ink-subtle)] flex-shrink-0">
+                    <span className="text-xs text-[var(--color-ink-subtle)]">
                       {bird.region}
                     </span>
                   )}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-xs text-[var(--color-ink-muted)] text-center py-4">
-              No target species yet
-            </p>
-          )}
-        </div>
+                  <button
+                    onClick={() => handleRemove(bird.id)}
+                    className="opacity-0 group-hover:opacity-100 p-0.5 text-[var(--color-ink-subtle)] hover:text-[var(--color-destructive)] transition-opacity"
+                    aria-label={`Remove ${bird.commonName}`}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-xs text-[var(--color-ink-muted)] text-center py-3">
+            No target species yet
+          </p>
+        )}
 
-        {/* Help link - Inside the card */}
-        <div className="mt-3 pt-3 border-t border-[var(--color-border)]">
-          <a
-            href="https://ebird.org/MyEBird?cmd=lifeList"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-[var(--color-primary)] hover:underline inline-flex items-center gap-1"
-          >
-            How to export from eBird
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-              <polyline points="15 3 21 3 21 9" />
-              <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
-          </a>
-        </div>
+        {/* Help link */}
+        <a
+          href="https://ebird.org/MyEBird?cmd=lifeList"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block mt-2 pt-2 border-t border-[var(--color-border)] text-xs text-[var(--color-primary)] hover:underline"
+        >
+          How to export from eBird ↗
+        </a>
       </div>
     </div>
   );
