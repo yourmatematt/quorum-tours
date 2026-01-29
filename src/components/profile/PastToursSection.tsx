@@ -38,7 +38,7 @@ export function PastToursSection({ tours }: PastToursSectionProps) {
         aria-controls="past-tours-content"
         className="w-full flex items-center justify-between py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded"
       >
-        <h2 id="past-tours-heading" className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)]">
+        <h2 id="past-tours-heading" className="font-display text-base font-semibold text-[var(--color-ink)]">
           Past Tours
         </h2>
         <div className="flex items-center gap-2">

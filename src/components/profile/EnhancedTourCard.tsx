@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ConfirmationStatusBadge } from '../ui/ConfirmationStatusBadge';
+import { QuorumProgressBar } from '../ui/QuorumProgressBar';
 
 type CommitmentStatus = 'confirmed' | 'forming' | 'not-running';
 type PaymentStatus = 'paid' | 'deposit-paid' | 'pending' | 'overdue';
@@ -22,6 +23,7 @@ interface EnhancedTourCardProps {
   status: CommitmentStatus;
   currentParticipants: number;
   quorum: number;
+  capacity: number;
   // New enhanced fields
   paymentStatus: PaymentStatus;
   departureDate: Date;
@@ -51,6 +53,7 @@ export function EnhancedTourCard({
   status,
   currentParticipants,
   quorum,
+  capacity,
   paymentStatus,
   departureDate,
   fellowTravelers,
@@ -109,18 +112,15 @@ export function EnhancedTourCard({
           </div>
         </div>
 
-        {/* Progress bar for forming tours */}
-        {status === 'forming' && (
-          <div className="flex items-center gap-2 mb-3">
-            <div className="flex-1 h-2 bg-[var(--color-surface-sunken)] rounded-full overflow-hidden">
-              <div
-                className="h-full bg-[var(--color-forming)] rounded-full transition-all"
-                style={{ width: `${Math.min((currentParticipants / quorum) * 100, 100)}%` }}
-              />
-            </div>
-            <span className="text-xs text-[var(--color-ink-muted)] font-mono">{currentParticipants}/{quorum}</span>
-          </div>
-        )}
+        {/* Quorum Progress */}
+        <div className="mb-3">
+          <QuorumProgressBar
+            current={currentParticipants}
+            quorum={quorum}
+            capacity={capacity}
+            size="sm"
+          />
+        </div>
 
         {/* Payment Status + Operator Row */}
         <div className="flex items-center justify-between gap-3 mb-3">

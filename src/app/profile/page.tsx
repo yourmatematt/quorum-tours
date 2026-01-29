@@ -53,6 +53,7 @@ const exampleCommitments = [
     status: 'confirmed' as const,
     currentParticipants: 8,
     quorum: 6,
+    capacity: 12,
     paymentStatus: 'paid' as const,
     departureDate: new Date('2026-03-15'),
     fellowTravelers: [
@@ -81,6 +82,7 @@ const exampleCommitments = [
     status: 'forming' as const,
     currentParticipants: 4,
     quorum: 6,
+    capacity: 10,
     paymentStatus: 'deposit-paid' as const,
     departureDate: new Date('2026-04-22'),
     fellowTravelers: [
