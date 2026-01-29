@@ -146,36 +146,14 @@ export default function JoinTourPage() {
 
     try {
       if (isConfirmed) {
-        // For confirmed tours: redirect to Stripe Checkout
-        const response = await fetch('/api/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            tourId: tour.id,
-            tourName: tour.name,
-            amount: Math.round(tour.price * 100),
-            userEmail: userEmail,
-            userId: user?.id || 'anonymous',
-          }),
-        });
-
-        if (!response.ok) {
-          const error = await response.json();
-          alert(`Payment error: ${error.error}`);
-          setIsSubmitting(false);
-          return;
-        }
-
-        const { url } = await response.json();
-
-        if (url) {
-          window.location.href = url;
-        } else {
-          alert('Failed to create checkout session');
-          setIsSubmitting(false);
-        }
+        // For confirmed tours: redirect to embedded payment page for full payment
+        router.push(`/tours/${tour.slug}/join/payment?type=full`);
+      } else if (requiresDeposit) {
+        // For forming tours with deposit: redirect to embedded payment page for deposit
+        router.push(`/tours/${tour.slug}/join/payment?type=deposit`);
       } else {
-        // For forming tours: express interest
+        // For forming tours without deposit: express interest only
+        // TODO: Create reservation in database
         await new Promise((resolve) => setTimeout(resolve, 1500));
         router.push(`/tours/${tour.slug}/join/success?type=interest`);
       }
@@ -184,7 +162,7 @@ export default function JoinTourPage() {
       alert('An error occurred. Please try again.');
       setIsSubmitting(false);
     }
-  };
+  };;;
 
   // Auth gate - redirect to login if not authenticated
   if (!user) {

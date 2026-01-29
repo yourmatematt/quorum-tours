@@ -30,6 +30,7 @@ export interface Tour {
     id: string;
     name: string;
     slug: string;
+    base_location?: string | null;
   } | null;
   guide?: {
     id: string;
@@ -61,7 +62,7 @@ export function useTours(options: UseToursOptions = {}) {
           .from('tours')
           .select(`
             *,
-            operator:operators(id, name, slug)
+            operator:operators(id, name, slug, base_location)
           `)
           .order('date_start', { ascending: true })
           .limit(limit);

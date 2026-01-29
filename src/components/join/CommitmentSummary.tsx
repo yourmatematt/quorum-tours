@@ -1,4 +1,4 @@
-type ConfirmationStatus = 'confirmed' | 'forming';
+type ConfirmationStatus = 'confirmed' | 'forming' | 'not-running';
 
 interface CommitmentSummaryProps {
   status: ConfirmationStatus;

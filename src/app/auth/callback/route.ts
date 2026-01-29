@@ -1,6 +1,10 @@
 import { type EmailOtpType } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createClient as createAdminClient } from '@supabase/supabase-js';
+
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://quorumtours.com';
+const emailFunctionUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/send-email`;
 
 /**
  * Auth Callback Route Handler
@@ -57,6 +61,66 @@ export async function GET(request: NextRequest) {
       if (error) {
         errorRedirect.searchParams.set('error', error.message);
         return NextResponse.redirect(errorRedirect);
+      }
+
+      // For new signups (type === 'signup' or 'email'), send welcome email
+      if (type === 'signup' || type === 'email') {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user?.email) {
+            // Check if we've already sent a welcome email to this user
+            const supabaseAdmin = createAdminClient(
+              process.env.NEXT_PUBLIC_SUPABASE_URL!,
+              process.env.SUPABASE_SERVICE_ROLE_KEY!
+            );
+
+            const { data: existingWelcome } = await supabaseAdmin
+              .from('email_log')
+              .select('id')
+              .eq('user_id', user.id)
+              .eq('email_type', 'welcome')
+              .limit(1)
+              .single();
+
+            if (!existingWelcome) {
+              // Send welcome email
+              const userName = user.user_metadata?.name || user.email?.split('@')[0] || 'there';
+
+              await fetch(emailFunctionUrl, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+                },
+                body: JSON.stringify({
+                  template: 'welcome',
+                  to: user.email,
+                  data: {
+                    userName,
+                    email: user.email,
+                    loginUrl: `${siteUrl}/login`,
+                    toursUrl: `${siteUrl}/tours`,
+                    chaseListUrl: `${siteUrl}/profile`,
+                  },
+                }),
+              });
+
+              // Log the email
+              await supabaseAdmin.from('email_log').insert({
+                user_id: user.id,
+                email_type: 'welcome',
+                subject: 'Welcome to Quorum Tours!',
+                recipient_email: user.email,
+                status: 'sent',
+              });
+
+              console.log(`Welcome email sent to ${user.email}`);
+            }
+          }
+        } catch (emailErr) {
+          // Don't block auth flow if email fails
+          console.error('Failed to send welcome email:', emailErr);
+        }
       }
 
       // Email verified successfully, redirect to next page

@@ -129,7 +129,7 @@ export function tourCommittedEmail(data: Record<string, unknown>): { subject: st
     <h2 style="font-size: 20px; color: ${colors.ink}; margin: 32px 0 16px;">Help this tour reach quorum</h2>
 
     <p style="font-size: 16px; color: ${colors.inkMuted}; line-height: 1.6; margin-bottom: 16px;">
-      This tour needs ${spotsRemaining} more ${spotsRemaining === 1 ? 'person' : 'people'} to run. Know someone who'd be interested in seeing ${targetSpecies} at ${tourLocation}?
+      This tour needs ${spotsRemaining} more ${spotsRemaining === 1 ? 'person' : 'people'} to run. Know someone who'd be interested in ${targetSpecies ? `seeing ${targetSpecies} in` : 'joining this wildlife tour in'} ${tourLocation}?
     </p>
 
     <p style="font-size: 14px; color: ${colors.inkSubtle}; margin-bottom: 12px;">Share this tour:</p>

@@ -69,6 +69,7 @@ serve(async (req) => {
     const results = {
       seven_day_reminders: 0,
       one_day_reminders: 0,
+      payment_reminders: 0,
       errors: [] as string[],
     }
 
@@ -240,6 +241,103 @@ serve(async (req) => {
         } else {
           results.errors.push(`Failed 1-day reminder for ${email} (tour: ${tour.id})`)
         }
+      }
+    }
+
+    // =======================================================================
+    // PAYMENT REMINDERS (6 hours before 24-hour deadline expires)
+    // =======================================================================
+
+    // Find reservations with payment_due_at between 5 and 7 hours from now
+    // This gives a window to catch the 6-hour mark even if cron runs at odd times
+    const sixHoursFromNow = new Date(now)
+    sixHoursFromNow.setHours(sixHoursFromNow.getHours() + 6)
+    const fiveHoursFromNow = new Date(now)
+    fiveHoursFromNow.setHours(fiveHoursFromNow.getHours() + 5)
+    const sevenHoursFromNow = new Date(now)
+    sevenHoursFromNow.setHours(sevenHoursFromNow.getHours() + 7)
+
+    const { data: pendingPayments } = await supabase
+      .from('reservations')
+      .select(`
+        id,
+        user_id,
+        tour_id,
+        payment_due_at,
+        balance_cents,
+        tours (
+          id,
+          title,
+          slug,
+          price_cents,
+          deposit_cents
+        ),
+        profiles (
+          email,
+          display_name
+        )
+      `)
+      .eq('status', 'payment_pending')
+      .gte('payment_due_at', fiveHoursFromNow.toISOString())
+      .lte('payment_due_at', sevenHoursFromNow.toISOString())
+
+    for (const reservation of pendingPayments || []) {
+      const email = reservation.profiles?.email
+      if (!email) continue
+
+      // Check if we already sent a payment reminder for this reservation
+      const { data: existingReminder } = await supabase
+        .from('email_log')
+        .select('id')
+        .eq('email_type', 'payment_reminder')
+        .eq('reservation_id', reservation.id)
+        .limit(1)
+        .single()
+
+      if (existingReminder) {
+        continue // Already sent
+      }
+
+      const hoursRemaining = Math.round(
+        (new Date(reservation.payment_due_at).getTime() - now.getTime()) / (1000 * 60 * 60)
+      )
+
+      const sent = await sendEmail('payment_reminder', email, {
+        userName: reservation.profiles?.display_name || 'there',
+        tourTitle: reservation.tours?.title || 'your tour',
+        hoursRemaining,
+        deadlineTime: new Date(reservation.payment_due_at).toLocaleString('en-AU', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+        }),
+        amountDue: ((reservation.balance_cents || reservation.tours?.price_cents || 0) / 100).toFixed(2),
+        paymentUrl: `${APP_URL}/tours/${reservation.tours?.slug || reservation.tour_id}/join/payment?type=full`,
+        profileUrl: `${APP_URL}/profile`,
+      })
+
+      if (sent) {
+        results.payment_reminders++
+        await supabase.from('email_log').insert({
+          user_id: reservation.user_id,
+          reservation_id: reservation.id,
+          tour_id: reservation.tour_id,
+          email_type: 'payment_reminder',
+          subject: `Payment reminder: ${hoursRemaining} hours left for "${reservation.tours?.title}"`,
+          recipient_email: email,
+          status: 'sent',
+          sent_at: new Date().toISOString(),
+          metadata: {
+            hours_remaining: hoursRemaining,
+            payment_due_at: reservation.payment_due_at,
+            amount_due_cents: reservation.balance_cents || reservation.tours?.price_cents,
+          }
+        })
+      } else {
+        results.errors.push(`Failed payment reminder for ${email} (reservation: ${reservation.id})`)
       }
     }
 

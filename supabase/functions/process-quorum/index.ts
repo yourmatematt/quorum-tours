@@ -39,7 +39,7 @@ serve(async (req) => {
       }
     }
 
-    const { tour_id } = await req.json()
+    const { tour_id, exclude_user_id } = await req.json()
 
     if (!tour_id) {
       return new Response(JSON.stringify({ error: 'tour_id is required' }), {
@@ -47,6 +47,8 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
+
+    // exclude_user_id is optional - used to avoid double-emailing the user who triggered quorum
 
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
@@ -124,8 +126,8 @@ serve(async (req) => {
       throw new Error(`Failed to update tour: ${tourUpdateError.message}`)
     }
 
-    // Get all reserved reservations
-    const { data: reservations, error: resError } = await supabase
+    // Get all reserved reservations (optionally excluding the user who just triggered quorum)
+    let reservationsQuery = supabase
       .from('reservations')
       .select(`
         id,
@@ -139,6 +141,13 @@ serve(async (req) => {
       `)
       .eq('tour_id', tour_id)
       .eq('status', 'reserved')
+
+    // Exclude the user who triggered quorum if provided (they already got their email)
+    if (exclude_user_id) {
+      reservationsQuery = reservationsQuery.neq('user_id', exclude_user_id)
+    }
+
+    const { data: reservations, error: resError } = await reservationsQuery
 
     if (resError) {
       throw new Error(`Failed to get reservations: ${resError.message}`)
