@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { PastTourItem } from '../ui/PastTourItem';
 
 interface PastTour {
   id: string;
@@ -16,12 +15,10 @@ interface PastToursSectionProps {
 }
 
 /**
- * PastToursSection - Collapsible past tour archive
+ * PastToursSection - Collapsible past tour card
  *
+ * Self-contained card with proper boundaries.
  * Collapsed by default to reduce cognitive load.
- * No celebration or achievement framing.
- *
- * Per IA: "Most users visit profile for active commitments"
  */
 export function PastToursSection({ tours }: PastToursSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -31,18 +28,18 @@ export function PastToursSection({ tours }: PastToursSectionProps) {
   }
 
   return (
-    <section aria-labelledby="past-tours-heading">
+    <div className="bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] overflow-hidden">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         aria-expanded={isExpanded}
         aria-controls="past-tours-content"
-        className="w-full flex items-center justify-between py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded"
+        className="w-full flex items-center justify-between p-4 text-left hover:bg-[var(--color-surface-sunken)] transition-colors"
       >
-        <h2 id="past-tours-heading" className="font-display text-base font-semibold text-[var(--color-ink)]">
+        <h2 className="font-display text-base font-semibold text-[var(--color-ink)]">
           Past Tours
         </h2>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-[var(--color-ink-muted)]">
+          <span className="text-xs text-[var(--color-ink-muted)]">
             {tours.length} {tours.length === 1 ? 'tour' : 'tours'}
           </span>
           <svg
@@ -63,20 +60,30 @@ export function PastToursSection({ tours }: PastToursSectionProps) {
       {isExpanded && (
         <div
           id="past-tours-content"
-          className="mt-2 bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-3"
+          className="px-4 pb-4 border-t border-[var(--color-border)]"
         >
-          {tours.map((tour) => (
-            <PastTourItem
-              key={tour.id}
-              id={tour.id}
-              title={tour.title}
-              date={tour.date}
-              outcome={tour.outcome}
-              participantCount={tour.participantCount}
-            />
-          ))}
+          <ul className="pt-3 space-y-2">
+            {tours.map((tour) => (
+              <li
+                key={tour.id}
+                className="flex items-center justify-between py-2 px-3 bg-[var(--color-surface-sunken)] rounded-[var(--radius-sm)]"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm text-[var(--color-ink)] truncate">{tour.title}</p>
+                  <p className="text-xs text-[var(--color-ink-muted)]">{tour.date}</p>
+                </div>
+                <span className={`ml-2 text-xs flex-shrink-0 ${
+                  tour.outcome === 'completed'
+                    ? 'text-[var(--color-confirmed)]'
+                    : 'text-[var(--color-ink-muted)]'
+                }`}>
+                  {tour.outcome === 'completed' ? '✓ Completed' : 'Cancelled'}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
-    </section>
+    </div>
   );
 }

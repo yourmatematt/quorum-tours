@@ -190,21 +190,11 @@ export default function ProfilePage() {
               )}
             </section>
 
-            {/* Right Column: Chase List + Settings (1/3 width on desktop) */}
-            <div className="lg:col-span-4 flex flex-col gap-4 min-h-0">
-
-              {/* Chase List - Takes available height */}
-              <div className="flex-1 min-h-0 bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-4 flex flex-col">
-                <ChaseListSection
-                  birds={exampleChaseList}
-                />
-              </div>
-
-              {/* Collapsible sections at bottom */}
-              <div className="flex-shrink-0 space-y-3">
-                <PastToursSection tours={examplePastTours} />
-                <SettingsSection />
-              </div>
+            {/* Right Column: Stacked cards with clear boundaries */}
+            <div className="lg:col-span-4 space-y-4 lg:overflow-y-auto lg:max-h-[calc(100vh-200px)]">
+              <ChaseListSection birds={exampleChaseList} />
+              <PastToursSection tours={examplePastTours} />
+              <SettingsSection />
             </div>
           </div>
         </div>
