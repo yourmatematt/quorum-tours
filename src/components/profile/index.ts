@@ -5,5 +5,6 @@ export { UserCommitmentCard } from './UserCommitmentCard';
 export { CommitmentsSection } from './CommitmentsSection';
 export { EnhancedTourCard } from './EnhancedTourCard';
 export { ChaseListSection } from './ChaseListSection';
+export { ChaseListMatchAlert } from './ChaseListMatchAlert';
 export { PastToursSection } from './PastToursSection';
 export { SettingsSection } from './SettingsSection';

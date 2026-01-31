@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { ConfirmationStatusBadge } from '../ui/ConfirmationStatusBadge';
-import { QuorumProgressBar } from '../ui/QuorumProgressBar';
 
 type CommitmentStatus = 'confirmed' | 'forming' | 'not-running';
 type PaymentStatus = 'paid' | 'deposit-paid' | 'pending' | 'overdue';
@@ -11,6 +9,12 @@ interface FellowTraveler {
   id: string;
   name: string;
   initials: string;
+}
+
+interface TargetSpecies {
+  id: string;
+  name: string;
+  region?: string;
 }
 
 interface EnhancedTourCardProps {
@@ -24,24 +28,21 @@ interface EnhancedTourCardProps {
   currentParticipants: number;
   quorum: number;
   capacity: number;
-  // New enhanced fields
   paymentStatus: PaymentStatus;
   departureDate: Date;
   fellowTravelers: FellowTraveler[];
-  itinerarySummary: string[];
+  targetSpecies?: TargetSpecies[];
 }
 
 /**
- * EnhancedTourCard - Full-featured commitment card for dashboard
+ * EnhancedTourCard - Redesigned commitment card for dashboard
  *
- * Shows everything a birder needs at a glance:
- * - Tour status and progress
- * - Days until departure
- * - Payment status
- * - Quick actions (contact operator, view itinerary)
- * - Fellow travelers with profile links
- *
- * Design: Field notebook feel - dense but scannable
+ * Design per spec:
+ * - Top accent stripe (1px) colored by status
+ * - Quorum as centrepiece with dot visualization
+ * - Large Fraunces countdown
+ * - Collapsible target species & actions
+ * - Border+colored-shadow hover (no lift)
  */
 export function EnhancedTourCard({
   tourId,
@@ -57,159 +58,249 @@ export function EnhancedTourCard({
   paymentStatus,
   departureDate,
   fellowTravelers,
-  itinerarySummary,
+  targetSpecies = [],
 }: EnhancedTourCardProps) {
-  const [showItinerary, setShowItinerary] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const isConfirmed = status === 'confirmed';
 
   // Calculate days until departure
   const today = new Date();
   const daysUntil = Math.ceil((departureDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-  const departureLabel = daysUntil === 0 ? 'Today!' : daysUntil === 1 ? '1 day' : `${daysUntil} days`;
 
-  const paymentConfig: Record<PaymentStatus, { label: string; color: string; bgColor: string }> = {
-    'paid': { label: 'Paid in full', color: 'text-[var(--color-confirmed)]', bgColor: 'bg-[var(--color-confirmed-bg)]' },
-    'deposit-paid': { label: 'Deposit paid', color: 'text-[var(--color-primary)]', bgColor: 'bg-[var(--color-primary-subtle)]' },
-    'pending': { label: 'Payment pending', color: 'text-[var(--color-forming)]', bgColor: 'bg-[var(--color-forming-bg)]' },
-    'overdue': { label: 'Payment overdue', color: 'text-[var(--color-destructive)]', bgColor: 'bg-red-50' },
+  // Status configuration
+  const statusConfig = {
+    confirmed: {
+      label: 'Quorum Reached',
+      accentColor: 'bg-[var(--color-confirmed)]',
+      borderHover: 'hover:border-[var(--color-confirmed)]',
+      shadowHover: 'hover:shadow-[0_4px_16px_rgba(46,139,87,0.15)]',
+      badgeBg: 'bg-[var(--color-confirmed-bg)]',
+      badgeText: 'text-[var(--color-confirmed)]',
+      dotColor: 'bg-[var(--color-confirmed)]',
+    },
+    forming: {
+      label: 'Forming',
+      accentColor: 'bg-[var(--color-forming)]',
+      borderHover: 'hover:border-[var(--color-forming)]',
+      shadowHover: 'hover:shadow-[0_4px_16px_rgba(217,119,6,0.15)]',
+      badgeBg: 'bg-[var(--color-forming-bg)]',
+      badgeText: 'text-[var(--color-forming)]',
+      dotColor: 'bg-[var(--color-forming)]',
+    },
+    'not-running': {
+      label: 'Not Running',
+      accentColor: 'bg-[var(--color-not-running)]',
+      borderHover: 'hover:border-[var(--color-not-running)]',
+      shadowHover: 'hover:shadow-[0_4px_16px_rgba(107,114,128,0.15)]',
+      badgeBg: 'bg-[var(--color-not-running-bg)]',
+      badgeText: 'text-[var(--color-not-running)]',
+      dotColor: 'bg-[var(--color-not-running)]',
+    },
+  };
+
+  const config = statusConfig[status];
+
+  // Payment configuration
+  const paymentConfig: Record<PaymentStatus, { label: string; color: string }> = {
+    paid: { label: 'Paid in full', color: 'text-[var(--color-confirmed)]' },
+    'deposit-paid': { label: 'Deposit paid', color: 'text-[var(--color-forming)]' },
+    pending: { label: 'Payment pending', color: 'text-[var(--color-forming)]' },
+    overdue: { label: 'Payment overdue', color: 'text-[var(--color-destructive)]' },
   };
 
   const payment = paymentConfig[paymentStatus];
 
+  // Quorum progress - dots visualization
+  const displayMax = isConfirmed ? capacity : quorum;
+  const maxDots = 10;
+  const displayDots = Math.min(displayMax, maxDots);
+  const filledDots = displayMax <= maxDots
+    ? Math.min(currentParticipants, displayMax)
+    : Math.round((currentParticipants / displayMax) * maxDots);
+
+  // Progress label
+  const progressLabel = isConfirmed
+    ? `${currentParticipants}/${capacity} · Running`
+    : `${currentParticipants}/${quorum} to run`;
+
   return (
     <div
       className={`
-        bg-[var(--color-surface-raised)] border-2 rounded-[var(--radius-organic)]
-        transition-colors
-        ${isConfirmed
-          ? 'border-[var(--color-confirmed)]/30'
-          : 'border-[var(--color-border)]'
-        }
+        relative bg-[var(--color-surface-raised)]
+        border-2 border-[var(--color-border)] rounded-[var(--radius-organic)]
+        overflow-hidden transition-all duration-200
+        ${config.borderHover} ${config.shadowHover}
       `}
     >
-      {/* Main Card Content */}
+      {/* Top accent stripe */}
+      <div className={`h-1 ${config.accentColor}`} />
+
+      {/* Card content */}
       <div className="p-4">
-        {/* Header: Name + Status + Days Until */}
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <div className="flex-1 min-w-0">
-            <a
-              href={`/tours/${tourId}`}
-              className="block font-display text-lg font-medium text-[var(--color-ink)] hover:text-[var(--color-primary)] transition-colors truncate"
-            >
-              {tourName}
-            </a>
-            <p className="text-sm text-[var(--color-ink-muted)]">
-              {tourDates} · {location}
-            </p>
-          </div>
-          <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-            <ConfirmationStatusBadge status={status} />
+        {/* Header: Tour name + Status badge */}
+        <div className="flex items-start justify-between gap-3 mb-1">
+          <a
+            href={`/tours/${tourId}`}
+            className="font-display text-xl font-semibold text-[var(--color-ink)] hover:text-[var(--color-primary)] transition-colors leading-tight tracking-tight"
+          >
+            {tourName}
+          </a>
+          <span
+            className={`
+              inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap
+              ${config.badgeBg} ${config.badgeText}
+            `}
+          >
+            <span className={`w-1.5 h-1.5 rounded-full ${config.dotColor}`} />
+            {config.label}
+          </span>
+        </div>
+
+        {/* Date + Location */}
+        <p className="text-sm text-[var(--color-ink-muted)] mb-4">
+          {tourDates} · {location}
+        </p>
+
+        {/* QUORUM PROGRESS section */}
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-medium tracking-wider uppercase text-[var(--color-ink-subtle)]">
+              Quorum Progress
+            </span>
+            {/* Days countdown - large Fraunces numeral */}
             {daysUntil > 0 && (
-              <span className="text-xs font-mono text-[var(--color-ink-muted)] bg-[var(--color-surface-sunken)] px-2 py-0.5 rounded">
-                {departureLabel}
+              <div className="text-right">
+                <span className="font-display text-2xl font-semibold text-[var(--color-ink)] tracking-tight">
+                  {daysUntil}
+                </span>
+                <span className="text-sm text-[var(--color-ink-muted)] ml-1">
+                  days
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Dots visualization */}
+          <div className="flex items-center gap-1 mb-1.5">
+            {Array.from({ length: displayDots }).map((_, i) => {
+              const isFilled = i < filledDots;
+              return (
+                <span
+                  key={i}
+                  className={`
+                    rounded-full transition-all
+                    ${isFilled
+                      ? `w-3 h-3 ${config.dotColor} shadow-[0_0_4px_rgba(46,139,87,0.3)]`
+                      : 'w-2.5 h-2.5 border-2 border-[var(--color-border)] bg-transparent'
+                    }
+                  `}
+                />
+              );
+            })}
+          </div>
+
+          {/* Progress label */}
+          <p className={`text-sm ${isConfirmed ? 'text-[var(--color-confirmed)]' : 'text-[var(--color-ink-muted)]'}`}>
+            {progressLabel}
+          </p>
+        </div>
+
+        {/* Payment status + Operator row */}
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <span className={`text-xs font-medium ${payment.color}`}>
+            {payment.label}
+          </span>
+          <span className="text-xs text-[var(--color-ink-muted)]">
+            {operatorName}
+          </span>
+        </div>
+
+        {/* Fellow travelers avatars */}
+        {fellowTravelers.length > 0 && (
+          <div className="flex items-center gap-0.5 mb-3">
+            {fellowTravelers.slice(0, 5).map((traveler, idx) => (
+              <div
+                key={traveler.id}
+                title={traveler.name}
+                className="w-8 h-8 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white text-xs font-medium border-2 border-[var(--color-surface-raised)]"
+                style={{ marginLeft: idx > 0 ? '-0.5rem' : 0 }}
+              >
+                {traveler.initials}
+              </div>
+            ))}
+            {fellowTravelers.length > 5 && (
+              <span className="ml-2 text-xs text-[var(--color-ink-muted)]">
+                +{fellowTravelers.length - 5}
               </span>
             )}
           </div>
-        </div>
-
-        {/* Quorum Progress */}
-        <div className="mb-3">
-          <QuorumProgressBar
-            current={currentParticipants}
-            quorum={quorum}
-            capacity={capacity}
-            size="sm"
-          />
-        </div>
-
-        {/* Payment Status + Operator Row */}
-        <div className="flex items-center justify-between gap-3 mb-3">
-          <span className={`text-xs font-medium px-2 py-1 rounded-full ${payment.bgColor} ${payment.color}`}>
-            {payment.label}
-          </span>
-          <a
-            href={`/operators/${operatorId}`}
-            className="text-xs text-[var(--color-ink-muted)] hover:text-[var(--color-primary)] transition-colors"
-          >
-            {operatorName} →
-          </a>
-        </div>
-
-        {/* Action Buttons Row */}
-        <div className="flex gap-2 mb-3">
-          <button
-            onClick={() => window.location.href = `mailto:contact@${operatorId}.example.com?subject=Question about ${tourName}`}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] text-[var(--color-ink)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-              <polyline points="22,6 12,13 2,6" />
-            </svg>
-            Contact
-          </button>
-          <button
-            onClick={() => setShowItinerary(!showItinerary)}
-            aria-expanded={showItinerary}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] text-[var(--color-ink)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0">
-              <line x1="8" y1="6" x2="21" y2="6" />
-              <line x1="8" y1="12" x2="21" y2="12" />
-              <line x1="8" y1="18" x2="21" y2="18" />
-              <line x1="3" y1="6" x2="3.01" y2="6" />
-              <line x1="3" y1="12" x2="3.01" y2="12" />
-              <line x1="3" y1="18" x2="3.01" y2="18" />
-            </svg>
-            Itinerary
-          </button>
-        </div>
-
-        {/* Itinerary Dropdown */}
-        {showItinerary && (
-          <div className="mb-3 p-3 bg-[var(--color-surface-sunken)] rounded-[var(--radius-sm)] text-sm">
-            <p className="font-medium text-[var(--color-ink)] mb-2">Trip Overview</p>
-            <ul className="space-y-1">
-              {itinerarySummary.map((item, idx) => (
-                <li key={idx} className="text-[var(--color-ink-muted)] flex items-start gap-2">
-                  <span className="text-xs font-mono text-[var(--color-ink-subtle)] mt-0.5">Day {idx + 1}</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-            <a
-              href={`/tours/${tourId}#itinerary`}
-              className="inline-block mt-2 text-xs text-[var(--color-primary)] hover:underline"
-            >
-              View full itinerary →
-            </a>
-          </div>
         )}
 
-        {/* Fellow Travelers - Avatar Row */}
-        {fellowTravelers.length > 0 && (
-          <div className="pt-3 border-t border-[var(--color-border)]">
-            <p className="text-xs text-[var(--color-ink-subtle)] mb-2">
-              Fellow travelers ({isConfirmed ? currentParticipants : `${currentParticipants} committed`})
-            </p>
-            <div className="flex items-center gap-1">
-              {/* Show first 6 travelers */}
-              {fellowTravelers.slice(0, 6).map((traveler, idx) => (
-                <a
-                  key={traveler.id}
-                  href={`/travelers/${traveler.id}`}
-                  title={traveler.name}
-                  className="w-8 h-8 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white text-xs font-medium hover:ring-2 hover:ring-[var(--color-primary)] hover:ring-offset-2 transition-all"
-                  style={{ marginLeft: idx > 0 ? '-0.25rem' : 0 }}
-                >
-                  {traveler.initials}
-                </a>
-              ))}
-              {/* Overflow indicator */}
-              {fellowTravelers.length > 6 && (
-                <span className="ml-1 text-xs text-[var(--color-ink-muted)]">
-                  +{fellowTravelers.length - 6} more
-                </span>
-              )}
+        {/* Collapsible Target species & actions */}
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex items-center gap-1 text-sm text-[var(--color-ink-muted)] hover:text-[var(--color-primary)] transition-colors"
+        >
+          Target species & actions
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+          >
+            <path d="M5 8l5 5 5-5" />
+          </svg>
+        </button>
+
+        {/* Expanded content */}
+        {isExpanded && (
+          <div className="mt-3 pt-3 border-t border-[var(--color-border)]">
+            {/* Target species */}
+            {targetSpecies.length > 0 && (
+              <div className="mb-3">
+                <p className="text-xs font-medium text-[var(--color-ink-subtle)] mb-2">Target species</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {targetSpecies.map((species) => (
+                    <span
+                      key={species.id}
+                      className="text-xs px-2 py-1 bg-[var(--color-surface-sunken)] text-[var(--color-ink)] rounded"
+                    >
+                      {species.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="flex gap-2">
+              <a
+                href={`mailto:contact@${operatorId}.example.com?subject=Question about ${tourName}`}
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium border border-[var(--color-border)] rounded-[var(--radius-sm)] text-[var(--color-ink)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <polyline points="22,6 12,13 2,6" />
+                </svg>
+                Contact
+              </a>
+              <a
+                href={`/tours/${tourId}#itinerary`}
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium border border-[var(--color-border)] rounded-[var(--radius-sm)] text-[var(--color-ink)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="8" y1="6" x2="21" y2="6" />
+                  <line x1="8" y1="12" x2="21" y2="12" />
+                  <line x1="8" y1="18" x2="21" y2="18" />
+                  <line x1="3" y1="6" x2="3.01" y2="6" />
+                  <line x1="3" y1="12" x2="3.01" y2="12" />
+                  <line x1="3" y1="18" x2="3.01" y2="18" />
+                </svg>
+                Itinerary
+              </a>
             </div>
           </div>
         )}

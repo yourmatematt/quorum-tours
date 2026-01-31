@@ -2,9 +2,9 @@ import { Metadata } from 'next';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import {
   ProfileHeader,
-  TrustStatusCard,
   EnhancedTourCard,
   ChaseListSection,
+  ChaseListMatchAlert,
   PastToursSection,
   SettingsSection,
 } from '@/components/profile';
@@ -15,44 +15,35 @@ export const metadata: Metadata = {
 };
 
 /**
- * Profile Page - User Dashboard (No-scroll desktop)
+ * Profile Page - User Dashboard
  *
- * Primary job: At-a-glance control room for birders
- * - Active tour commitments with full context
- * - Chase list with eBird import
- * - Quick access to settings
- *
- * Layout: Viewport-height dashboard, no scroll on desktop
- * Scrolling contained within individual panels where needed.
- *
- * Per IA:
- * - Profile exists to manage commitments, not display status
- * - Social connections: fellow travelers visible on tour cards
- * - Chase list integration for trip relevance
+ * Redesigned layout per spec:
+ * - Compact inline header with trust badge
+ * - UPCOMING TOURS section with Browse more link
+ * - Tour cards as main content
+ * - Past Tours collapsed below tours
+ * - Right sidebar: Chase List (primary), Match Alert, Account (demoted)
  */
 
 // Example user data (UI shell - would come from auth in production)
 const exampleUser = {
   displayName: 'Sarah Mitchell',
-  email: 'sarah.mitchell@email.com',
   memberSince: 'January 2025',
   trustTier: 'trusted' as const,
-  completedTours: 2,
-  strikeCount: 0,
 };
 
-// Enhanced commitment data with new fields
+// Enhanced commitment data
 const exampleCommitments = [
   {
     tourId: 'kakadu-wetlands-2026',
     tourName: 'Kakadu Wetlands Expedition',
-    tourDates: 'Mar 15-18, 2026',
+    tourDates: 'Mar 15–18, 2026',
     operatorId: 'outback-birding',
     operatorName: 'Outback Birding Co',
     location: 'Northern Territory',
     status: 'confirmed' as const,
     currentParticipants: 8,
-    quorum: 6,
+    quorum: 10,
     capacity: 12,
     paymentStatus: 'paid' as const,
     departureDate: new Date('2026-03-15'),
@@ -65,17 +56,15 @@ const exampleCommitments = [
       { id: 'user-6', name: 'Anna Rodriguez', initials: 'AR' },
       { id: 'user-7', name: 'Chris Lee', initials: 'CL' },
     ],
-    itinerarySummary: [
-      'Arrive Darwin, transfer to Kakadu',
-      'Yellow Water cruise, Mamukala Wetlands',
-      'Gunlom Falls, savanna woodlands',
-      'East Alligator region, departure',
+    targetSpecies: [
+      { id: 'sp-1', name: 'Gouldian Finch' },
+      { id: 'sp-2', name: 'Rainbow Pitta' },
     ],
   },
   {
     tourId: 'tasmania-raptors-2026',
     tourName: 'Tasmania Raptor Circuit',
-    tourDates: 'Apr 22-25, 2026',
+    tourDates: 'Apr 22–25, 2026',
     operatorId: 'wings-wilderness',
     operatorName: 'Wings & Wilderness',
     location: 'Tasmania',
@@ -90,37 +79,35 @@ const exampleCommitments = [
       { id: 'user-9', name: 'Sophie Brown', initials: 'SB' },
       { id: 'user-10', name: 'Andrew White', initials: 'AW' },
     ],
-    itinerarySummary: [
-      'Hobart arrival, Mount Wellington',
-      'Bruny Island pelagic day',
-      'Tasman Peninsula, sea cliffs',
-      'Central highlands, departure',
+    targetSpecies: [
+      { id: 'sp-3', name: 'Wedge-tailed Eagle' },
+      { id: 'sp-4', name: 'Grey Goshawk' },
     ],
   },
 ];
 
-// Example chase list (UI shell)
+// Example chase list with match indicator
 const exampleChaseList = [
-  { id: 'bird-1', commonName: 'Gouldian Finch', scientificName: 'Chloebia gouldiae', region: 'NT', addedDate: '2025-12-01' },
-  { id: 'bird-2', commonName: 'Regent Honeyeater', scientificName: 'Anthochaera phrygia', region: 'NSW', addedDate: '2025-11-15' },
-  { id: 'bird-3', commonName: 'Plains-wanderer', scientificName: 'Pedionomus torquatus', region: 'VIC', addedDate: '2025-10-20' },
-  { id: 'bird-4', commonName: 'Night Parrot', scientificName: 'Pezoporus occidentalis', region: 'QLD', addedDate: '2025-09-05' },
-  { id: 'bird-5', commonName: 'Helmeted Honeyeater', scientificName: 'Lichenostomus melanops cassidix', region: 'VIC', addedDate: '2025-08-10' },
+  { id: 'bird-1', commonName: 'Gouldian Finch', region: 'NT', addedDate: '2025-12-01', isMatched: true },
+  { id: 'bird-2', commonName: 'Regent Honeyeater', region: 'NSW', addedDate: '2025-11-15' },
+  { id: 'bird-3', commonName: 'Plains-wanderer', region: 'VIC', addedDate: '2025-10-20' },
+  { id: 'bird-4', commonName: 'Night Parrot', region: 'QLD', addedDate: '2025-09-05' },
+  { id: 'bird-5', commonName: 'Helmeted Honeyeater', region: 'VIC', addedDate: '2025-08-10' },
 ];
 
-// Example past tours (UI shell)
+// Example past tours
 const examplePastTours = [
   {
     id: 'broome-shorebirds-2025',
     title: 'Broome Shorebird Migration',
-    date: 'Sep 12-15, 2025',
+    date: 'Sep 12–15, 2025',
     outcome: 'completed' as const,
     participantCount: 8,
   },
   {
     id: 'cairns-rainforest-2025',
     title: 'Cairns Rainforest Endemics',
-    date: 'Jul 5-8, 2025',
+    date: 'Jul 5–8, 2025',
     outcome: 'completed' as const,
     participantCount: 6,
   },
@@ -129,43 +116,35 @@ const examplePastTours = [
 export default function ProfilePage() {
   return (
     <ErrorBoundary>
-      {/* Dashboard: Normal page scrolling */}
       <main className="bg-[var(--color-surface)] min-h-screen">
-        <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 py-4 lg:py-6">
-
-          {/* Top Row: Profile + Trust Status */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 mb-4">
-            <div className="lg:col-span-3">
-              <ProfileHeader
-                displayName={exampleUser.displayName}
-                email={exampleUser.email}
-                memberSince={exampleUser.memberSince}
-              />
-            </div>
-            <TrustStatusCard
-              trustTier={exampleUser.trustTier}
-              completedTours={exampleUser.completedTours}
-              strikeCount={exampleUser.strikeCount}
-            />
-          </div>
+        <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 pt-6">
+          {/* Compact Profile Header */}
+          <ProfileHeader
+            displayName={exampleUser.displayName}
+            memberSince={exampleUser.memberSince}
+            trustTier={exampleUser.trustTier}
+          />
 
           {/* Main Dashboard Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8">
+            {/* Left Column: Tours (8 cols on desktop) */}
+            <div className="lg:col-span-8">
+              {/* UPCOMING TOURS section header */}
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-[11px] font-semibold tracking-wider uppercase text-[var(--color-ink-subtle)]">
+                  Upcoming Tours
+                </h2>
+                <a
+                  href="/tours"
+                  className="text-sm text-[var(--color-primary)] hover:underline"
+                >
+                  Browse more →
+                </a>
+              </div>
 
-            {/* Left Column: My Tours (2/3 width on desktop) */}
-            <section
-              aria-labelledby="my-tours-heading"
-              className="lg:col-span-8"
-            >
-              <h2
-                id="my-tours-heading"
-                className="font-display text-lg font-semibold text-[var(--color-ink)] mb-3"
-              >
-                My Tours
-              </h2>
-
+              {/* Tour Cards */}
               {exampleCommitments.length > 0 ? (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {exampleCommitments.map((commitment) => (
                     <EnhancedTourCard
                       key={commitment.tourId}
@@ -188,12 +167,28 @@ export default function ProfilePage() {
                   </div>
                 </div>
               )}
-            </section>
 
-            {/* Right Column: Stacked cards - no nested scrolling */}
-            <div className="lg:col-span-4 space-y-3">
+              {/* Past Tours - collapsed, below tour cards */}
+              {examplePastTours.length > 0 && (
+                <div className="mt-4">
+                  <PastToursSection tours={examplePastTours} />
+                </div>
+              )}
+            </div>
+
+            {/* Right Column: Sidebar (4 cols on desktop) */}
+            <div className="lg:col-span-4 space-y-4">
+              {/* Chase List - Primary sidebar element */}
               <ChaseListSection birds={exampleChaseList} />
-              <PastToursSection tours={examplePastTours} />
+
+              {/* Chase List Match Alert */}
+              <ChaseListMatchAlert
+                speciesName="Gouldian Finch"
+                tourName="NT"
+                context="A new tour targeting Gouldian Finch was just listed in the NT. Your Kakadu trip already covers this — you're set."
+              />
+
+              {/* Account Section - Demoted to bottom */}
               <SettingsSection />
             </div>
           </div>

@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 interface HeroSectionProps {
-  toursConfirmedCount?: number;
   heroImage?: string;
 }
 
@@ -23,8 +22,7 @@ interface HeroSectionProps {
  * Stock search: "Australian wetland sunrise birds", "Kakadu landscape", "Australian bush golden hour"
  */
 export function HeroSection({
-  toursConfirmedCount = 47,
-  heroImage = '/images/hero/home-hero.jpg'
+  heroImage = '/images/hero/home-hero.webp'
 }: HeroSectionProps) {
   const [imageError, setImageError] = useState(false);
 
@@ -76,25 +74,6 @@ export function HeroSection({
       ">
         {/* Centered content layout */}
         <div className="max-w-4xl mx-auto text-center">
-          {/* eBird integration badge */}
-          <div className="mb-6">
-            <span className="
-              inline-flex items-center gap-2
-              px-4 py-2
-              text-sm font-medium
-              bg-white/95
-              text-[#1B4D3E]
-              rounded-[var(--radius-organic)]
-              shadow-lg
-              backdrop-blur-sm
-            ">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.18-.77-6-4.93-6-9V8.3l6-3.11 6 3.11V11c0 4.07-2.82 8.23-6 9z"/>
-              </svg>
-              Verified eBird Integration
-            </span>
-          </div>
-
           {/* Headline - Crimson Pro display serif */}
           <h1 className="
             font-display
@@ -160,33 +139,6 @@ export function HeroSection({
                 See How It Works
               </Button>
             </Link>
-          </div>
-
-          {/* Trust indicator - Tours confirmed */}
-          <div className="
-            inline-flex items-center gap-3
-            px-6 py-3
-            bg-white/95
-            rounded-[var(--radius-organic)]
-            shadow-lg
-            backdrop-blur-sm
-          ">
-            <div className="
-              flex items-center justify-center
-              w-10 h-10
-              bg-[#1B4D3E]/10
-              rounded-full
-            ">
-              <svg className="w-5 h-5 text-[#1B4D3E]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
-              </svg>
-            </div>
-            <div className="text-left">
-              <div className="text-sm text-[#1B4D3E]/70">This season</div>
-              <div className="text-lg font-semibold text-[#1B4D3E]">
-                <span className="font-mono">{toursConfirmedCount}</span> tours confirmed
-              </div>
-            </div>
           </div>
         </div>
       </div>

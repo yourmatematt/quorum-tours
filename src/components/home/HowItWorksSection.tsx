@@ -1,105 +1,60 @@
 'use client';
 
-import { useMemo } from 'react';
-import { ScrollReveal, StaggerContainer } from '@/components/ui/ScrollReveal';
+import Image from 'next/image';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 
 interface ProcessStep {
   number: number;
   action: string;
   outcome: string;
-  icon: React.ReactNode;
+  image: string;
 }
 
 /**
- * How It Works Section - Organic Biophilic Design
+ * How It Works Section - Visual Steps with Screenshots
  *
- * Design System: HOME-REDESIGN-DECISIONS.md
- * - 3-step quorum mechanic with flowing layout
- * - Organic rounded corners (20px) and natural shadows
- * - Forest green accent numbers
+ * Updated to use actual product screenshots instead of icons
+ * Steps: Browse → Commit → Tour Confirms → (User provides step 4)
  */
 export function HowItWorksSection() {
-  const steps: ProcessStep[] = useMemo(() => [
+  const steps: ProcessStep[] = [
     {
       number: 1,
-      action: 'Express interest',
-      outcome: 'Your signal joins the aggregate. No charge, no obligation.',
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        </svg>
-      ),
+      action: 'Find your tour',
+      outcome: 'Browse tours by region, species, or date. See quorum progress at a glance.',
+      image: '/images/how-it-works/step1-browse.png',
     },
     {
       number: 2,
       action: 'Commit conditionally',
-      outcome: 'You agree to join if quorum is reached. Still no charge.',
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
+      outcome: 'Pay a small deposit to signal commitment. Fully refunded if quorum isn\'t reached.',
+      image: '/images/how-it-works/step3-commit.png',
     },
     {
       number: 3,
       action: 'Tour confirms',
-      outcome: 'Quorum reached. The tour runs. Everyone goes.',
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-        </svg>
-      ),
+      outcome: 'Once quorum is reached, the tour is guaranteed. Pay the balance and you\'re set.',
+      image: '/images/how-it-works/step4-confirmed.png',
     },
-  ], []);
+  ];
 
   return (
-    <section className="
-      py-20
-      bg-white
-    ">
-      <div className="
-        w-full max-w-[var(--container-max)]
-        mx-auto px-6 lg:px-8
-      ">
-        {/* Section header - center aligned */}
+    <section className="py-20 bg-white">
+      <div className="w-full max-w-[var(--container-max)] mx-auto px-6 lg:px-8">
+        {/* Section header */}
         <ScrollReveal variant="fade-up" duration={500}>
           <div className="mb-16 text-center max-w-2xl mx-auto">
-            <h2 className="
-              font-display
-              text-[clamp(1.75rem,4vw,2.5rem)]
-              leading-tight
-              text-[var(--color-ink)]
-              mb-[var(--space-md)]
-            ">
+            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-md)]">
               How confirmation works.
             </h2>
-            <p className="
-              text-[var(--color-ink-muted)]
-              text-lg
-              leading-relaxed
-            ">
-              Three stages. Zero risk until the tour is guaranteed to run.
+            <p className="text-[var(--color-ink-muted)] text-lg leading-relaxed">
+              Three steps. Zero risk until the tour is guaranteed to run.
             </p>
           </div>
         </ScrollReveal>
 
-        {/* Process steps - flowing horizontal layout */}
-        <div className="
-          grid grid-cols-1 md:grid-cols-3
-          gap-8
-          relative
-          mb-16
-        ">
-          {/* Flowing connector line - organic curve on desktop */}
-          <div className="
-            hidden md:block
-            absolute top-20 left-[16.67%] right-[16.67%]
-            h-1
-            bg-gradient-to-r from-[var(--color-secondary)]/20 via-[var(--color-primary)]/20 to-[var(--color-confirmed)]/40
-            rounded-full
-          " aria-hidden="true" />
-
+        {/* Process steps */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {steps.map((step, index) => (
             <ScrollReveal
               key={step.number}
@@ -108,79 +63,39 @@ export function HowItWorksSection() {
               duration={500}
             >
               <div className="relative">
-                {/* Step container - organic rounded corners */}
-                <div className="
-                  bg-white
-                  border-2 border-[var(--color-border)]
-                  rounded-[var(--radius-organic)]
-                  p-8
-                  shadow-[var(--shadow-card)]
-                  hover:shadow-[var(--shadow-card-hover)]
-                  hover:border-[var(--color-primary)]
-                  transition-all duration-200
-                  relative
-                ">
-                  {/* Step number - forest green circle */}
-                  <div className="
-                    absolute -top-6 left-8
-                    w-12 h-12
-                    bg-[var(--color-primary)]
-                    text-white
-                    font-heading font-semibold
-                    rounded-full
-                    flex items-center justify-center
-                    text-xl
-                    shadow-[var(--shadow-card)]
-                    z-10
-                  ">
+                {/* Step card */}
+                <div className="bg-white border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] overflow-hidden shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:border-[var(--color-primary)] transition-all duration-200">
+                  {/* Step number badge */}
+                  <div className="absolute top-4 left-4 w-10 h-10 bg-[var(--color-primary)] text-white font-heading font-semibold rounded-full flex items-center justify-center text-lg shadow-[var(--shadow-card)] z-10">
                     {step.number}
                   </div>
 
-                  {/* Icon */}
-                  <div className="
-                    mt-6 mb-4
-                    text-[var(--color-secondary)]
-                  ">
-                    {step.icon}
+                  {/* Screenshot image */}
+                  <div className="relative w-full aspect-[4/3] bg-[var(--color-surface-sunken)]">
+                    <Image
+                      src={step.image}
+                      alt={step.action}
+                      fill
+                      className="object-cover object-top"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
                   </div>
 
-                  {/* Action headline - Crimson Pro */}
-                  <h3 className="
-                    font-heading
-                    text-2xl
-                    font-semibold
-                    text-[var(--color-ink)]
-                    mb-3
-                  ">
-                    {step.action}
-                  </h3>
-
-                  {/* Outcome - Atkinson Hyperlegible */}
-                  <p className="
-                    text-[var(--color-ink-muted)]
-                    text-base
-                    leading-relaxed
-                  ">
-                    {step.outcome}
-                  </p>
+                  {/* Text content */}
+                  <div className="p-6">
+                    <h3 className="font-heading text-xl font-semibold text-[var(--color-ink)] mb-2">
+                      {step.action}
+                    </h3>
+                    <p className="text-[var(--color-ink-muted)] text-sm leading-relaxed">
+                      {step.outcome}
+                    </p>
+                  </div>
                 </div>
 
                 {/* Arrow connector on mobile */}
                 {index < steps.length - 1 && (
-                  <div className="
-                    md:hidden
-                    flex justify-center
-                    py-4
-                    text-[var(--color-primary)]
-                  " aria-hidden="true">
-                    <svg
-                      width="32"
-                      height="32"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
+                  <div className="md:hidden flex justify-center py-4 text-[var(--color-primary)]" aria-hidden="true">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M12 5v14M5 12l7 7 7-7" />
                     </svg>
                   </div>
@@ -190,24 +105,11 @@ export function HowItWorksSection() {
           ))}
         </div>
 
-        {/* Clarification card - organic styling */}
+        {/* Clarification card */}
         <ScrollReveal variant="fade-up" delay={450} duration={500}>
-          <div className="
-            max-w-3xl mx-auto
-            p-8
-            bg-[var(--color-surface)]
-            border-2 border-[var(--color-border)]
-            rounded-[var(--radius-organic)]
-            shadow-[var(--shadow-card)]
-          ">
+          <div className="max-w-3xl mx-auto p-8 bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] shadow-[var(--shadow-card)]">
             <div className="flex items-start gap-4">
-              <div className="
-                flex-shrink-0
-                w-12 h-12
-                bg-[var(--color-primary)]/10
-                rounded-full
-                flex items-center justify-center
-              ">
+              <div className="flex-shrink-0 w-12 h-12 bg-[var(--color-primary)]/10 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -215,7 +117,7 @@ export function HowItWorksSection() {
               <div>
                 <p className="text-lg text-[var(--color-ink)]">
                   <strong className="font-semibold">If quorum is not reached?</strong>
-                  {' '}The tour does not run. Your conditional commitment expires. You are not charged.
+                  {' '}The tour does not run. Your deposit is fully refunded. You are never charged for a tour that doesn't happen.
                 </p>
               </div>
             </div>
