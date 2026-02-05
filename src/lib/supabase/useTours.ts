@@ -24,6 +24,7 @@ export interface Tour {
   included: string[];
   itinerary: unknown;
   image_url: string | null;
+  is_featured: boolean;
   created_at: string;
   // Joined data
   operator?: {

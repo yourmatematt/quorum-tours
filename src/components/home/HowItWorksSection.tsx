@@ -40,7 +40,7 @@ export function HowItWorksSection() {
         <ScrollReveal variant="fade-up" duration={500}>
           <div className="mb-16 text-center max-w-2xl mx-auto">
             <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-md)]">
-              How confirmation works.
+              How Quorum works.
             </h2>
             <p className="text-[var(--color-ink-muted)] text-lg leading-relaxed">
               Three steps. Zero risk until the tour is guaranteed to run.

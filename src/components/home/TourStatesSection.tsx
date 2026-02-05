@@ -1,51 +1,62 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { TourCard } from '../TourCard';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
+import { createClient } from '@/lib/supabase/client';
+import { type Tour } from '@/lib/supabase/useTours';
+import { format } from 'date-fns';
 
 /**
  * Featured Tours Section - Organic Biophilic Design
  *
  * Design System: HOME-REDESIGN-DECISIONS.md
- * - Shows 3 example tours with different confirmation states
+ * - Shows featured tours from database (is_featured = true)
  * - Demonstrates transparency of the quorum mechanic
  * - Organic rounded corners, natural shadows
  */
 export function TourStatesSection() {
-  // Featured tour examples (memoized)
-  const exampleTours = useMemo(() => [
-    {
-      title: 'Dawn Chorus at Werribee',
-      operatorName: 'Sarah Mitchell',
-      status: 'confirmed' as const,
-      currentParticipants: 8,
-      quorum: 6,
-      capacity: 12,
-      date: 'Mar 15, 2026',
-      location: 'Werribee, VIC',
-    },
-    {
-      title: 'Shorebird Migration Watch',
-      operatorName: 'David Chen',
-      status: 'forming' as const,
-      currentParticipants: 4,
-      quorum: 8,
-      capacity: 12,
-      date: 'Apr 2, 2026',
-      location: 'Cairns, QLD',
-    },
-    {
-      title: 'Rainforest Endemics Trek',
-      operatorName: 'Maria Santos',
-      status: 'forming' as const,
-      currentParticipants: 7,
-      quorum: 10,
-      capacity: 14,
-      date: 'Apr 12, 2026',
-      location: 'Daintree, QLD',
-    },
-  ], []);
+  const [featuredTours, setFeaturedTours] = useState<Tour[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchFeaturedTours() {
+      const supabase = createClient();
+
+      try {
+        const { data, error } = await supabase
+          .from('tours')
+          .select(`
+            *,
+            operator:operators(id, name, slug, base_location)
+          `)
+          .eq('is_featured', true)
+          .in('status', ['forming', 'payment_pending', 'confirmed'])
+          .order('date_start', { ascending: true })
+          .limit(3);
+
+        if (error) throw error;
+
+        const enrichedTours: Tour[] = (data || []).map(tour => ({
+          ...tour,
+          current_participants: tour.current_participant_count || 0,
+        }));
+
+        setFeaturedTours(enrichedTours);
+      } catch (err) {
+        console.error('Error fetching featured tours:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchFeaturedTours();
+  }, []);
+
+  // Don't show the section if there are no featured tours and not loading
+  if (!isLoading && featuredTours.length === 0) {
+    return null;
+  }
 
   return (
     <section className="
@@ -78,23 +89,43 @@ export function TourStatesSection() {
           </div>
         </ScrollReveal>
 
+        {/* Loading state */}
+        {isLoading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-64 bg-white border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] animate-pulse" />
+            ))}
+          </div>
+        )}
+
         {/* Tour cards grid - organic spacing */}
-        <div className="
-          grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
-          gap-8
-          mb-16
-        ">
-          {exampleTours.map((tour, index) => (
-            <ScrollReveal
-              key={index}
-              variant="fade-up"
-              delay={index * 100}
-              duration={500}
-            >
-              <TourCard {...tour} />
-            </ScrollReveal>
-          ))}
-        </div>
+        {!isLoading && (
+          <div className="
+            grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
+            gap-8
+            mb-16
+          ">
+            {featuredTours.map((tour, index) => (
+              <ScrollReveal
+                key={tour.id}
+                variant="fade-up"
+                delay={index * 100}
+                duration={500}
+              >
+                <TourCard
+                  title={tour.title}
+                  operatorName={tour.operator?.name || 'Unknown Operator'}
+                  status={tour.status}
+                  currentParticipants={tour.current_participants}
+                  quorum={tour.threshold}
+                  capacity={tour.capacity}
+                  date={format(new Date(tour.date_start), 'MMM d, yyyy')}
+                  location={tour.operator?.base_location || tour.location || 'TBD'}
+                />
+              </ScrollReveal>
+            ))}
+          </div>
+        )}
 
         {/* Status legend - organic cards */}
         <ScrollReveal variant="fade-up" delay={300} duration={500}>
