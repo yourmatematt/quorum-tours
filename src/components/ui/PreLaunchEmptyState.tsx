@@ -98,8 +98,249 @@ export function PreLaunchEmptyState({ context, isLoggedIn = false, userName }: P
   };
 
   // =========================================================================
-  // LOGGED IN STATE - Compact single viewport layout
+  // LOGGED IN STATE - Naturalist Field Journal for Operators
   // =========================================================================
+  if (isLoggedIn && context === 'operators') {
+    return (
+      <div className="py-4 sm:py-[var(--space-lg)]">
+        <ScrollReveal variant="fade-up" duration={500}>
+          <div className="
+            max-w-4xl mx-auto
+            relative
+            bg-gradient-to-b from-[#FDFCF7] via-[#F8F7F0] to-[#F0F5F0]
+            p-4 sm:p-6 md:p-[var(--space-2xl)]
+            rounded-lg sm:rounded-[var(--radius-lg)]
+          ">
+            {/* Paper texture lines */}
+            <div
+              className="absolute inset-0 pointer-events-none rounded-lg sm:rounded-[var(--radius-lg)]"
+              style={{
+                backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(46, 139, 87, 0.03) 31px, rgba(46, 139, 87, 0.03) 32px)'
+              }}
+            />
+
+            {/* Sketch border */}
+            <div className="
+              relative
+              border-2 sm:border-[3px] border-[var(--color-ink)]
+              rounded-xl sm:rounded-[2rem]
+              p-4 sm:p-6 md:p-[var(--space-2xl)]
+              bg-white/80
+              backdrop-blur-sm
+            "
+            style={{
+              boxShadow: '4px 4px 0 rgba(46, 139, 87, 0.15), 0 2px 8px rgba(26, 51, 32, 0.1)'
+            }}>
+              {/* Dashed outer border - hidden on mobile */}
+              <div
+                className="hidden sm:block absolute inset-0 border-2 border-dashed border-[var(--color-primary)] rounded-[2rem] pointer-events-none"
+                style={{ top: '-6px', left: '-6px', right: '-6px', bottom: '-6px' }}
+              />
+
+              {/* Date stamp */}
+              <div className="
+                inline-block
+                font-mono text-[0.625rem] sm:text-xs
+                uppercase tracking-wider
+                text-[var(--color-ink-muted)]
+                border-2 border-[var(--color-border)]
+                px-3 py-1.5 sm:px-4 sm:py-2
+                rounded-lg
+                bg-white
+                mb-4 sm:mb-[var(--space-xl)]
+              "
+              style={{ transform: 'rotate(-1deg)' }}>
+                Field Notes · Feb 2026
+              </div>
+
+              {/* Heading with animated underline */}
+              <div className="mb-3 sm:mb-[var(--space-md)]">
+                <h2 className="
+                  font-display
+                  text-[1.75rem] sm:text-[clamp(2rem,5vw,3.5rem)]
+                  font-semibold
+                  text-[var(--color-ink)]
+                  leading-[1.1]
+                  inline-block
+                  relative
+                ">
+                  Building Our Field Guide Network
+                  <div
+                    className="absolute bottom-[-6px] sm:bottom-[-8px] left-0 w-full h-0.5 sm:h-1 bg-[var(--color-primary)] rounded-sm"
+                    style={{
+                      animation: 'underlineGrow 1.2s ease-out 0.3s forwards',
+                      transformOrigin: 'left',
+                      transform: 'scaleX(0)'
+                    }}
+                  />
+                </h2>
+              </div>
+
+              <p className="
+                text-base sm:text-xl
+                text-[var(--color-ink-muted)]
+                italic
+                mb-6 sm:mb-[var(--space-xl)]
+              ">
+                A community of verified birding guides is taking shape
+              </p>
+
+              {/* Current Observation */}
+              <div className="
+                bg-[var(--color-surface-sunken)]
+                border-l-4 border-[var(--color-primary)]
+                p-4 sm:p-6 md:p-[var(--space-xl)]
+                rounded-[var(--radius-md)]
+                mb-6 sm:mb-[var(--space-xl)]
+                relative
+              ">
+                <div
+                  className="hidden sm:block absolute top-4 right-4 text-2xl text-[var(--color-primary)] opacity-30"
+                  aria-hidden="true"
+                >
+                  ✎
+                </div>
+                <h3 className="
+                  font-display
+                  text-base sm:text-lg
+                  font-semibold
+                  text-[var(--color-ink)]
+                  mb-2 sm:mb-3
+                ">
+                  Current Observation
+                </h3>
+                <p className="text-sm sm:text-base text-[var(--color-ink-muted)] leading-relaxed">
+                  We're carefully vetting our first cohort of birding guides—professionals who share our commitment to quality field experiences and ethical wildlife observation. Each guide undergoes credential verification, reference checks, and alignment assessment with Quorum's trust-first approach.
+                </p>
+              </div>
+
+              {/* Process Steps */}
+              <div className="
+                grid grid-cols-1 sm:grid-cols-3
+                gap-4 sm:gap-6
+                mb-6 sm:mb-[var(--space-xl)]
+              ">
+                {[
+                  { number: 1, title: 'Credentialing', subtitle: 'in progress' },
+                  { number: 2, title: 'Reference', subtitle: 'verification' },
+                  { number: 3, title: 'Alignment', subtitle: 'assessment' }
+                ].map((step, index) => (
+                  <div
+                    key={step.number}
+                    className="
+                      bg-white
+                      border-2 border-[var(--color-border)]
+                      rounded-[var(--radius-organic)]
+                      p-4 sm:p-6
+                      text-center
+                      transition-all duration-300
+                      hover:-translate-y-1
+                      hover:border-[var(--color-primary)]
+                      hover:shadow-[0_8px_24px_rgba(26,51,32,0.12),0_4px_8px_rgba(26,51,32,0.08)]
+                      relative
+                      overflow-hidden
+                    "
+                  >
+                    <div
+                      className="hidden sm:block absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] transition-transform duration-300"
+                      style={{ transform: 'scaleX(0)' }}
+                    />
+                    <div className="
+                      w-10 h-10 sm:w-12 sm:h-12
+                      mx-auto mb-3 sm:mb-4
+                      bg-[var(--color-surface-sunken)]
+                      rounded-full
+                      flex items-center justify-center
+                      font-mono font-bold
+                      text-lg sm:text-xl
+                      text-[var(--color-primary)]
+                    ">
+                      {step.number}
+                    </div>
+                    <div className="
+                      font-display
+                      text-sm sm:text-base
+                      font-semibold
+                      text-[var(--color-ink)]
+                    ">
+                      {step.title}<br />{step.subtitle}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* How You Can Help */}
+              <div className="
+                bg-[var(--color-surface-sunken)]
+                border-l-4 border-[var(--color-primary)]
+                p-4 sm:p-6 md:p-[var(--space-xl)]
+                rounded-[var(--radius-md)]
+                mb-6 sm:mb-[var(--space-xl)]
+                relative
+              ">
+                <div
+                  className="hidden sm:block absolute top-4 right-4 text-2xl text-[var(--color-primary)] opacity-30"
+                  aria-hidden="true"
+                >
+                  ✎
+                </div>
+                <h3 className="
+                  font-display
+                  text-base sm:text-lg
+                  font-semibold
+                  text-[var(--color-ink)]
+                  mb-2 sm:mb-3
+                ">
+                  How You Can Help
+                </h3>
+                <p className="text-sm sm:text-base text-[var(--color-ink-muted)] leading-relaxed">
+                  If you've been on a birding tour with a guide you trust, help us grow the network. Share Quorum with operators who demonstrate professionalism, expertise, and respect for the birds and habitats you explored together.
+                </p>
+              </div>
+
+              {/* CTA */}
+              <div className="text-center">
+                <Link
+                  href="/for-operators"
+                  className="
+                    inline-flex items-center justify-center gap-2 sm:gap-3
+                    px-6 py-3 sm:px-8 sm:py-4
+                    bg-[var(--color-primary)]
+                    text-white
+                    font-bold
+                    text-base sm:text-lg
+                    rounded-full
+                    transition-all duration-300
+                    hover:-translate-y-0.5
+                    no-underline
+                    w-full sm:w-auto
+                    min-h-[48px]
+                  "
+                  style={{
+                    boxShadow: '0 4px 0 var(--color-primary-hover), 0 6px 12px rgba(46, 139, 87, 0.3)'
+                  }}
+                >
+                  <span>Invite a Guide</span>
+                  <svg className="w-5 h-5 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
+
+        <style jsx>{`
+          @keyframes underlineGrow {
+            to { transform: scaleX(1); }
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  // LOGGED IN STATE - Tours context (original design)
   if (isLoggedIn) {
     return (
       <div className="py-[var(--space-lg)]">
@@ -148,10 +389,7 @@ export function PreLaunchEmptyState({ context, isLoggedIn = false, userName }: P
                 text-[var(--color-ink)]
                 mb-[var(--space-sm)]
               ">
-                {context === 'tours'
-                  ? 'Tours are coming soon'
-                  : 'Operators are coming soon'
-                }
+                Tours are coming soon
               </h2>
 
               {/* Supporting copy */}
@@ -160,10 +398,7 @@ export function PreLaunchEmptyState({ context, isLoggedIn = false, userName }: P
                 leading-relaxed
                 mb-[var(--space-xl)]
               ">
-                {context === 'tours'
-                  ? "We're onboarding our first guides now. Your chase list is ready—you'll be notified first when tours match your species."
-                  : "We're bringing on vetted guides who share our commitment to quality birding experiences. Check back soon."
-                }
+                We're onboarding our first guides now. Your chase list is ready—you'll be notified first when tours match your species.
               </p>
 
               {/* Stay Updated */}

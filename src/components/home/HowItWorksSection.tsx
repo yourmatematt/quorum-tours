@@ -1,20 +1,18 @@
 'use client';
 
-import Image from 'next/image';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 
 interface ProcessStep {
   number: number;
   action: string;
   outcome: string;
-  image: string;
 }
 
 /**
- * How It Works Section - Visual Steps with Screenshots
+ * How It Works Section - Simple Numbered Steps
  *
- * Updated to use actual product screenshots instead of icons
- * Steps: Browse → Commit → Tour Confirms → (User provides step 4)
+ * Minimal design with numbered circles and concise text
+ * Steps: Browse → Commit → Tour Confirms
  */
 export function HowItWorksSection() {
   const steps: ProcessStep[] = [
@@ -22,19 +20,16 @@ export function HowItWorksSection() {
       number: 1,
       action: 'Find your tour',
       outcome: 'Browse tours by region, species, or date. See quorum progress at a glance.',
-      image: '/images/how-it-works/step1-browse.png',
     },
     {
       number: 2,
       action: 'Commit conditionally',
       outcome: 'Pay a small deposit to signal commitment. Fully refunded if quorum isn\'t reached.',
-      image: '/images/how-it-works/step3-commit.png',
     },
     {
       number: 3,
       action: 'Tour confirms',
       outcome: 'Once quorum is reached, the tour is guaranteed. Pay the balance and you\'re set.',
-      image: '/images/how-it-works/step4-confirmed.png',
     },
   ];
 
@@ -54,7 +49,7 @@ export function HowItWorksSection() {
         </ScrollReveal>
 
         {/* Process steps */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16 relative">
           {steps.map((step, index) => (
             <ScrollReveal
               key={step.number}
@@ -62,44 +57,34 @@ export function HowItWorksSection() {
               delay={index * 150}
               duration={500}
             >
-              <div className="relative">
-                {/* Step card */}
-                <div className="bg-white border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] overflow-hidden shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:border-[var(--color-primary)] transition-all duration-200">
-                  {/* Step number badge */}
-                  <div className="absolute top-4 left-4 w-10 h-10 bg-[var(--color-primary)] text-white font-heading font-semibold rounded-full flex items-center justify-center text-lg shadow-[var(--shadow-card)] z-10">
+              <div className="relative text-center">
+                {/* Connector line between circles */}
+                {index < steps.length - 1 && (
+                  <div
+                    className="hidden md:block absolute top-8 h-px"
+                    style={{
+                      backgroundColor: '#2e8b57',
+                      left: 'calc(50% + 2rem)',
+                      right: 'calc(-100% + 50% - 2rem)'
+                    }}
+                  />
+                )}
+                <div className="relative z-10">
+                  {/* Numbered circle */}
+                  <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-[var(--color-primary)] text-white font-heading font-semibold rounded-full text-2xl shadow-[var(--shadow-card)]">
                     {step.number}
                   </div>
 
-                  {/* Screenshot image */}
-                  <div className="relative w-full aspect-[4/3] bg-[var(--color-surface-sunken)]">
-                    <Image
-                      src={step.image}
-                      alt={step.action}
-                      fill
-                      className="object-cover object-top"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                  </div>
+                  {/* Step title */}
+                  <h3 className="font-heading text-xl font-semibold text-[var(--color-ink)] mb-3">
+                    {step.action}
+                  </h3>
 
-                  {/* Text content */}
-                  <div className="p-6">
-                    <h3 className="font-heading text-xl font-semibold text-[var(--color-ink)] mb-2">
-                      {step.action}
-                    </h3>
-                    <p className="text-[var(--color-ink-muted)] text-sm leading-relaxed">
-                      {step.outcome}
-                    </p>
-                  </div>
+                  {/* Description */}
+                  <p className="text-[var(--color-ink-muted)] leading-relaxed max-w-[30ch] mx-auto">
+                    {step.outcome}
+                  </p>
                 </div>
-
-                {/* Arrow connector on mobile */}
-                {index < steps.length - 1 && (
-                  <div className="md:hidden flex justify-center py-4 text-[var(--color-primary)]" aria-hidden="true">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M12 5v14M5 12l7 7 7-7" />
-                    </svg>
-                  </div>
-                )}
               </div>
             </ScrollReveal>
           ))}

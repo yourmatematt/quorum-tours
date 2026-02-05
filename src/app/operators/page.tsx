@@ -31,7 +31,7 @@ function mapOperatorForDisplay(operator: DbOperator): DisplayOperator {
     slug: operator.slug,
     name: operator.name,
     photo: operator.logo_url || undefined,
-    verified: operator.verification_status === 'verified',
+    verified: operator.is_verified,
     expertise: operator.tagline || 'Birding specialist',
     location: operator.base_location || 'Australia',
     specializations: operator.specialties || [],

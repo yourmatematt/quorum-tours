@@ -26,8 +26,8 @@ const variantStyles: Record<ButtonVariant, string> = {
   secondary: `
     bg-transparent
     text-[var(--color-ink)]
-    border-2 border-[var(--color-border-strong)]
-    hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]
+    border-2 border-[var(--color-ink-muted)]
+    hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/5
     focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2
   `,
   ghost: `

@@ -15,7 +15,7 @@ export interface Operator {
   established_year: number | null;
   languages: string[];
   specialties: string[];
-  verification_status: string;
+  is_verified: boolean;
   created_at: string;
   // Computed
   tours_count: number;
@@ -46,7 +46,7 @@ export function useOperators(options: UseOperatorsOptions = {}) {
           .limit(limit);
 
         if (verified_only) {
-          query = query.eq('verification_status', 'verified');
+          query = query.eq('is_verified', true);
         }
 
         const { data: operatorsData, error: operatorsError } = await query;
