@@ -1,10 +1,5 @@
 export { HowItWorksHero } from './HowItWorksHero';
-export { StageCard } from './StageCard';
-export { ProblemSection } from './ProblemSection';
 export { MechanicSection } from './MechanicSection';
-export { FailureCaseSection } from './FailureCaseSection';
-export { ConfirmationSection } from './ConfirmationSection';
-export { BoundaryItem } from './BoundaryItem';
-export { BoundariesSection } from './BoundariesSection';
-export { TrustSystemSection } from './TrustSystemSection';
+export { BenefitsSection } from './BenefitsSection';
+export { TrustStrip } from './TrustStrip';
 export { ClosingCTA } from './ClosingCTA';

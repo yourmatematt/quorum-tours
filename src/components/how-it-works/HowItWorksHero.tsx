@@ -72,8 +72,7 @@ export function HowItWorksHero() {
           mx-auto
           mb-[var(--space-2xl)]
         ">
-          Tours run when enough people commit. No gambling on viability,
-          no last-minute cancellations. Choose your path to learn more.
+          Tours run when enough people commit. No gambling on viability, no last-minute cancellations.
         </p>
 
         {/* Dual CTAs */}
@@ -121,7 +120,7 @@ export function HowItWorksHero() {
           text-[var(--color-ink-subtle)]
           text-sm
         ">
-          <span>Or scroll to explore both perspectives</span>
+          <span>Or scroll to see how it works for everyone</span>
         </div>
       </div>
     </section>
