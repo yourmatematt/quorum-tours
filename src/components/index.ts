@@ -35,13 +35,10 @@ export { PathwaysSection } from './home/PathwaysSection';
 
 // How It Works Page Sections
 export {
-  StageCard,
-  ProblemSection,
+  HowItWorksHero,
   MechanicSection,
-  FailureCaseSection,
-  ConfirmationSection,
-  BoundaryItem,
-  BoundariesSection,
+  BenefitsSection,
+  TrustStrip,
   ClosingCTA,
 } from './how-it-works';
 

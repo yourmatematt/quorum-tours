@@ -33,9 +33,9 @@
   --color-secondary: #87CEEB;
   --color-secondary-hover: #6bb8da;
 
-  /* Accent/CTA (Gold - verified 4.8:1 contrast on forest green) */
-  --color-accent: #FFD700;
-  --color-accent-hover: #e6c200;
+  /* Accent/CTA (Goldenrod - subtle but noticeable) */
+  --color-accent: #DAA520;
+  --color-accent-hover: #B8860B;
 
   /* Status colors (nature-themed) */
   --color-confirmed: #2E8B57;
