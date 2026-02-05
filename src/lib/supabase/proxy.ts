@@ -8,11 +8,13 @@ import { NextResponse, type NextRequest } from 'next/server';
  * 1. Refreshing the Auth token by calling `supabase.auth.getUser()`
  * 2. Passing the refreshed Auth token to Server Components via `request.cookies.set`
  * 3. Passing the refreshed Auth token to the browser via `response.cookies.set`
+ * 4. Enforcing role-based access for admin/operator subdomains
  *
  * This ensures that:
  * - Users don't get randomly logged out
  * - Auth tokens stay in sync between server and client
  * - Users can access protected routes even if their token expired
+ * - Subdomain access is restricted by role
  */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -49,17 +51,45 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getUser();
   const user = data?.user;
 
-  // Redirect unauthenticated users to login (unless they're already there)
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/signup') &&
-    !request.nextUrl.pathname.startsWith('/auth')
-  ) {
+  // Get hostname for subdomain detection
+  const hostname = request.headers.get('host') || '';
+  const isAdminSubdomain = hostname.startsWith('admin.');
+  const isOperatorsSubdomain = hostname.startsWith('operators.');
+
+  // Public routes that don't require auth
+  const isPublicRoute =
+    request.nextUrl.pathname.startsWith('/login') ||
+    request.nextUrl.pathname.startsWith('/signup') ||
+    request.nextUrl.pathname.startsWith('/auth') ||
+    request.nextUrl.pathname.startsWith('/access-denied');
+
+  // Redirect unauthenticated users to login (unless on public route)
+  if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     url.searchParams.set('redirect', request.nextUrl.pathname);
     return NextResponse.redirect(url);
+  }
+
+  // Role-based subdomain access control
+  if (user && !isPublicRoute) {
+    const role = user.app_metadata?.role || 'user';
+
+    // Admin subdomain: only 'admin' role allowed
+    if (isAdminSubdomain && role !== 'admin') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/access-denied';
+      url.searchParams.set('reason', 'not-admin');
+      return NextResponse.redirect(url);
+    }
+
+    // Operators subdomain: only 'operator' role allowed (admin cannot access)
+    if (isOperatorsSubdomain && role !== 'operator') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/access-denied';
+      url.searchParams.set('reason', 'not-operator');
+      return NextResponse.redirect(url);
+    }
   }
 
   // IMPORTANT: You MUST return the supabaseResponse object as is.
