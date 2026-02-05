@@ -7,6 +7,20 @@ import { createClient } from '@/lib/supabase/client';
 import { type Tour } from '@/lib/supabase/useTours';
 import { format } from 'date-fns';
 
+// Map database tour status to display status for TourCard
+type DisplayStatus = 'confirmed' | 'forming' | 'not-running';
+function mapTourStatus(dbStatus: string): DisplayStatus {
+  switch (dbStatus) {
+    case 'confirmed':
+    case 'payment_pending':
+      return 'confirmed';
+    case 'forming':
+      return 'forming';
+    default:
+      return 'not-running';
+  }
+}
+
 /**
  * Featured Tours Section - Organic Biophilic Design
  *
@@ -115,7 +129,7 @@ export function TourStatesSection() {
                 <TourCard
                   title={tour.title}
                   operatorName={tour.operator?.name || 'Unknown Operator'}
-                  status={tour.status}
+                  status={mapTourStatus(tour.status)}
                   currentParticipants={tour.current_participants}
                   quorum={tour.threshold}
                   capacity={tour.capacity}

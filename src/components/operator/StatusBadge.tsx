@@ -16,6 +16,7 @@ export type StatusVariant =
   // Tour quorum states
   | 'forming'
   | 'confirmed'
+  | 'payment_pending'
   | 'past'
   | 'completed'
   // Booking/payment states
@@ -62,6 +63,13 @@ const statusConfig: Record<StatusVariant, {
     bgColor: 'bg-[var(--color-confirmed-bg)]',
     textColor: 'text-[var(--color-confirmed)]',
     borderColor: 'border-[var(--color-success-border)]',
+  },
+  payment_pending: {
+    label: 'Payment Pending',
+    icon: '◷',
+    bgColor: 'bg-[var(--color-warning-bg)]',
+    textColor: 'text-[var(--color-warning-text)]',
+    borderColor: 'border-[var(--color-warning-border)]',
   },
   past: {
     label: 'Completed',
