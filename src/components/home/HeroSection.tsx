@@ -4,7 +4,6 @@ import { Button } from '../ui/Button';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { ResponsiveVideo } from '../ui/ResponsiveVideo';
 
 interface HeroSectionProps {
   heroImage?: string;
@@ -73,88 +72,75 @@ export function HeroSection({
         w-full max-w-[var(--container-max)]
         mx-auto px-4 sm:px-6 lg:px-8
       ">
-        {/* Two-column layout: Text (SEO first) + Video */}
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Text content - First in DOM for SEO, visually on right on desktop */}
-          <div className="order-1 lg:order-2 text-center lg:text-left">
-            {/* Headline - Crimson Pro display serif */}
-            <h1 className="
-              font-display
-              text-3xl sm:text-5xl lg:text-6xl
-              font-semibold
-              text-white
-              mb-4 sm:mb-6
-              leading-tight
-              drop-shadow-lg
-            ">
-              Tours that run when birders commit.
-            </h1>
+        {/* Centered content layout */}
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Headline - Crimson Pro display serif */}
+          <h1 className="
+            font-display
+            text-3xl sm:text-5xl lg:text-7xl
+            font-semibold
+            text-white
+            mb-4 sm:mb-6
+            leading-tight
+            drop-shadow-lg
+          ">
+            Tours that run when birders commit.
+          </h1>
 
-            {/* Subhead - Atkinson Hyperlegible (accessibility-focused) */}
-            <p className="
-              text-base sm:text-lg lg:text-xl
-              text-white/90
-              mb-6 sm:mb-8
-              max-w-2xl lg:max-w-none
-              mx-auto lg:mx-0
-              leading-relaxed
-              drop-shadow-md
-            ">
-              Quorum aggregates demand before operators schedule. You commit conditionally—if quorum is reached, the tour runs. If not, you owe nothing.
-            </p>
+          {/* Subhead - Atkinson Hyperlegible (accessibility-focused) */}
+          <p className="
+            text-base sm:text-lg lg:text-xl
+            text-white/90
+            mb-6 sm:mb-8
+            max-w-2xl mx-auto
+            leading-relaxed
+            drop-shadow-md
+          ">
+            Quorum aggregates demand before operators schedule. You commit conditionally—if quorum is reached, the tour runs. If not, you owe nothing.
+          </p>
 
-            {/* Primary CTA - Gold accent for maximum visibility */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start items-center">
-              <Link href="/tours">
-                <Button
-                  variant="primary"
-                  className="
-                    !bg-[#D4A84B]
-                    !text-[#1B4D3E]
-                    hover:!bg-[#E5B95C]
-                    !rounded-[var(--radius-organic)]
-                    !px-6 !py-3 sm:!px-8 sm:!py-4
-                    !text-base sm:!text-lg
-                    !font-semibold
-                    !shadow-lg
-                    transition-all duration-200
-                    w-full sm:w-auto
-                  "
-                >
-                  Browse Available Tours
-                </Button>
-              </Link>
-              <Link href="/how-it-works">
-                <Button
-                  variant="secondary"
-                  className="
-                    !bg-white/10
-                    !text-white
-                    !border-2 !border-white/50
-                    hover:!bg-white/20
-                    hover:!border-white
-                    !rounded-[var(--radius-organic)]
-                    !px-6 !py-3 sm:!px-8 sm:!py-4
-                    !text-base sm:!text-lg
-                    !font-medium
-                    !backdrop-blur-sm
-                    transition-all duration-200
-                    w-full sm:w-auto
-                  "
-                >
-                  See How It Works
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Explainer Video - What is Quorum? */}
-          <div className="order-2 lg:order-1">
-            <ResponsiveVideo
-              slug="what-is-quorum"
-              title="What is Quorum? (35 seconds)"
-              className="shadow-2xl"
-            />
+          {/* Primary CTA - Gold accent for maximum visibility */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-12">
+            <Link href="/tours">
+              <Button
+                variant="primary"
+                className="
+                  !bg-[#D4A84B]
+                  !text-[#1B4D3E]
+                  hover:!bg-[#E5B95C]
+                  !rounded-[var(--radius-organic)]
+                  !px-6 !py-3 sm:!px-8 sm:!py-4
+                  !text-base sm:!text-lg
+                  !font-semibold
+                  !shadow-lg
+                  transition-all duration-200
+                  w-full sm:w-auto
+                "
+              >
+                Browse Available Tours
+              </Button>
+            </Link>
+            <Link href="/how-it-works">
+              <Button
+                variant="secondary"
+                className="
+                  !bg-white/10
+                  !text-white
+                  !border-2 !border-white/50
+                  hover:!bg-white/20
+                  hover:!border-white
+                  !rounded-[var(--radius-organic)]
+                  !px-6 !py-3 sm:!px-8 sm:!py-4
+                  !text-base sm:!text-lg
+                  !font-medium
+                  !backdrop-blur-sm
+                  transition-all duration-200
+                  w-full sm:w-auto
+                "
+              >
+                See How It Works
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
