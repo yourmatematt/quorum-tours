@@ -52,25 +52,26 @@ export function HowItWorksSection() {
         </ScrollReveal>
 
         {/* Video + Steps Grid */}
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start mb-12 sm:mb-16">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-stretch mb-12 sm:mb-16">
           {/* Video - Square, always 1:1 */}
           <ScrollReveal variant="fade-up" delay={100} duration={500}>
-            <div className="lg:sticky lg:top-24">
-              <ResponsiveVideo
-                slug="what-is-quorum"
-                title="What is Quorum? (35 seconds)"
-                aspect="square"
-                hideTitle
-                className="shadow-xl rounded-[var(--radius-organic)]"
-              />
-              <p className="mt-4 text-center text-sm text-[var(--color-ink-muted)]">
-                Watch: 35 seconds to understand Quorum
-              </p>
-            </div>
+            <ResponsiveVideo
+              slug="what-is-quorum"
+              title="What is Quorum? (35 seconds)"
+              aspect="square"
+              hideTitle
+              className="shadow-xl rounded-[var(--radius-organic)]"
+            />
           </ScrollReveal>
 
-          {/* Steps - Stacked vertically */}
-          <div className="space-y-6 sm:space-y-8">
+          {/* Steps - Vertically aligned to match video height */}
+          <div className="relative lg:aspect-square flex flex-col justify-between py-4 lg:py-0">
+            {/* Vertical connector line - full height on desktop */}
+            <div
+              className="hidden lg:block absolute left-8 top-[calc(theme(spacing.8)+0.5rem)] bottom-[calc(theme(spacing.8)+0.5rem)] w-0.5 bg-gradient-to-b from-[var(--color-primary)]/30 via-[var(--color-primary)]/40 to-[var(--color-primary)]/30"
+              aria-hidden="true"
+            />
+
             {steps.map((step, index) => (
               <ScrollReveal
                 key={step.number}
@@ -79,10 +80,10 @@ export function HowItWorksSection() {
                 duration={500}
               >
                 <div className="relative flex gap-4 sm:gap-6">
-                  {/* Vertical connector line */}
+                  {/* Mobile connector line */}
                   {index < steps.length - 1 && (
                     <div
-                      className="absolute left-6 sm:left-8 top-14 sm:top-16 bottom-0 w-0.5 bg-gradient-to-b from-[var(--color-primary)]/40 to-[var(--color-primary)]/10"
+                      className="lg:hidden absolute left-6 sm:left-8 top-14 sm:top-16 h-12 w-0.5 bg-gradient-to-b from-[var(--color-primary)]/40 to-[var(--color-primary)]/10"
                       style={{ transform: 'translateX(-50%)' }}
                       aria-hidden="true"
                     />
@@ -106,7 +107,7 @@ export function HowItWorksSection() {
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 pt-1 sm:pt-2 pb-2">
+                  <div className="flex-1 pt-1 sm:pt-2">
                     <h3 className="
                       font-display
                       text-lg sm:text-xl
