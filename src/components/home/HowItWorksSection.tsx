@@ -89,11 +89,11 @@ export function HowItWorksSection() {
                   {/* Mobile connector line */}
                   {index < steps.length - 1 && (
                     <div
-                      className="lg:hidden absolute w-0.5 bg-[var(--color-primary)]/30"
+                      className="lg:hidden absolute w-1 bg-[var(--color-primary)]"
                       style={{
                         left: '1.5rem',
                         top: '3.5rem',
-                        height: '3rem',
+                        height: '2.5rem',
                         transform: 'translateX(-50%)',
                       }}
                       aria-hidden="true"
