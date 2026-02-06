@@ -45,3 +45,12 @@ next-env.d.ts
 .playwright-mcp/
 artifacts/
 public/brand/
+
+# Serena MCP
+.serena/
+
+# Logs
+*.log
+
+# Windows
+Thumbs.db
