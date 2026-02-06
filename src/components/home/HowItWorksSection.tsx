@@ -1,6 +1,7 @@
 'use client';
 
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
+import { ResponsiveVideo } from '@/components/ui/ResponsiveVideo';
 
 interface ProcessStep {
   number: number;
@@ -9,10 +10,12 @@ interface ProcessStep {
 }
 
 /**
- * How It Works Section - Simple Numbered Steps
+ * How It Works Section - Video + Vertical Steps Layout
  *
- * Minimal design with numbered circles and concise text
- * Steps: Browse → Commit → Tour Confirms
+ * Desktop: Square video on left, steps stacked vertically on right
+ * Mobile: Video above, steps below
+ *
+ * Design: Organic/natural aesthetic with forest green accents
  */
 export function HowItWorksSection() {
   const steps: ProcessStep[] = [
@@ -34,13 +37,13 @@ export function HowItWorksSection() {
   ];
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-white">
+    <section className="py-16 sm:py-20 lg:py-24 bg-white">
       <div className="w-full max-w-[var(--container-max)] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <ScrollReveal variant="fade-up" duration={500}>
-          <div className="mb-10 sm:mb-16 text-center max-w-2xl mx-auto">
-            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-3 sm:mb-[var(--space-md)]">
-              How Quorum works.
+          <div className="mb-10 sm:mb-14 text-center max-w-2xl mx-auto">
+            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-3 sm:mb-4">
+              How Quorum works
             </h2>
             <p className="text-[var(--color-ink-muted)] text-base sm:text-lg leading-relaxed">
               Three steps. Zero risk until the tour is guaranteed to run.
@@ -48,59 +51,110 @@ export function HowItWorksSection() {
           </div>
         </ScrollReveal>
 
-        {/* Process steps */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 mb-10 sm:mb-16 relative">
-          {steps.map((step, index) => (
-            <ScrollReveal
-              key={step.number}
-              variant="fade-up"
-              delay={index * 150}
-              duration={500}
-            >
-              <div className="relative text-center">
-                {/* Connector line between circles */}
-                {index < steps.length - 1 && (
-                  <div
-                    className="hidden md:block absolute top-8 h-px"
-                    style={{
-                      backgroundColor: '#2e8b57',
-                      left: 'calc(50% + 2rem)',
-                      right: 'calc(-100% + 50% - 2rem)'
-                    }}
-                  />
-                )}
-                <div className="relative z-10">
-                  {/* Numbered circle */}
-                  <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 mb-4 sm:mb-6 bg-[var(--color-primary)] text-white font-heading font-semibold rounded-full text-xl sm:text-2xl shadow-[var(--shadow-card)]">
-                    {step.number}
+        {/* Video + Steps Grid */}
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start mb-12 sm:mb-16">
+          {/* Video - Square, always 1:1 */}
+          <ScrollReveal variant="fade-up" delay={100} duration={500}>
+            <div className="lg:sticky lg:top-24">
+              <ResponsiveVideo
+                slug="what-is-quorum"
+                title="What is Quorum? (35 seconds)"
+                aspect="square"
+                hideTitle
+                className="shadow-xl rounded-[var(--radius-organic)]"
+              />
+              <p className="mt-4 text-center text-sm text-[var(--color-ink-muted)]">
+                Watch: 35 seconds to understand Quorum
+              </p>
+            </div>
+          </ScrollReveal>
+
+          {/* Steps - Stacked vertically */}
+          <div className="space-y-6 sm:space-y-8">
+            {steps.map((step, index) => (
+              <ScrollReveal
+                key={step.number}
+                variant="fade-up"
+                delay={150 + index * 100}
+                duration={500}
+              >
+                <div className="relative flex gap-4 sm:gap-6">
+                  {/* Vertical connector line */}
+                  {index < steps.length - 1 && (
+                    <div
+                      className="absolute left-6 sm:left-8 top-14 sm:top-16 bottom-0 w-0.5 bg-gradient-to-b from-[var(--color-primary)]/40 to-[var(--color-primary)]/10"
+                      style={{ transform: 'translateX(-50%)' }}
+                      aria-hidden="true"
+                    />
+                  )}
+
+                  {/* Number circle */}
+                  <div className="relative z-10 flex-shrink-0">
+                    <div className="
+                      w-12 h-12 sm:w-16 sm:h-16
+                      rounded-full
+                      bg-[var(--color-primary)]
+                      text-white
+                      font-display font-semibold
+                      text-xl sm:text-2xl
+                      flex items-center justify-center
+                      shadow-lg
+                      ring-4 ring-white
+                    ">
+                      {step.number}
+                    </div>
                   </div>
 
-                  {/* Step title */}
-                  <h3 className="font-heading text-lg sm:text-xl font-semibold text-[var(--color-ink)] mb-2 sm:mb-3">
-                    {step.action}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-sm sm:text-base text-[var(--color-ink-muted)] leading-relaxed max-w-[30ch] mx-auto">
-                    {step.outcome}
-                  </p>
+                  {/* Content */}
+                  <div className="flex-1 pt-1 sm:pt-2 pb-2">
+                    <h3 className="
+                      font-display
+                      text-lg sm:text-xl
+                      font-semibold
+                      text-[var(--color-ink)]
+                      mb-2
+                    ">
+                      {step.action}
+                    </h3>
+                    <p className="
+                      text-sm sm:text-base
+                      text-[var(--color-ink-muted)]
+                      leading-relaxed
+                    ">
+                      {step.outcome}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </ScrollReveal>
-          ))}
+              </ScrollReveal>
+            ))}
+          </div>
         </div>
 
         {/* Clarification card */}
-        <ScrollReveal variant="fade-up" delay={450} duration={500}>
-          <div className="max-w-3xl mx-auto p-4 sm:p-8 bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] shadow-[var(--shadow-card)]">
-            <div className="flex items-start gap-3 sm:gap-4">
-              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-[var(--color-primary)]/10 rounded-full flex items-center justify-center">
+        <ScrollReveal variant="fade-up" delay={500} duration={500}>
+          <div className="
+            max-w-3xl mx-auto
+            p-5 sm:p-8
+            bg-gradient-to-br from-[var(--color-primary)]/5 to-[var(--color-primary)]/10
+            border-l-4 border-[var(--color-primary)]
+            rounded-r-[var(--radius-lg)]
+            shadow-sm
+          ">
+            <div className="flex items-start gap-4">
+              <div className="
+                flex-shrink-0
+                w-10 h-10 sm:w-12 sm:h-12
+                bg-white
+                rounded-full
+                flex items-center justify-center
+                shadow-sm
+              ">
                 <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div>
-                <p className="text-base sm:text-lg text-[var(--color-ink)]">
+                <p className="text-base sm:text-lg text-[var(--color-ink)] leading-relaxed">
                   <strong className="font-semibold">If quorum is not reached?</strong>
                   {' '}The tour does not run. Your deposit is fully refunded. You are never charged for a tour that doesn't happen.
                 </p>

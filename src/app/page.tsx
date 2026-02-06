@@ -1,5 +1,4 @@
 import { HeroSection } from '../components/home/HeroSection';
-import { ExplainerVideoSection } from '../components/home/ExplainerVideoSection';
 import { HowItWorksSection } from '../components/home/HowItWorksSection';
 import { ComparisonSection } from '../components/home/ComparisonSection';
 import { TourStatesSection } from '../components/home/TourStatesSection';
@@ -32,12 +31,7 @@ export default function HomePage() {
         <HeroSection />
       </ErrorBoundary>
 
-      {/* Section 2: Explainer Video - What is Quorum? */}
-      <ErrorBoundary>
-        <ExplainerVideoSection />
-      </ErrorBoundary>
-
-      {/* Section 3: How It Works - Visual Mechanic */}
+      {/* Section 2: How It Works - Video + Steps */}
       <ErrorBoundary>
         <HowItWorksSection />
       </ErrorBoundary>

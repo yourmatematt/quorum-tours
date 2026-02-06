@@ -14,6 +14,10 @@ interface ResponsiveVideoProps {
   posterMobile?: string;
   /** Optional className for the container */
   className?: string;
+  /** Force a specific aspect ratio on all breakpoints */
+  aspect?: 'responsive' | 'square' | 'video';
+  /** Hide the title overlay */
+  hideTitle?: boolean;
 }
 
 /**
@@ -38,6 +42,8 @@ export function ResponsiveVideo({
   posterDesktop,
   posterMobile,
   className = '',
+  aspect = 'responsive',
+  hideTitle = false,
 }: ResponsiveVideoProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -70,6 +76,13 @@ export function ResponsiveVideo({
     setIsPlaying(false);
   }, []);
 
+  // Determine which video/poster to use based on aspect
+  const useSquare = aspect === 'square';
+  const useVideo = aspect === 'video';
+  const videoSrc = useSquare ? videoMobile : videoDesktop;
+  const posterSrc = useSquare ? defaultPosterMobile : defaultPosterDesktop;
+  const aspectClass = useSquare ? 'aspect-square' : 'aspect-video';
+
   if (hasError) {
     return (
       <div className={`
@@ -77,11 +90,14 @@ export function ResponsiveVideo({
         rounded-[var(--radius-lg)] overflow-hidden
         ${className}
       `}>
-        {/* Desktop aspect ratio */}
-        <div className="hidden md:block aspect-video" />
-        {/* Mobile aspect ratio */}
-        <div className="md:hidden aspect-square" />
-
+        {aspect === 'responsive' ? (
+          <>
+            <div className="hidden md:block aspect-video" />
+            <div className="md:hidden aspect-square" />
+          </>
+        ) : (
+          <div className={aspectClass} />
+        )}
         <div className="absolute inset-0 flex items-center justify-center">
           <p className="text-[var(--color-ink-muted)] text-sm">
             Video unavailable
@@ -91,6 +107,82 @@ export function ResponsiveVideo({
     );
   }
 
+  // Forced aspect ratio (square or video)
+  if (aspect !== 'responsive') {
+    return (
+      <div className={`relative rounded-[var(--radius-lg)] overflow-hidden ${className}`}>
+        <div className={`relative ${aspectClass} bg-[var(--color-surface-sunken)]`}>
+          {!isPlaying ? (
+            <>
+              <Image
+                src={posterSrc}
+                alt={title}
+                fill
+                className="object-cover"
+                sizes="(min-width: 768px) 50vw, 100vw"
+              />
+              <button
+                onClick={handlePlay}
+                className="
+                  absolute inset-0
+                  flex items-center justify-center
+                  bg-black/20 hover:bg-black/30
+                  transition-colors duration-200
+                  group cursor-pointer
+                "
+                aria-label={`Play video: ${title}`}
+              >
+                <div className="
+                  w-16 h-16
+                  rounded-full
+                  bg-white/90 group-hover:bg-white
+                  flex items-center justify-center
+                  shadow-lg
+                  transition-all duration-200
+                  group-hover:scale-105
+                ">
+                  <svg
+                    className="w-7 h-7 text-[var(--color-primary)] ml-1"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              </button>
+            </>
+          ) : (
+            <video
+              ref={videoRef}
+              src={videoSrc}
+              className="absolute inset-0 w-full h-full object-cover"
+              controls
+              playsInline
+              onEnded={handleVideoEnd}
+              onError={handleVideoError}
+            >
+              <track kind="captions" />
+              Your browser does not support the video tag.
+            </video>
+          )}
+        </div>
+        {!isPlaying && !hideTitle && (
+          <div className="
+            absolute bottom-0 left-0 right-0
+            bg-gradient-to-t from-black/60 to-transparent
+            px-4 py-3
+            pointer-events-none
+          ">
+            <p className="text-white text-sm font-medium truncate">
+              {title}
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Responsive aspect ratio (original behavior)
   return (
     <div className={`relative rounded-[var(--radius-lg)] overflow-hidden ${className}`}>
       {/* Desktop container - 16:9 */}
@@ -98,7 +190,6 @@ export function ResponsiveVideo({
         <div className="relative aspect-video bg-[var(--color-surface-sunken)]">
           {!isPlaying ? (
             <>
-              {/* Poster image */}
               <Image
                 src={defaultPosterDesktop}
                 alt={title}
@@ -106,7 +197,6 @@ export function ResponsiveVideo({
                 className="object-cover"
                 sizes="(min-width: 768px) 50vw, 100vw"
               />
-              {/* Play button overlay */}
               <button
                 onClick={handlePlay}
                 className="
@@ -159,7 +249,6 @@ export function ResponsiveVideo({
         <div className="relative aspect-square bg-[var(--color-surface-sunken)]">
           {!isPlaying ? (
             <>
-              {/* Poster image */}
               <Image
                 src={defaultPosterMobile}
                 alt={title}
@@ -167,7 +256,6 @@ export function ResponsiveVideo({
                 className="object-cover"
                 sizes="100vw"
               />
-              {/* Play button overlay */}
               <button
                 onClick={handlePlay}
                 className="
@@ -215,8 +303,7 @@ export function ResponsiveVideo({
         </div>
       </div>
 
-      {/* Video title - visible below poster */}
-      {!isPlaying && (
+      {!isPlaying && !hideTitle && (
         <div className="
           absolute bottom-0 left-0 right-0
           bg-gradient-to-t from-black/60 to-transparent
