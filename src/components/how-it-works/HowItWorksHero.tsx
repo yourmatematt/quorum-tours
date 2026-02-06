@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
+import { ScrollReveal } from '../ui/ScrollReveal';
 
 /**
  * HowItWorksHero - Audience disambiguation hero
@@ -53,75 +54,83 @@ export function HowItWorksHero() {
         text-center
       ">
         {/* Headline */}
-        <h1 className="
-          font-display
-          text-[clamp(2.5rem,6vw,4rem)]
-          leading-[1.1]
-          text-[var(--color-ink)]
-          mb-[var(--space-lg)]
-        ">
-          Understand how Quorum works
-        </h1>
+        <ScrollReveal variant="fade-up" duration={600}>
+          <h1 className="
+            font-display
+            text-[clamp(2.5rem,6vw,4rem)]
+            leading-[1.1]
+            text-[var(--color-ink)]
+            mb-[var(--space-lg)]
+          ">
+            Understand how Quorum works
+          </h1>
+        </ScrollReveal>
 
         {/* Supporting text */}
-        <p className="
-          text-[var(--text-lg)]
-          text-[var(--color-ink-muted)]
-          leading-relaxed
-          max-w-[55ch]
-          mx-auto
-          mb-[var(--space-2xl)]
-        ">
-          Tours run when enough people commit. No gambling on viability, no last-minute cancellations.
-        </p>
+        <ScrollReveal variant="fade-up" delay={100} duration={600}>
+          <p className="
+            text-[var(--text-lg)]
+            text-[var(--color-ink-muted)]
+            leading-relaxed
+            max-w-[55ch]
+            mx-auto
+            mb-[var(--space-2xl)]
+          ">
+            Tours run when enough people commit. No gambling on viability, no last-minute cancellations.
+          </p>
+        </ScrollReveal>
 
         {/* Dual CTAs */}
-        <div className="flex flex-col sm:flex-row gap-[var(--space-md)] justify-center">
-          <a
-            href="#birders"
-            className="
-              inline-flex items-center justify-center
-              px-8 py-4
-              text-lg font-semibold
-              text-white
-              bg-[var(--color-primary)]
-              hover:bg-[var(--color-primary-hover)]
-              rounded-[var(--radius-md)]
-              transition-colors duration-200
-              focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2
-              min-h-[56px]
-            "
-          >
-            I'm a Birder
-          </a>
-          <Link
-            href="/for-operators"
-            className="
-              inline-flex items-center justify-center
-              px-8 py-4
-              text-lg font-semibold
-              text-[var(--color-primary)]
-              bg-transparent
-              border-2 border-[var(--color-primary)]
-              hover:bg-[var(--color-primary)]/5
-              rounded-[var(--radius-md)]
-              transition-colors duration-200
-              focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2
-              min-h-[56px]
-            "
-          >
-            I'm an Operator
-          </Link>
-        </div>
+        <ScrollReveal variant="fade-up" delay={200} duration={600}>
+          <div className="flex flex-col sm:flex-row gap-[var(--space-md)] justify-center">
+            <a
+              href="#birders"
+              className="
+                inline-flex items-center justify-center
+                px-8 py-4
+                text-lg font-semibold
+                text-white
+                bg-[var(--color-primary)]
+                hover:bg-[var(--color-primary-hover)]
+                rounded-[var(--radius-md)]
+                transition-colors duration-200
+                focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2
+                min-h-[56px]
+              "
+            >
+              I'm a Birder
+            </a>
+            <Link
+              href="/for-operators"
+              className="
+                inline-flex items-center justify-center
+                px-8 py-4
+                text-lg font-semibold
+                text-[var(--color-primary)]
+                bg-transparent
+                border-2 border-[var(--color-primary)]
+                hover:bg-[var(--color-primary)]/5
+                rounded-[var(--radius-md)]
+                transition-colors duration-200
+                focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2
+                min-h-[56px]
+              "
+            >
+              I'm an Operator
+            </Link>
+          </div>
+        </ScrollReveal>
 
         {/* Scroll hint */}
-        <div className="
-          mt-[var(--space-3xl)]
-          text-[var(--color-ink-subtle)]
-          text-sm
-        ">
-          <span>Or scroll to see how it works for everyone</span>
-        </div>
+        <ScrollReveal variant="fade" delay={400} duration={800}>
+          <div className="
+            mt-[var(--space-3xl)]
+            text-[var(--color-ink-subtle)]
+            text-sm
+          ">
+            <span>Or scroll to see how it works for everyone</span>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );
