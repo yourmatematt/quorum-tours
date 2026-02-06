@@ -66,9 +66,15 @@ export function HowItWorksSection() {
 
           {/* Steps - Vertically aligned to match video height */}
           <div className="relative lg:aspect-square flex flex-col justify-between py-4 lg:py-0">
-            {/* Vertical connector line - full height on desktop */}
+            {/* Vertical connector line - desktop */}
             <div
-              className="hidden lg:block absolute left-8 top-[calc(theme(spacing.8)+0.5rem)] bottom-[calc(theme(spacing.8)+0.5rem)] w-0.5 bg-gradient-to-b from-[var(--color-primary)]/30 via-[var(--color-primary)]/40 to-[var(--color-primary)]/30"
+              className="hidden lg:block absolute w-0.5 bg-[var(--color-primary)]/25"
+              style={{
+                left: '2rem',
+                top: '2rem',
+                bottom: '2rem',
+                transform: 'translateX(-50%)',
+              }}
               aria-hidden="true"
             />
 
@@ -83,8 +89,13 @@ export function HowItWorksSection() {
                   {/* Mobile connector line */}
                   {index < steps.length - 1 && (
                     <div
-                      className="lg:hidden absolute left-6 sm:left-8 top-14 sm:top-16 h-12 w-0.5 bg-gradient-to-b from-[var(--color-primary)]/40 to-[var(--color-primary)]/10"
-                      style={{ transform: 'translateX(-50%)' }}
+                      className="lg:hidden absolute w-0.5 bg-[var(--color-primary)]/30"
+                      style={{
+                        left: '1.5rem',
+                        top: '3.5rem',
+                        height: '3rem',
+                        transform: 'translateX(-50%)',
+                      }}
                       aria-hidden="true"
                     />
                   )}
