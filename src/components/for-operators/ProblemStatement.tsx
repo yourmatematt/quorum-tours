@@ -1,3 +1,8 @@
+'use client';
+
+import { ResponsiveVideo } from '@/components/ui/ResponsiveVideo';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
+
 interface PainPoint {
   id: string;
   iconPath: string;
@@ -42,14 +47,26 @@ export function ProblemStatement(): JSX.Element {
   return (
     <section className="py-12 sm:py-16 lg:py-[var(--space-2xl)] bg-[var(--color-surface)]">
       <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-[var(--space-lg)]">
-        <header className="text-center mb-8 sm:mb-[var(--space-xl)]">
-          <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-sm)]">
-            You Became a Guide to Guide
-          </h2>
-          <p className="text-[var(--text-base)] text-[var(--color-ink-muted)] max-w-[45ch] mx-auto">
-            Not to gamble on viability, chase payments, or drown in admin.
-          </p>
-        </header>
+        <ScrollReveal variant="fade-up" duration={500}>
+          <header className="text-center mb-8">
+            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-sm)]">
+              You Became a Guide to Guide
+            </h2>
+            <p className="text-[var(--text-base)] text-[var(--color-ink-muted)] max-w-[45ch] mx-auto">
+              Not to gamble on viability, chase payments, or drown in admin.
+            </p>
+          </header>
+        </ScrollReveal>
+
+        {/* Explainer Video - The Three Pain Points */}
+        <ScrollReveal variant="fade-up" delay={100} duration={500}>
+          <div className="max-w-3xl mx-auto mb-12">
+            <ResponsiveVideo
+              slug="three-pain-points"
+              title="The Three Pain Points (75 seconds)"
+            />
+          </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-[var(--space-md)]">
           {painPoints.map((point) => (

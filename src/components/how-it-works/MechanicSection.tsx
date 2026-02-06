@@ -1,6 +1,7 @@
 'use client';
 
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
+import { ResponsiveVideo } from '@/components/ui/ResponsiveVideo';
 
 const steps = [
   {
@@ -74,10 +75,20 @@ export function MechanicSection() {
             leading-tight
             text-[var(--color-ink)]
             text-center
-            mb-16
+            mb-8
           ">
             Four steps. That&apos;s it.
           </h2>
+        </ScrollReveal>
+
+        {/* Explainer Video - The Four-Step Journey */}
+        <ScrollReveal variant="fade-up" delay={150} duration={500}>
+          <div className="max-w-3xl mx-auto mb-16">
+            <ResponsiveVideo
+              slug="four-step-journey"
+              title="The Four-Step Journey (80 seconds)"
+            />
+          </div>
         </ScrollReveal>
 
         {/* Horizontal step flow */}
