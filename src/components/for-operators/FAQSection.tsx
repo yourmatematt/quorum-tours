@@ -55,9 +55,9 @@ export function FAQSection(): JSX.Element {
   }
 
   return (
-    <section className="py-[var(--space-2xl)] bg-[var(--color-surface)]">
-      <div className="w-full max-w-[var(--container-max)] mx-auto px-[var(--space-lg)]">
-        <header className="text-center mb-[var(--space-xl)]">
+    <section className="py-12 sm:py-16 lg:py-[var(--space-2xl)] bg-[var(--color-surface)]">
+      <div className="w-full max-w-[var(--container-max)] mx-auto px-4 sm:px-6 lg:px-[var(--space-lg)]">
+        <header className="text-center mb-8 sm:mb-[var(--space-xl)]">
           <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-sm)]">
             Questions You're Probably Asking
           </h2>
@@ -66,7 +66,7 @@ export function FAQSection(): JSX.Element {
           </p>
         </header>
 
-        <div className="max-w-3xl mx-auto space-y-[var(--space-md)]">
+        <div className="max-w-3xl mx-auto space-y-3 sm:space-y-[var(--space-md)]">
           {faqs.map((faq, index) => (
             <div
               key={faq.question}
@@ -74,11 +74,11 @@ export function FAQSection(): JSX.Element {
             >
               <button
                 onClick={() => handleToggle(index)}
-                className="w-full px-[var(--space-lg)] py-[var(--space-md)] text-left flex items-center justify-between gap-[var(--space-md)] hover:bg-[var(--color-surface-sunken)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-primary)] transition-colors"
+                className="w-full px-4 sm:px-[var(--space-lg)] py-3 sm:py-[var(--space-md)] text-left flex items-center justify-between gap-3 sm:gap-[var(--space-md)] hover:bg-[var(--color-surface-sunken)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-primary)] transition-colors"
                 aria-expanded={openIndex === index}
                 aria-controls={`faq-answer-${index}`}
               >
-                <span className="flex-1 font-semibold text-[var(--text-base)] text-[var(--color-ink)]">
+                <span className="flex-1 font-semibold text-sm sm:text-[var(--text-base)] text-[var(--color-ink)]">
                   {faq.question}
                 </span>
                 <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center text-[var(--color-ink-subtle)]" aria-hidden="true">
@@ -87,8 +87,8 @@ export function FAQSection(): JSX.Element {
               </button>
 
               {openIndex === index && (
-                <div id={`faq-answer-${index}`} className="px-[var(--space-lg)] pb-[var(--space-lg)]">
-                  <p className="text-[var(--text-base)] text-[var(--color-ink-muted)] leading-relaxed">
+                <div id={`faq-answer-${index}`} className="px-4 sm:px-[var(--space-lg)] pb-4 sm:pb-[var(--space-lg)]">
+                  <p className="text-sm sm:text-[var(--text-base)] text-[var(--color-ink-muted)] leading-relaxed">
                     {faq.answer}
                   </p>
                 </div>
@@ -97,7 +97,7 @@ export function FAQSection(): JSX.Element {
           ))}
         </div>
 
-        <div className="mt-[var(--space-2xl)] text-center">
+        <div className="mt-8 sm:mt-[var(--space-2xl)] text-center">
           <p className="text-[var(--color-ink-muted)]">
             Have a question we didn't answer?{' '}
             <a

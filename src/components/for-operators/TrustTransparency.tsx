@@ -41,9 +41,9 @@ const benefits = ['No monthly fees', 'No setup costs', 'Unlimited listings'];
 
 export function TrustTransparency(): JSX.Element {
   return (
-    <section className="py-[var(--space-2xl)] bg-[var(--color-surface)]">
-      <div className="w-full max-w-[var(--container-max)] mx-auto px-[var(--space-lg)]">
-        <header className="text-center mb-[var(--space-xl)]">
+    <section className="py-12 sm:py-16 lg:py-[var(--space-2xl)] bg-[var(--color-surface)]">
+      <div className="w-full max-w-[var(--container-max)] mx-auto px-4 sm:px-6 lg:px-[var(--space-lg)]">
+        <header className="text-center mb-8 sm:mb-[var(--space-xl)]">
           <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-sm)]">
             Transparent Pricing. No Surprises.
           </h2>
@@ -52,22 +52,22 @@ export function TrustTransparency(): JSX.Element {
           </p>
         </header>
 
-        <div className="p-[var(--space-lg)] bg-[var(--color-surface-raised)] border-2 border-[var(--color-accent)] rounded-[var(--radius-lg)] flex flex-col md:flex-row items-center justify-between gap-[var(--space-lg)]">
-          <div className="flex items-center gap-[var(--space-lg)]">
-            <span className="font-mono text-[3rem] font-bold text-[var(--color-ink)] leading-none">
+        <div className="p-4 sm:p-[var(--space-lg)] bg-[var(--color-surface-raised)] border-2 border-[var(--color-accent)] rounded-[var(--radius-lg)] flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-[var(--space-lg)]">
+          <div className="flex items-center gap-3 sm:gap-[var(--space-lg)]">
+            <span className="font-mono text-[2.5rem] sm:text-[3rem] font-bold text-[var(--color-ink)] leading-none">
               6%
             </span>
             <div>
-              <p className="text-[var(--text-lg)] font-semibold text-[var(--color-ink)]">
+              <p className="text-base sm:text-[var(--text-lg)] font-semibold text-[var(--color-ink)]">
                 Flat commission. Forever.
               </p>
-              <p className="text-[var(--text-sm)] text-[var(--color-ink-muted)]">
+              <p className="text-xs sm:text-[var(--text-sm)] text-[var(--color-ink-muted)]">
                 Only on successful bookings. If your tour doesn't run, you pay nothing.
               </p>
             </div>
           </div>
 
-          <ul className="flex flex-wrap gap-x-[var(--space-lg)] gap-y-[var(--space-sm)] text-[var(--text-sm)]">
+          <ul className="flex flex-wrap gap-x-4 sm:gap-x-[var(--space-lg)] gap-y-2 sm:gap-y-[var(--space-sm)] text-xs sm:text-[var(--text-sm)]">
             {benefits.map((benefit) => (
               <li key={benefit} className="flex items-center gap-2">
                 <CheckIcon />
@@ -77,46 +77,46 @@ export function TrustTransparency(): JSX.Element {
           </ul>
         </div>
 
-        <div className="mt-[var(--space-3xl)]">
-          <h3 className="text-[var(--text-xl)] font-semibold text-[var(--color-ink)] text-center mb-[var(--space-xl)]">
+        <div className="mt-10 sm:mt-[var(--space-3xl)]">
+          <h3 className="text-lg sm:text-[var(--text-xl)] font-semibold text-[var(--color-ink)] text-center mb-6 sm:mb-[var(--space-xl)]">
             How We Compare
           </h3>
 
-          <div className="overflow-x-auto">
-            <table className="w-full max-w-3xl mx-auto border-collapse">
+          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+            <table className="w-full max-w-3xl mx-auto border-collapse text-sm sm:text-base min-w-[500px]">
               <thead>
                 <tr>
-                  <th scope="col" className="p-[var(--space-md)] text-left text-[var(--color-ink-muted)] font-medium border-b-2 border-[var(--color-border)]">
+                  <th scope="col" className="p-2 sm:p-[var(--space-md)] text-left text-[var(--color-ink-muted)] font-medium border-b-2 border-[var(--color-border)]">
                     Feature
                   </th>
-                  <th scope="col" className="p-[var(--space-md)] text-center text-[var(--color-primary)] font-semibold border-b-2 border-[var(--color-primary)] bg-[var(--color-primary)]/5">
-                    Quorum Tours
+                  <th scope="col" className="p-2 sm:p-[var(--space-md)] text-center text-[var(--color-primary)] font-semibold border-b-2 border-[var(--color-primary)] bg-[var(--color-primary)]/5">
+                    Quorum
                   </th>
-                  <th scope="col" className="p-[var(--space-md)] text-center text-[var(--color-ink-muted)] font-medium border-b-2 border-[var(--color-border)]">
+                  <th scope="col" className="p-2 sm:p-[var(--space-md)] text-center text-[var(--color-ink-muted)] font-medium border-b-2 border-[var(--color-border)]">
                     FareHarbor
                   </th>
-                  <th scope="col" className="p-[var(--space-md)] text-center text-[var(--color-ink-muted)] font-medium border-b-2 border-[var(--color-border)]">
-                    DIY (Spreadsheets)
+                  <th scope="col" className="p-2 sm:p-[var(--space-md)] text-center text-[var(--color-ink-muted)] font-medium border-b-2 border-[var(--color-border)]">
+                    DIY
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {comparisonData.map((row) => (
                   <tr key={row.feature}>
-                    <td className="p-[var(--space-md)] text-[var(--color-ink)] border-b border-[var(--color-border)]">
+                    <td className="p-2 sm:p-[var(--space-md)] text-[var(--color-ink)] border-b border-[var(--color-border)]">
                       {row.feature}
                     </td>
-                    <td className="p-[var(--space-md)] border-b border-[var(--color-border)] bg-[var(--color-primary)]/5">
+                    <td className="p-2 sm:p-[var(--space-md)] border-b border-[var(--color-border)] bg-[var(--color-primary)]/5">
                       <div className="flex items-center justify-center">
                         {renderCell(row.quorum)}
                       </div>
                     </td>
-                    <td className="p-[var(--space-md)] text-[var(--color-ink-muted)] border-b border-[var(--color-border)]">
+                    <td className="p-2 sm:p-[var(--space-md)] text-[var(--color-ink-muted)] border-b border-[var(--color-border)]">
                       <div className="flex items-center justify-center">
                         {renderCell(row.fareharbor)}
                       </div>
                     </td>
-                    <td className="p-[var(--space-md)] text-[var(--color-ink-muted)] border-b border-[var(--color-border)]">
+                    <td className="p-2 sm:p-[var(--space-md)] text-[var(--color-ink-muted)] border-b border-[var(--color-border)]">
                       <div className="flex items-center justify-center">
                         {renderCell(row.diy)}
                       </div>

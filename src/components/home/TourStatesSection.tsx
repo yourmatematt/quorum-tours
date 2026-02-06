@@ -74,28 +74,28 @@ export function TourStatesSection() {
 
   return (
     <section className="
-      py-20
+      py-12 sm:py-16 lg:py-20
       bg-[var(--color-surface)]
     ">
       <div className="
         w-full max-w-[var(--container-max)]
-        mx-auto px-6 lg:px-8
+        mx-auto px-4 sm:px-6 lg:px-8
       ">
         {/* Section header - center aligned */}
         <ScrollReveal variant="fade-up" duration={500}>
-          <div className="mb-16 text-center max-w-2xl mx-auto">
+          <div className="mb-10 sm:mb-16 text-center max-w-2xl mx-auto">
             <h2 className="
               font-display
               text-[clamp(1.75rem,4vw,2.5rem)]
               leading-tight
               text-[var(--color-ink)]
-              mb-[var(--space-md)]
+              mb-3 sm:mb-[var(--space-md)]
             ">
               Featured tours.
             </h2>
             <p className="
               text-[var(--color-ink-muted)]
-              text-lg
+              text-base sm:text-lg
               leading-relaxed
             ">
               Every tour shows its confirmation state. No hidden status. No guessing.
@@ -105,7 +105,7 @@ export function TourStatesSection() {
 
         {/* Loading state */}
         {isLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 mb-10 sm:mb-16">
             {[1, 2, 3].map((i) => (
               <div key={i} className="h-64 bg-white border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] animate-pulse" />
             ))}
@@ -116,8 +116,8 @@ export function TourStatesSection() {
         {!isLoading && (
           <div className="
             grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
-            gap-8
-            mb-16
+            gap-4 sm:gap-8
+            mb-10 sm:mb-16
           ">
             {featuredTours.map((tour, index) => (
               <ScrollReveal
@@ -146,84 +146,84 @@ export function TourStatesSection() {
           <div className="
             max-w-4xl mx-auto
             grid grid-cols-1 md:grid-cols-3
-            gap-6
+            gap-4 sm:gap-6
           ">
             <div className="
-              p-6
+              p-4 sm:p-6
               bg-white
               border-2 border-[var(--color-border)]
               rounded-[var(--radius-organic)]
               shadow-[var(--shadow-card)]
-              flex items-start gap-4
+              flex items-start gap-3 sm:gap-4
             ">
               <div className="
                 flex-shrink-0
-                w-12 h-12
+                w-10 h-10 sm:w-12 sm:h-12
                 bg-[var(--color-confirmed-bg)]
                 rounded-full
                 flex items-center justify-center
               ">
-                <svg className="w-6 h-6 text-[var(--color-confirmed)]" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-confirmed)]" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
                 </svg>
               </div>
               <div>
-                <strong className="text-[var(--color-ink)] font-semibold text-base block mb-1">Confirmed</strong>
-                <p className="text-[var(--color-ink-muted)] text-sm leading-relaxed">
+                <strong className="text-[var(--color-ink)] font-semibold text-sm sm:text-base block mb-1">Confirmed</strong>
+                <p className="text-[var(--color-ink-muted)] text-xs sm:text-sm leading-relaxed">
                   Quorum reached. This tour will run.
                 </p>
               </div>
             </div>
 
             <div className="
-              p-6
+              p-4 sm:p-6
               bg-white
               border-2 border-[var(--color-border)]
               rounded-[var(--radius-organic)]
               shadow-[var(--shadow-card)]
-              flex items-start gap-4
+              flex items-start gap-3 sm:gap-4
             ">
               <div className="
                 flex-shrink-0
-                w-12 h-12
+                w-10 h-10 sm:w-12 sm:h-12
                 bg-[var(--color-forming-bg)]
                 rounded-full
                 flex items-center justify-center
               ">
-                <svg className="w-6 h-6 text-[var(--color-forming)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-forming)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div>
-                <strong className="text-[var(--color-ink)] font-semibold text-base block mb-1">Forming</strong>
-                <p className="text-[var(--color-ink-muted)] text-sm leading-relaxed">
+                <strong className="text-[var(--color-ink)] font-semibold text-sm sm:text-base block mb-1">Forming</strong>
+                <p className="text-[var(--color-ink-muted)] text-xs sm:text-sm leading-relaxed">
                   Gathering commitments. Not yet confirmed.
                 </p>
               </div>
             </div>
 
             <div className="
-              p-6
+              p-4 sm:p-6
               bg-white
               border-2 border-[var(--color-border)]
               rounded-[var(--radius-organic)]
               shadow-[var(--shadow-card)]
-              flex items-start gap-4
+              flex items-start gap-3 sm:gap-4
             ">
               <div className="
                 flex-shrink-0
-                w-12 h-12
+                w-10 h-10 sm:w-12 sm:h-12
                 bg-[var(--color-not-running-bg)]
                 rounded-full
                 flex items-center justify-center
               ">
-                <svg className="w-6 h-6 text-[var(--color-not-running)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-not-running)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </div>
               <div>
-                <strong className="text-[var(--color-ink)] font-semibold text-base block mb-1">Not Running</strong>
-                <p className="text-[var(--color-ink-muted)] text-sm leading-relaxed">
+                <strong className="text-[var(--color-ink)] font-semibold text-sm sm:text-base block mb-1">Not Running</strong>
+                <p className="text-[var(--color-ink-muted)] text-xs sm:text-sm leading-relaxed">
                   Quorum not reached. No one is charged.
                 </p>
               </div>

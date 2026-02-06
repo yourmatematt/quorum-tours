@@ -24,50 +24,50 @@ export function ComparisonSection() {
   ], []);
   return (
     <section className="
-      py-[var(--space-section-normal)]
+      py-12 sm:py-16 lg:py-[var(--space-section-normal)]
       bg-[var(--color-surface)]
     ">
       <div className="
         w-full max-w-[var(--container-max)]
-        mx-auto px-[var(--space-lg)]
+        mx-auto px-4 sm:px-6 lg:px-[var(--space-lg)]
       ">
         {/* Section header */}
-        <div className="mb-[var(--space-3xl)] max-w-[var(--container-content)]">
+        <div className="mb-8 sm:mb-[var(--space-3xl)] max-w-[var(--container-content)]">
           <h2 className="
             font-display
             text-[clamp(1.75rem,4vw,2.5rem)]
             leading-tight
             text-[var(--color-ink)]
-            mb-[var(--space-md)]
+            mb-3 sm:mb-[var(--space-md)]
           ">
             Why this is different.
           </h2>
           <p className="
             text-[var(--color-ink-muted)]
-            text-[var(--text-base)]
+            text-sm sm:text-[var(--text-base)]
           ">
             Traditional booking platforms transfer uncertainty to you. Quorum resolves it first.
           </p>
         </div>
 
         {/* Comparison panels */}
-        <div className="space-y-[var(--space-xl)]">
+        <div className="space-y-4 sm:space-y-[var(--space-xl)]">
           {comparisons.map((item, index) => (
             <div
               key={index}
               className="
                 grid grid-cols-1 lg:grid-cols-2
-                gap-[var(--space-lg)]
+                gap-3 sm:gap-[var(--space-lg)]
                 items-stretch
               "
             >
               {/* Problem - left */}
               <div className="
-                p-[var(--space-xl)]
+                p-4 sm:p-[var(--space-xl)]
                 bg-[var(--color-surface-sunken)]
                 border border-[var(--color-border)]
-                rounded-tl-[var(--radius-lg)] rounded-bl-[var(--radius-lg)]
-                rounded-tr-[var(--radius-sm)] rounded-br-[var(--radius-sm)]
+                rounded-[var(--radius-lg)] lg:rounded-tl-[var(--radius-lg)] lg:rounded-bl-[var(--radius-lg)]
+                lg:rounded-tr-[var(--radius-sm)] lg:rounded-br-[var(--radius-sm)]
               ">
                 <span className="
                   inline-block
@@ -77,18 +77,18 @@ export function ComparisonSection() {
                 ">
                   Traditional model
                 </span>
-                <p className="text-[var(--color-ink-muted)] leading-relaxed">
+                <p className="text-sm sm:text-base text-[var(--color-ink-muted)] leading-relaxed">
                   {item.problem}
                 </p>
               </div>
 
               {/* Solution - right */}
               <div className="
-                p-[var(--space-xl)]
+                p-4 sm:p-[var(--space-xl)]
                 bg-[var(--color-surface-raised)]
                 border border-[var(--color-confirmed)]
-                rounded-tr-[var(--radius-lg)] rounded-br-[var(--radius-lg)]
-                rounded-tl-[var(--radius-sm)] rounded-bl-[var(--radius-sm)]
+                rounded-[var(--radius-lg)] lg:rounded-tr-[var(--radius-lg)] lg:rounded-br-[var(--radius-lg)]
+                lg:rounded-tl-[var(--radius-sm)] lg:rounded-bl-[var(--radius-sm)]
               ">
                 <span className="
                   inline-block
@@ -98,7 +98,7 @@ export function ComparisonSection() {
                 ">
                   Quorum model
                 </span>
-                <p className="text-[var(--color-ink)] leading-relaxed">
+                <p className="text-sm sm:text-base text-[var(--color-ink)] leading-relaxed">
                   {item.solution}
                 </p>
               </div>
@@ -108,14 +108,14 @@ export function ComparisonSection() {
 
         {/* Honest constraint acknowledgment */}
         <div className="
-          mt-[var(--space-3xl)]
-          p-[var(--space-lg)]
+          mt-8 sm:mt-[var(--space-3xl)]
+          p-4 sm:p-[var(--space-lg)]
           border-l-4 border-[var(--color-forming)]
           bg-[var(--color-forming-bg)]
           rounded-r-[var(--radius-md)]
           max-w-[var(--container-content)]
         ">
-          <p className="text-[var(--color-ink)] text-[var(--text-sm)]">
+          <p className="text-[var(--color-ink)] text-xs sm:text-[var(--text-sm)]">
             <strong>What Quorum does not do:</strong>
             {' '}We do not guarantee sightings, weather, or personal compatibility.
             We guarantee that if you commit, you will know whether the tour runs before you are charged.

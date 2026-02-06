@@ -6,7 +6,6 @@ import {
   TrustTransparency,
   SocialProof,
   FAQSection,
-  OperatorCTA,
 } from '@/components/for-operators';
 
 /**
@@ -21,16 +20,14 @@ import {
  * 3. Understanding - "Here's how it works"
  * 4. Trust - "Others like me use it"
  * 5. Evaluation - "What does it cost?"
- * 6. Action - "How do I start?"
  *
  * Section order:
- * 1. Hero (above fold)
+ * 1. Hero (above fold) - includes primary CTA
  * 2. Problem Statement (emotional hook)
  * 3. How It Works (process)
  * 4. Trust & Transparency (pricing)
  * 5. Social Proof (testimonials)
  * 6. FAQ (objections)
- * 7. CTA (conversion)
  */
 
 export const metadata: Metadata = {
@@ -65,9 +62,6 @@ export default function ForOperatorsPage() {
 
       {/* Section 6: FAQ - Address objections */}
       <FAQSection />
-
-      {/* Section 7: CTA - Final conversion */}
-      <OperatorCTA />
     </main>
   );
 }

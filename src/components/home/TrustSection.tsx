@@ -44,28 +44,28 @@ export function TrustSection() {
   ], []);
   return (
     <section className="
-      py-[var(--space-section-normal)]
+      py-12 sm:py-16 lg:py-[var(--space-section-normal)]
       bg-[var(--color-surface)]
     ">
       <div className="
         w-full max-w-[var(--container-max)]
-        mx-auto px-[var(--space-lg)]
+        mx-auto px-4 sm:px-6 lg:px-[var(--space-lg)]
       ">
         {/* Section header */}
         <ScrollReveal variant="fade-up" duration={500}>
-          <div className="mb-[var(--space-3xl)] max-w-[var(--container-content)]">
+          <div className="mb-8 sm:mb-[var(--space-3xl)] max-w-[var(--container-content)]">
             <h2 className="
               font-display
               text-[clamp(1.75rem,4vw,2.5rem)]
               leading-tight
               text-[var(--color-ink)]
-              mb-[var(--space-md)]
+              mb-3 sm:mb-[var(--space-md)]
             ">
               Built on trust, not persuasion.
             </h2>
             <p className="
               text-[var(--color-ink-muted)]
-              text-[var(--text-base)]
+              text-sm sm:text-[var(--text-base)]
             ">
               Every part of Quorum is designed to reduce uncertainty, not to sell you something.
             </p>
@@ -75,10 +75,10 @@ export function TrustSection() {
         {/* Asymmetric grid layout */}
         <div className="
           grid grid-cols-1 lg:grid-cols-5
-          gap-[var(--space-2xl)]
+          gap-8 sm:gap-[var(--space-2xl)]
         ">
           {/* Trust signals - 3 columns */}
-          <div className="lg:col-span-3 space-y-[var(--space-xl)]">
+          <div className="lg:col-span-3 space-y-4 sm:space-y-[var(--space-xl)]">
             {trustSignals.map((signal, index) => (
               <ScrollReveal
                 key={index}
@@ -88,8 +88,8 @@ export function TrustSection() {
               >
                 <div
                   className="
-                    flex gap-[var(--space-lg)]
-                    p-[var(--space-lg)]
+                    flex gap-3 sm:gap-[var(--space-lg)]
+                    p-4 sm:p-[var(--space-lg)]
                     bg-[var(--color-surface-raised)]
                     border border-[var(--color-border)]
                     rounded-[var(--radius-lg)]
@@ -97,12 +97,12 @@ export function TrustSection() {
                 >
                   {/* Icon - custom, not default Lucide */}
                   <div className="
-                    w-10 h-10
+                    w-8 h-8 sm:w-10 sm:h-10
                     flex items-center justify-center
                     bg-[var(--color-confirmed-bg)]
                     text-[var(--color-confirmed)]
                     rounded-[var(--radius-md)]
-                    font-mono font-bold
+                    font-mono font-bold text-sm sm:text-base
                     flex-shrink-0
                   ">
                     {signal.icon}
@@ -112,14 +112,15 @@ export function TrustSection() {
                   <div>
                     <h3 className="
                       font-medium
+                      text-sm sm:text-base
                       text-[var(--color-ink)]
-                      mb-[var(--space-xs)]
+                      mb-1 sm:mb-[var(--space-xs)]
                     ">
                       {signal.title}
                     </h3>
                     <p className="
                       text-[var(--color-ink-muted)]
-                      text-[var(--text-sm)]
+                      text-xs sm:text-[var(--text-sm)]
                       leading-relaxed
                     ">
                       {signal.description}
@@ -132,11 +133,11 @@ export function TrustSection() {
 
           {/* Operator previews - 2 columns */}
           <ScrollReveal variant="fade-up" delay={200} duration={500} className="lg:col-span-2">
-            <div className="space-y-[var(--space-lg)]">
+            <div className="space-y-4 sm:space-y-[var(--space-lg)]">
               <h3 className="
-                text-sm font-medium uppercase tracking-wide
+                text-xs sm:text-sm font-medium uppercase tracking-wide
                 text-[var(--color-ink-subtle)]
-                mb-[var(--space-md)]
+                mb-3 sm:mb-[var(--space-md)]
               ">
                 Featured operators
               </h3>

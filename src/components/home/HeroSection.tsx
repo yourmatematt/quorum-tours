@@ -29,10 +29,10 @@ export function HeroSection({
   return (
     <section className="
       relative
-      min-h-[90vh]
+      min-h-[80vh] sm:min-h-[85vh] lg:min-h-[90vh]
       flex items-center
-      pt-24
-      pb-20
+      pt-20 sm:pt-24
+      pb-16 sm:pb-20
       overflow-hidden
     ">
       {/* Background - Image with fallback to gradient */}
@@ -70,17 +70,17 @@ export function HeroSection({
       <div className="
         relative z-10
         w-full max-w-[var(--container-max)]
-        mx-auto px-6 lg:px-8
+        mx-auto px-4 sm:px-6 lg:px-8
       ">
         {/* Centered content layout */}
         <div className="max-w-4xl mx-auto text-center">
           {/* Headline - Crimson Pro display serif */}
           <h1 className="
             font-display
-            text-5xl sm:text-6xl lg:text-7xl
+            text-3xl sm:text-5xl lg:text-7xl
             font-semibold
             text-white
-            mb-6
+            mb-4 sm:mb-6
             leading-tight
             drop-shadow-lg
           ">
@@ -89,9 +89,9 @@ export function HeroSection({
 
           {/* Subhead - Atkinson Hyperlegible (accessibility-focused) */}
           <p className="
-            text-lg sm:text-xl
+            text-base sm:text-lg lg:text-xl
             text-white/90
-            mb-8
+            mb-6 sm:mb-8
             max-w-2xl mx-auto
             leading-relaxed
             drop-shadow-md
@@ -100,7 +100,7 @@ export function HeroSection({
           </p>
 
           {/* Primary CTA - Gold accent for maximum visibility */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-12">
             <Link href="/tours">
               <Button
                 variant="primary"
@@ -109,11 +109,12 @@ export function HeroSection({
                   !text-[#1B4D3E]
                   hover:!bg-[#E5B95C]
                   !rounded-[var(--radius-organic)]
-                  !px-8 !py-4
-                  !text-lg
+                  !px-6 !py-3 sm:!px-8 sm:!py-4
+                  !text-base sm:!text-lg
                   !font-semibold
                   !shadow-lg
                   transition-all duration-200
+                  w-full sm:w-auto
                 "
               >
                 Browse Available Tours
@@ -129,11 +130,12 @@ export function HeroSection({
                   hover:!bg-white/20
                   hover:!border-white
                   !rounded-[var(--radius-organic)]
-                  !px-8 !py-4
-                  !text-lg
+                  !px-6 !py-3 sm:!px-8 sm:!py-4
+                  !text-base sm:!text-lg
                   !font-medium
                   !backdrop-blur-sm
                   transition-all duration-200
+                  w-full sm:w-auto
                 "
               >
                 See How It Works

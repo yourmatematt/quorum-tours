@@ -40,9 +40,9 @@ const painPoints: PainPoint[] = [
 
 export function ProblemStatement(): JSX.Element {
   return (
-    <section className="py-[var(--space-2xl)] bg-[var(--color-surface)]">
-      <div className="w-full max-w-[1400px] mx-auto px-[var(--space-lg)]">
-        <header className="text-center mb-[var(--space-xl)]">
+    <section className="py-12 sm:py-16 lg:py-[var(--space-2xl)] bg-[var(--color-surface)]">
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-[var(--space-lg)]">
+        <header className="text-center mb-8 sm:mb-[var(--space-xl)]">
           <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-sm)]">
             You Became a Guide to Guide
           </h2>
@@ -51,11 +51,11 @@ export function ProblemStatement(): JSX.Element {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--space-md)]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-[var(--space-md)]">
           {painPoints.map((point) => (
             <article
               key={point.id}
-              className="flex flex-col p-[var(--space-lg)] bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-lg)]"
+              className="flex flex-col p-4 sm:p-[var(--space-lg)] bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-lg)]"
             >
               <div className="flex items-center gap-[var(--space-sm)] mb-[var(--space-md)]">
                 <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-[var(--color-forming)]/10 text-[var(--color-forming)] rounded-[var(--radius-sm)]">
