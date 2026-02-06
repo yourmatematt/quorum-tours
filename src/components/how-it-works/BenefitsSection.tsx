@@ -179,7 +179,7 @@ export function BenefitsSection() {
                   focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2
                 "
               >
-                List Your Tours →
+                Learn More →
               </Link>
             </div>
           </ScrollReveal>
