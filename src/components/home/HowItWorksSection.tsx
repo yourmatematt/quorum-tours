@@ -68,7 +68,7 @@ export function HowItWorksSection() {
           <div className="relative lg:aspect-square flex flex-col justify-between py-4 lg:py-0">
             {/* Vertical connector line - desktop */}
             <div
-              className="hidden lg:block absolute w-0.5 bg-[var(--color-primary)]/25"
+              className="hidden lg:block absolute w-1 bg-[var(--color-primary)]"
               style={{
                 left: '2rem',
                 top: '2rem',
