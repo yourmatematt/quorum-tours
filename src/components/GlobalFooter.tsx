@@ -198,13 +198,25 @@ export function GlobalFooter() {
           </nav>
 
           {/* Copyright */}
-          <p className="
+          <div className="
             text-sm text-[var(--color-ink-subtle)]
-            flex items-center
+            text-center md:text-right
           ">
-            © {currentYear} Quorum Tours. Built with care for birders.
-            <LeafOrnament />
-          </p>
+            <p>© {currentYear} Quorum Tours.</p>
+            <p className="flex items-center justify-center md:justify-end mt-1">
+              Built with care by{' '}
+              <a
+                href="https://yourmateagency.com.au/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[var(--color-primary)] hover:underline mx-1"
+              >
+                Your Mate
+              </a>
+              {' '}for birders.
+              <LeafOrnament />
+            </p>
+          </div>
         </div>
       </div>
     </footer>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 
 interface ComparisonItem {
   problem: string;
@@ -53,14 +54,19 @@ export function ComparisonSection() {
         {/* Comparison panels */}
         <div className="space-y-4 sm:space-y-[var(--space-xl)]">
           {comparisons.map((item, index) => (
-            <div
+            <ScrollReveal
               key={index}
-              className="
-                grid grid-cols-1 lg:grid-cols-2
-                gap-3 sm:gap-[var(--space-lg)]
-                items-stretch
-              "
+              variant="fade-up"
+              delay={150 + index * 150}
+              duration={500}
             >
+              <div
+                className="
+                  grid grid-cols-1 lg:grid-cols-2
+                  gap-3 sm:gap-[var(--space-lg)]
+                  items-stretch
+                "
+              >
               {/* Problem - left */}
               <div className="
                 p-4 sm:p-[var(--space-xl)]
@@ -103,6 +109,7 @@ export function ComparisonSection() {
                 </p>
               </div>
             </div>
+            </ScrollReveal>
           ))}
         </div>
 

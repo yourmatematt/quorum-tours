@@ -80,7 +80,7 @@ export function PathwaysSection() {
                 variant="secondary"
                 style={{ border: '2px solid var(--color-ink)' }}
               >
-                See How Confirmation Works
+                See How It Works
               </Button>
             </div>
           </ScrollReveal>

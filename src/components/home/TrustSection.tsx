@@ -29,19 +29,12 @@ export function TrustSection() {
     },
   ], []);
 
-  // Example featured operators (memoized to prevent re-creation)
-  const featuredOperators = useMemo(() => [
-    {
-      name: 'Sarah Mitchell',
-      expertise: 'Wetland ecology, 15 years guiding',
-      verified: true,
-    },
-    {
-      name: 'David Chen',
-      expertise: 'Shorebird specialist, conservation biologist',
-      verified: true,
-    },
-  ], []);
+  // Featured operators - empty until real data is available
+  const featuredOperators: Array<{
+    name: string;
+    expertise: string;
+    verified: boolean;
+  }> = [];
   return (
     <section className="
       py-12 sm:py-16 lg:py-[var(--space-section-normal)]
@@ -142,27 +135,65 @@ export function TrustSection() {
                 Featured operators
               </h3>
 
-              {featuredOperators.map((operator, index) => (
-                <OperatorPreviewCard
-                  key={index}
-                  {...operator}
-                />
-              ))}
-
-              <a
-                href="/operators"
-                className="
-                  inline-flex items-center gap-2
-                  text-[var(--color-accent)]
-                  text-sm font-medium
-                  hover:underline
-                  mt-[var(--space-md)]
-                  py-3 px-2 min-h-[48px]
-                "
-              >
-                View all operators
-                <span aria-hidden="true">&rarr;</span>
-              </a>
+              {featuredOperators.length > 0 ? (
+                <>
+                  {featuredOperators.map((operator, index) => (
+                    <OperatorPreviewCard
+                      key={index}
+                      {...operator}
+                    />
+                  ))}
+                  <a
+                    href="/operators"
+                    className="
+                      inline-flex items-center gap-2
+                      text-[var(--color-accent)]
+                      text-sm font-medium
+                      hover:underline
+                      mt-[var(--space-md)]
+                      py-3 px-2 min-h-[48px]
+                    "
+                  >
+                    View all operators
+                    <span aria-hidden="true">&rarr;</span>
+                  </a>
+                </>
+              ) : (
+                <div className="
+                  p-6 sm:p-8
+                  bg-[var(--color-surface-raised)]
+                  border border-dashed border-[var(--color-border)]
+                  rounded-[var(--radius-lg)]
+                  text-center
+                ">
+                  <p className="
+                    text-[var(--color-ink-muted)]
+                    text-sm sm:text-base
+                    mb-3
+                  ">
+                    Verified operators coming soon.
+                  </p>
+                  <p className="
+                    text-[var(--color-ink-subtle)]
+                    text-xs sm:text-sm
+                    mb-4
+                  ">
+                    We're onboarding experienced birding guides who meet our standards.
+                  </p>
+                  <a
+                    href="/for-operators"
+                    className="
+                      flex flex-col gap-0.5
+                      text-[var(--color-accent)]
+                      text-xs sm:text-sm
+                      hover:underline
+                    "
+                  >
+                    <span>Know a great guide?</span>
+                    <span>Tell them about Quorum &rarr;</span>
+                  </a>
+                </div>
+              )}
             </div>
           </ScrollReveal>
         </div>
