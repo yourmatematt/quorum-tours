@@ -397,7 +397,7 @@ export function GlobalNav() {
               animate-in slide-in-from-top-2 duration-200
             "
           >
-            <div className="px-[var(--space-md)] py-[var(--space-lg)]">
+            <div className="px-[var(--space-md)] pt-[var(--space-2xl)] pb-[var(--space-lg)]">
               {/* Nav links */}
               <div className="space-y-1">
                 {navItems.map(item => {
