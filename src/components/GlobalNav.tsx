@@ -15,12 +15,11 @@ const navItems = [
 
 interface AccountDropdownProps {
   onNavigate?: () => void;
-  userName: string;
-  userEmail: string;
+  displayLabel: string;
   onSignOut: () => void;
 }
 
-function AccountDropdown({ onNavigate, userName, userEmail, onSignOut }: AccountDropdownProps) {
+function AccountDropdown({ onNavigate, displayLabel, onSignOut }: AccountDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -115,7 +114,7 @@ function AccountDropdown({ onNavigate, userName, userEmail, onSignOut }: Account
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        My Account
+        {displayLabel}
         <svg
           width="12"
           height="12"
@@ -144,12 +143,6 @@ function AccountDropdown({ onNavigate, userName, userEmail, onSignOut }: Account
           "
           role="menu"
         >
-          {/* User info */}
-          <div className="px-[var(--space-md)] py-[var(--space-sm)] border-b border-[var(--color-border)]">
-            <p className="text-sm font-medium text-[var(--color-ink)]">{userName}</p>
-            <p className="text-xs text-[var(--color-ink-muted)]">{userEmail}</p>
-          </div>
-
           {/* Menu items */}
           <Link
             href="/profile"
@@ -215,8 +208,12 @@ export function GlobalNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isLoggedIn = !!user;
-  const userName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'User';
-  const userEmail = user?.email || '';
+  const firstName = user?.user_metadata?.first_name || '';
+  const lastName = user?.user_metadata?.last_name || '';
+  const displayLabel = firstName && lastName
+    ? `${firstName}.${lastName.charAt(0).toUpperCase()}`
+    : firstName || user?.email?.split('@')[0] || 'Account';
+
 
   const handleSignOut = async () => {
     const supabase = createClient();
@@ -323,8 +320,7 @@ export function GlobalNav() {
             <div className="ml-[var(--space-md)] pl-[var(--space-lg)] border-l border-[var(--color-border)]">
               {isLoggedIn ? (
                 <AccountDropdown
-                  userName={userName}
-                  userEmail={userEmail}
+                  displayLabel={displayLabel}
                   onSignOut={handleSignOut}
                 />
               ) : (
@@ -433,46 +429,37 @@ export function GlobalNav() {
 
               {/* Auth section */}
               {isLoggedIn ? (
-                <div className="space-y-[var(--space-md)]">
-                  {/* User info */}
-                  <div className="px-[var(--space-md)]">
-                    <p className="text-sm font-medium text-[var(--color-ink)]">{userName}</p>
-                    <p className="text-xs text-[var(--color-ink-muted)]">{userEmail}</p>
-                  </div>
-
-                  {/* Account links */}
-                  <div className="space-y-1">
-                    <Link
-                      href="/profile"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="
-                        block px-[var(--space-md)] py-[var(--space-sm)]
-                        text-base font-medium
-                        text-[var(--color-ink-muted)]
-                        rounded-[var(--radius-sm)]
-                        hover:bg-[var(--color-surface-sunken)]
-                        hover:text-[var(--color-ink)]
-                        transition-colors
-                      "
-                    >
-                      Profile
-                    </Link>
-                    <Link
-                      href="/profile#bookings"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="
-                        block px-[var(--space-md)] py-[var(--space-sm)]
-                        text-base font-medium
-                        text-[var(--color-ink-muted)]
-                        rounded-[var(--radius-sm)]
-                        hover:bg-[var(--color-surface-sunken)]
-                        hover:text-[var(--color-ink)]
-                        transition-colors
-                      "
-                    >
-                      My Bookings
-                    </Link>
-                  </div>
+                <div className="space-y-1">
+                  <Link
+                    href="/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="
+                      block px-[var(--space-md)] py-[var(--space-sm)]
+                      text-base font-medium
+                      text-[var(--color-ink-muted)]
+                      rounded-[var(--radius-sm)]
+                      hover:bg-[var(--color-surface-sunken)]
+                      hover:text-[var(--color-ink)]
+                      transition-colors
+                    "
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    href="/profile#bookings"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="
+                      block px-[var(--space-md)] py-[var(--space-sm)]
+                      text-base font-medium
+                      text-[var(--color-ink-muted)]
+                      rounded-[var(--radius-sm)]
+                      hover:bg-[var(--color-surface-sunken)]
+                      hover:text-[var(--color-ink)]
+                      transition-colors
+                    "
+                  >
+                    My Bookings
+                  </Link>
 
                   {/* Sign out */}
                   <button
