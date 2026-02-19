@@ -104,9 +104,7 @@ export async function PATCH(
         const { error: memberError } = await serviceClient.from('operator_members').insert({
           operator_id: operator.id,
           profile_id: application.profile_id,
-          is_admin: true,
           is_active: true,
-          role: 'owner',
         });
 
         if (memberError) {
