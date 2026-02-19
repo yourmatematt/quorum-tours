@@ -83,6 +83,7 @@ export async function PATCH(
           description: application.description,
           base_location: application.base_location,
           is_verified: true,
+          owner_profile_id: application.profile_id,
           metadata: {
             credentials: application.credentials,
             years_experience: application.years_experience,
