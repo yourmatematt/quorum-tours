@@ -11,17 +11,20 @@ import {
   MapPin,
   MoreVertical,
   Share2,
+  Loader2,
 } from 'lucide-react';
 import { DashboardViewContainer, DashboardViewHeader, DashboardScrollArea, QuorumIndicatorRing, StatusBadge } from '@/components/operator';
+import { useOperatorContext } from '@/hooks/useOperatorContext';
+import { useOperatorTours } from '@/hooks/useOperatorTours';
+import type { Tour as DBTour } from '@/lib/supabase/useTours';
 
-// TODO: Replace with real API data
 interface Tour {
   id: string;
   title: string;
   start_date: string;
   end_date: string;
   duration_days: number;
-  type: 'single-day' | 'multi-day';
+  type: string;
   price_per_person: number;
   status: 'forming' | 'confirmed' | 'past' | 'cancelled';
   participants_current: number;
@@ -31,84 +34,40 @@ interface Tour {
   days_until_departure: number;
 }
 
-// Stubbed tour data
-const STUBBED_TOURS: Tour[] = [
-  {
-    id: '1',
-    title: 'Patagonian Birding Adventure',
-    start_date: '2026-05-10',
-    end_date: '2026-05-24',
-    duration_days: 14,
-    type: 'multi-day',
-    price_per_person: 4200,
-    status: 'forming',
-    participants_current: 4,
-    participants_quorum: 6,
-    participants_max: 8,
-    target_species: ['Andean Condor', 'Magellanic Woodpecker', 'Austral Parakeet', 'Black-necked Swan'],
-    days_until_departure: 80,
-  },
-  {
-    id: '2',
-    title: 'Costa Rica Cloud Forest Expedition',
-    start_date: '2026-03-15',
-    end_date: '2026-03-22',
-    duration_days: 7,
-    type: 'multi-day',
-    price_per_person: 3200,
-    status: 'confirmed',
-    participants_current: 8,
-    participants_quorum: 6,
-    participants_max: 8,
-    target_species: ['Resplendent Quetzal', 'Three-wattled Bellbird', 'Keel-billed Toucan'],
-    days_until_departure: 24,
-  },
-  {
-    id: '3',
-    title: 'Buenos Aires Urban Birding',
-    start_date: '2026-03-01',
-    end_date: '2026-03-01',
-    duration_days: 1,
-    type: 'single-day',
-    price_per_person: 180,
-    status: 'confirmed',
-    participants_current: 6,
-    participants_quorum: 4,
-    participants_max: 10,
-    target_species: ['Southern Lapwing', 'Rufous Hornero', 'Chalk-browed Mockingbird'],
-    days_until_departure: 8,
-  },
-  {
-    id: '4',
-    title: 'Atlantic Forest Endemics',
-    start_date: '2025-11-20',
-    end_date: '2025-11-27',
-    duration_days: 7,
-    type: 'multi-day',
-    price_per_person: 3800,
-    status: 'past',
-    participants_current: 7,
-    participants_quorum: 6,
-    participants_max: 8,
-    target_species: ['Red-ruffed Fruitcrow', 'Black-fronted Piping Guan', 'Blue Manakin'],
-    days_until_departure: -64,
-  },
-  {
-    id: '5',
-    title: 'Pantanal Wetlands Safari',
-    start_date: '2026-06-15',
-    end_date: '2026-06-25',
-    duration_days: 10,
-    type: 'multi-day',
-    price_per_person: 4500,
-    status: 'forming',
-    participants_current: 2,
-    participants_quorum: 6,
-    participants_max: 8,
-    target_species: ['Hyacinth Macaw', 'Jabiru', 'Greater Rhea', 'Helmeted Manakin'],
-    days_until_departure: 116,
-  },
-];
+function mapDBStatus(dbStatus: DBTour['status']): Tour['status'] {
+  switch (dbStatus) {
+    case 'completed':
+      return 'past';
+    case 'payment_pending':
+      return 'confirmed';
+    default:
+      return dbStatus;
+  }
+}
+
+function mapDBTourToLocal(tour: DBTour): Tour {
+  const now = Date.now();
+  const startMs = new Date(tour.date_start).getTime();
+  const endMs = new Date(tour.date_end).getTime();
+  const daysUntilDeparture = Math.ceil((startMs - now) / (1000 * 60 * 60 * 24));
+  const durationDays = Math.max(1, Math.ceil((endMs - startMs) / (1000 * 60 * 60 * 24)) + 1);
+
+  return {
+    id: tour.id,
+    title: tour.title,
+    start_date: tour.date_start,
+    end_date: tour.date_end,
+    duration_days: durationDays,
+    type: tour.tour_type,
+    price_per_person: tour.price_cents / 100,
+    status: mapDBStatus(tour.status),
+    participants_current: tour.current_participants || 0,
+    participants_quorum: tour.threshold,
+    participants_max: tour.capacity,
+    target_species: tour.target_species || [],
+    days_until_departure: daysUntilDeparture,
+  };
+}
 
 const FILTER_OPTIONS = [
   { id: 'all', label: 'All' },
@@ -120,10 +79,13 @@ const FILTER_OPTIONS = [
 ] as const;
 
 export function MyToursView() {
+  const { operatorId } = useOperatorContext();
+  const { tours: dbTours, isLoading, error } = useOperatorTours(operatorId);
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
-  // Filter tours
-  const filteredTours = STUBBED_TOURS.filter((tour) => {
+  const mappedTours = dbTours.map(mapDBTourToLocal);
+
+  const filteredTours = mappedTours.filter((tour) => {
     if (statusFilter === 'all') {
       if (tour.status === 'cancelled') return false;
     } else if (statusFilter === 'forming') {
@@ -177,7 +139,20 @@ export function MyToursView() {
 
       {/* Scrollable Tours Grid */}
       <DashboardScrollArea>
-        {filteredTours.length > 0 ? (
+        {isLoading ? (
+          <div className="text-center py-12">
+            <Loader2 className="w-12 h-12 text-[var(--color-ink-muted)] mx-auto mb-4 animate-spin" />
+            <p className="text-[var(--color-ink-muted)]">Loading your tours...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <MapPin className="w-16 h-16 text-[var(--color-ink-muted)] mx-auto mb-4" />
+            <h3 className="font-display text-xl font-semibold text-[var(--color-ink)] mb-2">
+              Unable to load tours
+            </h3>
+            <p className="text-[var(--color-ink-muted)] mb-6">{error}</p>
+          </div>
+        ) : filteredTours.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredTours.map((tour) => (
               <TourCard key={tour.id} tour={tour} />

@@ -1,10 +1,13 @@
+import { Suspense } from 'react';
 import { ProfileView } from '@/components/operator/profile/ProfileView';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export default function ProfilePage() {
   return (
     <ErrorBoundary>
-      <ProfileView />
+      <Suspense>
+        <ProfileView />
+      </Suspense>
     </ErrorBoundary>
   );
 }

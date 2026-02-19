@@ -19,6 +19,10 @@ import { quorumReachedOperatorEmail } from './templates/quorum-reached-operator.
 import { depositForfeitedEmail } from './templates/deposit-forfeited.ts'
 import { tourConfirmedEmail } from './templates/tour-confirmed.ts'
 import { payoutSentEmail } from './templates/payout-sent.ts'
+import { operatorApplicationReceivedEmail } from './templates/operator-application-received.ts'
+import { operatorApplicationConfirmationEmail } from './templates/operator-application-confirmation.ts'
+import { operatorApplicationApprovedEmail } from './templates/operator-application-approved.ts'
+import { operatorApplicationRejectedEmail } from './templates/operator-application-rejected.ts'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 const EMAIL_FROM = Deno.env.get('EMAIL_FROM') || 'Quorum Tours <tours@quorumtours.com>'
@@ -39,6 +43,10 @@ const templates: Record<string, (data: Record<string, unknown>) => { subject: st
   deposit_forfeited: depositForfeitedEmail,
   tour_confirmed: tourConfirmedEmail,
   payout_sent: payoutSentEmail,
+  operator_application_received: operatorApplicationReceivedEmail,
+  operator_application_confirmation: operatorApplicationConfirmationEmail,
+  operator_application_approved: operatorApplicationApprovedEmail,
+  operator_application_rejected: operatorApplicationRejectedEmail,
 }
 
 interface EmailRequest {

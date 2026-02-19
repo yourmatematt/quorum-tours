@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight, Check, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
+import { FormAlert } from '@/components/auth/FormAlert';
 
 const STEPS = [
   { id: 1, name: 'Tour Type', description: 'Single day or multi-day' },
@@ -34,8 +36,11 @@ interface TourFormData {
 type ValidationErrors = Partial<Record<keyof TourFormData, string>>;
 
 export function CreateTourWizard() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [tourType, setTourType] = useState<'single-day' | 'multi-day' | null>(null);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [publishError, setPublishError] = useState<string | null>(null);
   
   // Form data state
   const [formData, setFormData] = useState<TourFormData>({
@@ -174,6 +179,32 @@ export function CreateTourWizard() {
     }
   };
 
+  async function handlePublish(): Promise<void> {
+    setIsPublishing(true);
+    setPublishError(null);
+
+    try {
+      const response = await fetch('/api/operator/tours', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tourType, ...formData }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.error ?? 'Failed to publish tour');
+      }
+
+      router.push('/operator/tours');
+    } catch (err) {
+      setPublishError(
+        err instanceof Error ? err.message : 'An unexpected error occurred'
+      );
+    } finally {
+      setIsPublishing(false);
+    }
+  }
+
   return (
     <div className="h-[calc(100vh-theme(spacing.16))] lg:h-[calc(100vh-theme(spacing.12))] flex flex-col max-w-5xl mx-auto">
       {/* Fixed Header - Never scrolls */}
@@ -265,7 +296,9 @@ export function CreateTourWizard() {
               updateFormData={updateFormData}
             />
           )}
-          {currentStep === 5 && <DetailsStep />}
+          {currentStep === 5 && (
+            <DetailsStep formData={formData} updateFormData={updateFormData} />
+          )}
           {currentStep === 6 && <PreviewStep />}
         </div>
       </div>
@@ -295,14 +328,26 @@ export function CreateTourWizard() {
             <ChevronRight className="w-4 h-4 lg:w-5 lg:h-5" />
           </button>
         ) : (
-          <button
-            onClick={() => alert('Publishing tour (TODO: API integration)')}
-            className="inline-flex items-center gap-2 px-4 lg:px-6 py-3 lg:py-3 bg-[var(--color-primary)] text-white rounded-[var(--radius-organic)] font-medium text-sm lg:text-base shadow-[var(--shadow-card)] hover:bg-[var(--color-primary-hover)] transition-colors duration-200"
-          >
-            <Check className="w-4 h-4 lg:w-5 lg:h-5" />
-            <span className="hidden sm:inline">Publish Tour</span>
-            <span className="sm:hidden">Publish</span>
-          </button>
+          <div className="flex items-center gap-3">
+            {publishError && (
+              <FormAlert variant="error">{publishError}</FormAlert>
+            )}
+            <button
+              onClick={handlePublish}
+              disabled={isPublishing}
+              className="inline-flex items-center gap-2 px-4 lg:px-6 py-3 lg:py-3 bg-[var(--color-primary)] text-white rounded-[var(--radius-organic)] font-medium text-sm lg:text-base shadow-[var(--shadow-card)] hover:bg-[var(--color-primary-hover)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+            >
+              <Check className="w-4 h-4 lg:w-5 lg:h-5" />
+              {isPublishing ? (
+                <span>Publishing...</span>
+              ) : (
+                <>
+                  <span className="hidden sm:inline">Publish Tour</span>
+                  <span className="sm:hidden">Publish</span>
+                </>
+              )}
+            </button>
+          </div>
         )}
       </div>
     </div>
@@ -760,7 +805,13 @@ function PricingStep({
 }
 
 // Step 5: Details
-function DetailsStep() {
+function DetailsStep({
+  formData,
+  updateFormData,
+}: {
+  formData: TourFormData;
+  updateFormData: (field: keyof TourFormData, value: any) => void;
+}) {
   return (
     <div className="h-full flex flex-col">
       <h2 className="font-display text-xl lg:text-2xl font-semibold text-[var(--color-ink)] mb-4">
@@ -769,21 +820,27 @@ function DetailsStep() {
 
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="flex flex-col">
-          <label className="block text-sm font-medium text-[var(--color-ink)] mb-1.5">
+          <label htmlFor="included" className="block text-sm font-medium text-[var(--color-ink)] mb-1.5">
             What's Included
           </label>
           <textarea
+            id="included"
             placeholder="• All ground transportation&#10;• Accommodation (5 nights)&#10;• Breakfast and lunch daily&#10;• Expert guide services"
+            value={formData.included}
+            onChange={(e) => updateFormData('included', e.target.value)}
             className="flex-1 min-h-[100px] w-full px-3 py-3 border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] focus:border-[var(--color-primary)] focus:outline-none transition-colors duration-200 resize-none"
           />
         </div>
 
         <div className="flex flex-col">
-          <label className="block text-sm font-medium text-[var(--color-ink)] mb-1.5">
+          <label htmlFor="not-included" className="block text-sm font-medium text-[var(--color-ink)] mb-1.5">
             What's Not Included
           </label>
           <textarea
+            id="not-included"
             placeholder="• International flights&#10;• Travel insurance&#10;• Dinner and beverages&#10;• Personal equipment"
+            value={formData.notIncluded}
+            onChange={(e) => updateFormData('notIncluded', e.target.value)}
             className="flex-1 min-h-[100px] w-full px-3 py-3 border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] focus:border-[var(--color-primary)] focus:outline-none transition-colors duration-200 resize-none"
           />
         </div>

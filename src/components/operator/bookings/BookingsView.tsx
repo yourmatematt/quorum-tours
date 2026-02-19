@@ -3,22 +3,12 @@
 import { useState } from 'react';
 import { Eye, Mail, Download } from 'lucide-react';
 import { DashboardViewContainer, DashboardViewHeader, DashboardScrollArea, StatusBadge } from '@/components/operator';
+import { useOperatorContext } from '@/hooks/useOperatorContext';
+import { useOperatorBookings } from '@/hooks/useOperatorBookings';
+import type { OperatorBooking } from '@/hooks/useOperatorBookings';
 
-type TrustTier = 'new' | 'trusted' | 'strike-1' | 'strike-2';
+type TrustTier = OperatorBooking['trust_tier'];
 
-interface Booking {
-  id: string;
-  tour_name: string;
-  participant_name: string;
-  participant_email: string;
-  status: 'held' | 'paid' | 'cancelled' | 'forfeited';
-  booking_date: string;
-  amount: number;
-  deposit_amount?: number;
-  trust_tier: TrustTier;
-}
-
-// Trust tier badge config
 const trustTierConfig: Record<TrustTier, { label: string; className: string }> = {
   'new': {
     label: 'New',
@@ -46,58 +36,48 @@ const FILTER_OPTIONS = [
   { id: 'cancelled', label: 'Cancelled' },
 ] as const;
 
-const STUBBED_BOOKINGS: Booking[] = [
-  {
-    id: '1',
-    tour_name: 'Patagonian Birding Adventure',
-    participant_name: 'Sarah Johnson',
-    participant_email: 'sarah.j@email.com',
-    status: 'paid',
-    booking_date: '2026-01-15',
-    amount: 4200,
-    trust_tier: 'trusted',
-  },
-  {
-    id: '2',
-    tour_name: 'Costa Rica Cloud Forest',
-    participant_name: 'Michael Chen',
-    participant_email: 'mchen@email.com',
-    status: 'held',
-    booking_date: '2026-01-18',
-    amount: 3200,
-    deposit_amount: 640,
-    trust_tier: 'new',
-  },
-  {
-    id: '3',
-    tour_name: 'Buenos Aires Urban Birding',
-    participant_name: 'Emma Thompson',
-    participant_email: 'emma.t@email.com',
-    status: 'paid',
-    booking_date: '2026-01-20',
-    amount: 180,
-    trust_tier: 'trusted',
-  },
-  {
-    id: '4',
-    tour_name: 'Costa Rica Cloud Forest',
-    participant_name: 'James Wilson',
-    participant_email: 'jwilson@email.com',
-    status: 'forfeited',
-    booking_date: '2026-01-10',
-    amount: 3200,
-    deposit_amount: 640,
-    trust_tier: 'strike-1',
-  },
-];
-
 export function BookingsView() {
+  const { operatorId } = useOperatorContext();
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const { bookings, isLoading, error } = useOperatorBookings(operatorId);
 
-  const filteredBookings = STUBBED_BOOKINGS.filter((booking) => {
+  const filteredBookings = bookings.filter((booking) => {
     if (statusFilter !== 'all' && booking.status !== statusFilter) return false;
     return true;
   });
+
+  if (isLoading) {
+    return (
+      <DashboardViewContainer maxWidth="wide">
+        <DashboardViewHeader
+          title="Bookings"
+          subtitle="Manage participant bookings across all tours"
+        />
+        <div className="flex items-center justify-center py-16">
+          <div className="text-center">
+            <div className="inline-block w-8 h-8 border-4 border-[var(--color-border)] border-t-[var(--color-primary)] rounded-full animate-spin mb-4" />
+            <p className="text-sm text-[var(--color-ink-muted)]">Loading bookings...</p>
+          </div>
+        </div>
+      </DashboardViewContainer>
+    );
+  }
+
+  if (error) {
+    return (
+      <DashboardViewContainer maxWidth="wide">
+        <DashboardViewHeader
+          title="Bookings"
+          subtitle="Manage participant bookings across all tours"
+        />
+        <div className="flex items-center justify-center py-16">
+          <div className="text-center">
+            <p className="text-sm text-[var(--color-ink-muted)]">Unable to load bookings. Please try again later.</p>
+          </div>
+        </div>
+      </DashboardViewContainer>
+    );
+  }
 
   return (
     <DashboardViewContainer maxWidth="wide">

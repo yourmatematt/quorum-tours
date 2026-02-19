@@ -1,0 +1,40 @@
+Audit the current codebase for operator onboarding flows. I need a complete picture of what exists RIGHT NOW — not what's planned, not what's in schemas only. What can a user actually DO in the browser today.
+
+Specifically check:
+
+1. SIGNUP/AUTH
+   - What happens when someone clicks "Sign in" or "Sign up"?
+   - Is there a registration flow? What fields?
+   - After signup, where does the user land?
+
+2. OPERATOR APPLICATION/EOI
+   - Is there a form or flow for a user to express interest in becoming an operator?
+   - What does the "List Your First Tour" button on /for-operators link to?
+   - Are there any other entry points for operators?
+
+3. OPERATOR PROFILE CREATION
+   - Can a logged-in user create an operator profile?
+   - Is there a setup wizard or onboarding checklist?
+   - What routes exist under /operators/ ?
+
+4. OPERATOR DASHBOARD
+   - Does /operators/[slug]/dashboard exist and render?
+   - Can an operator create a tour from their dashboard?
+   - What tour creation methods exist (form, chat, both)?
+
+5. STRIPE CONNECT
+   - Does /api/stripe/connect/authorize exist?
+   - Is there a "Connect your Stripe account" button anywhere in the UI?
+   - Can an operator complete Stripe onboarding through the app?
+
+6. ADMIN SIDE
+   - Can I create/approve operators from the admin dashboard?
+   - Is there an operator approval queue?
+
+For each item, tell me:
+- EXISTS AND WORKS (route exists, renders, functional)
+- EXISTS BUT BROKEN (route exists but errors/dead ends)
+- ROUTE EXISTS NO UI (backend route but no frontend)
+- DOES NOT EXIST
+
+Give me file paths for everything you find.

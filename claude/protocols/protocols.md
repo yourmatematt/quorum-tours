@@ -28,13 +28,13 @@ Frontend UI/UX + content presentation only. No backend architecture.
 - typescript-lsp@claude-plugins-official
 
 ## Newly Installed Skills & Plugins (Claude Code Plugins)
-- code-simplifier @ claude-plugins-official 
-- content-marketing @ claude-code-workflows 
-- interface-design @ interface-design 
-- seo-content-creation @ claude-code-workflows
-- seo-technical-optimization @ claude-code-workflows
-- serena @ claude-plugins-official
-- superpowers @ superpowers-dev
+- code-simplifier@claude-plugins-official 
+- content-marketing@claude-code-workflows 
+- interface-design@interface-design 
+- seo-content-creation@claude-code-workflows
+- seo-technical-optimization@claude-code-workflows
+- serena@claude-plugins-official
+- superpowers@superpowers-dev
 
 ## Delegation Map (Who does what)
 

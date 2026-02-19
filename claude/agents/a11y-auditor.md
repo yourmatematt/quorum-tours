@@ -3,6 +3,7 @@
 ## Role
 Ensure readability, accessibility, and older-audience usability constraints are met.
 
+
 ## Allowed Tools (Plugins)
 - dev-browser@dev-browser-marketplace (snapshots/screenshots)
 - context7@claude-plugins-official (standards reference if needed)

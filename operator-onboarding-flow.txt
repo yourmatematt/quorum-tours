@@ -1,0 +1,88 @@
+Wire the complete operator onboarding flow end-to-end through the frontend. No mock data. No manual database inserts. Every step happens through the UI.
+
+CONTEXT FROM CODEBASE AUDIT:
+The UI exists for almost everything. The gap is backend connections. Here's what the audit found:
+
+- /signup → WORKS
+- /for-operators → WORKS (but CTA links to dead Calendly)
+- /operator/profile → FORM UI COMPLETE, NO BACKEND SAVE
+- /operator/tours/create → 6-STEP WIZARD COMPLETE, NO API ON PUBLISH
+- /operator dashboard → EXISTS, ALL MOCK DATA
+- /operator/earnings → STRIPE BUTTON EXISTS, NO CLICK HANDLER
+- Stripe Connect Edge Function → EXISTS at supabase/functions/stripe-connect-onboard/index.ts
+- Stripe Connect Webhook → EXISTS at supabase/functions/stripe-webhook/index.ts
+- /admin → EXISTS, OPERATOR VERIFICATION QUEUE IS MOCK DATA WITH CONSOLE.LOG HANDLERS
+- Admin auth gate → DOES NOT EXIST
+
+THE FULL FLOW TO WIRE (in order of how a real operator experiences it):
+
+STEP 1: OPERATOR APPLIES
+Replace the Calendly link on /for-operators with an in-app application flow.
+- "List Your First Tour" button → opens application form (new page or modal)
+- Form fields: name, email, business name, location, brief description of their operation, years of experience, any relevant credentials/licenses
+- On submit: create a row in an operator_applications table (or use the operators table with approval_status = 'pending')
+- Send me (admin) an email notification via Resend that a new application has been received
+- Show the applicant a confirmation: "Thanks — we'll review your application and be in touch within 48 hours"
+- If the user is already logged in, link the application to their account. If not, prompt them to create an account as part of the flow.
+
+STEP 2: ADMIN REVIEWS AND APPROVES
+Wire the existing admin verification queue at /admin:
+- Fetch real pending applications from Supabase (replace mock data in OperatorVerificationQueue.tsx)
+- Display applicant details
+- "Approve" button: update approval_status to 'approved', create the operator record if needed, set linked_operator_id on their profile, send approval email to operator via Resend
+- "Reject" button: update status to 'rejected', send rejection email
+- Protect /admin routes with middleware — only my account (check for admin role or a specific user ID) can access
+
+STEP 3: OPERATOR LOGS IN AND SEES DASHBOARD
+When an approved operator logs in:
+- Middleware or layout check: if user has linked_operator_id, show operator nav/dashboard access
+- /operator loads real data from their operator record, not mock data
+- If they have no tours yet, show empty state with clear "Create Your First Tour" CTA
+- Wire ALL dashboard pages to real Supabase queries scoped to their operator_id:
+  - /operator → real metrics (tour count, booking count, total earnings — zeros are fine)
+  - /operator/tours → real tours list (empty state initially)
+  - /operator/bookings → real bookings via their tours (empty state initially)
+  - /operator/earnings → real earnings (empty state initially)
+
+STEP 4: OPERATOR COMPLETES PROFILE
+/operator/profile form already exists. Wire it:
+- On load: fetch their operator record, populate all form fields
+- On save: UPDATE the operator record in Supabase
+- Persist everything the form collects: name, tagline, bio, location, photo, credentials
+- Success/error toast feedback
+- Profile data flows through to public page at /operators/[id]
+
+STEP 5: OPERATOR CREATES FIRST TOUR
+/operator/tours/create wizard already exists (6 steps). Wire the publish step:
+- On publish: INSERT into tours table with their operator_id
+- Map all wizard fields to the tours table schema
+- After successful publish: redirect to /operator/tours showing their new tour
+- Tour must appear on the public /tours page
+- Tour must appear on their public operator profile
+
+STEP 6: STRIPE CONNECT
+Wire the existing button in EarningsView.tsx:
+- Button click → call the existing Edge Function at supabase/functions/stripe-connect-onboard
+- Edge Function already creates a Connect account and returns an onboarding URL
+- Redirect operator to Stripe's hosted onboarding flow
+- On return from Stripe: land on /operator/earnings with updated status
+- The webhook at supabase/functions/stripe-webhook already handles account.updated — make sure it updates the operator record's stripe fields
+- Show connection status on the earnings page: Not Connected / Pending / Active
+
+WHAT SUCCESS LOOKS LIKE:
+I visit /for-operators → click apply → fill form → submit.
+I go to /admin → see the application → click approve.
+The operator gets an email → logs in → sees their dashboard.
+They edit their profile → it saves and shows on the public site.
+They create a tour → it publishes and appears on /tours.
+They connect Stripe → redirected to Stripe → come back connected.
+
+The entire flow works through the browser. No database console. No manual inserts. No mock data anywhere in the operator experience.
+
+PRIORITY ORDER IF YOU NEED TO SHIP INCREMENTALLY:
+1. Operator application form (replaces Calendly dead link)
+2. Admin approval wiring (replaces mock queue)
+3. Profile save (operator's first action after approval)
+4. Tour publish (the whole point)
+5. Dashboard real data (confirms their tour exists)
+6. Stripe Connect wiring (needed before anyone pays, not before tonight)
