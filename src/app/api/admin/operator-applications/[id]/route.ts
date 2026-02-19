@@ -83,7 +83,6 @@ export async function PATCH(
           description: application.description,
           base_location: application.base_location,
           is_verified: true,
-          user_id: application.profile_id,
           metadata: {
             credentials: application.credentials,
             years_experience: application.years_experience,
@@ -101,7 +100,7 @@ export async function PATCH(
       // If applicant has an account, set up their membership and role
       if (application.profile_id) {
         // Create operator_members entry
-        await serviceClient.from('operator_members').insert({
+        const { error: memberError } = await serviceClient.from('operator_members').insert({
           operator_id: operator.id,
           profile_id: application.profile_id,
           is_admin: true,
@@ -109,15 +108,25 @@ export async function PATCH(
           role: 'owner',
         });
 
+        if (memberError) {
+          console.error('Failed to create operator_members entry:', memberError);
+          return NextResponse.json({ error: 'Failed to create operator membership.' }, { status: 500 });
+        }
+
         // Update profile role to operator
-        await serviceClient
+        const { error: profileError } = await serviceClient
           .from('profiles')
           .update({ role: 'operator', linked_operator_id: operator.id })
           .eq('id', application.profile_id);
+
+        if (profileError) {
+          console.error('Failed to update profile role:', profileError);
+          return NextResponse.json({ error: 'Failed to update profile role.' }, { status: 500 });
+        }
       }
 
       // Update application status
-      await serviceClient
+      const { error: statusError } = await serviceClient
         .from('operator_applications')
         .update({
           status: 'approved',
@@ -127,6 +136,11 @@ export async function PATCH(
           created_operator_id: operator.id,
         })
         .eq('id', id);
+
+      if (statusError) {
+        console.error('Failed to update application status:', statusError);
+        return NextResponse.json({ error: 'Failed to update application status.' }, { status: 500 });
+      }
 
       // Send approval email
       sendEmail({
