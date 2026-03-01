@@ -141,6 +141,13 @@ export function OperatorApplicationForm(): JSX.Element {
             Back to Home
           </Link>
         </div>
+        {user && (
+          <p className="text-sm text-[var(--color-ink-subtle)] mt-4">
+            <Link href="/apply/status" className="text-[var(--color-primary)] hover:underline">
+              Check your application status
+            </Link>
+          </p>
+        )}
       </div>
     );
   }

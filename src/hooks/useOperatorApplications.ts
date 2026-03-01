@@ -19,7 +19,7 @@ export interface OperatorApplication {
   created_at: string;
 }
 
-export function useOperatorApplications(status?: string) {
+export function useOperatorApplications(status?: string, profileId?: string) {
   const [applications, setApplications] = useState<OperatorApplication[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,10 +33,14 @@ export function useOperatorApplications(status?: string) {
       let query = supabase
         .from('operator_applications')
         .select('*')
-        .order('created_at', { ascending: true });
+        .order('created_at', { ascending: false });
 
       if (status) {
         query = query.eq('status', status);
+      }
+
+      if (profileId) {
+        query = query.eq('profile_id', profileId);
       }
 
       const { data, error: fetchError } = await query;
@@ -53,7 +57,7 @@ export function useOperatorApplications(status?: string) {
     } finally {
       setIsLoading(false);
     }
-  }, [status]);
+  }, [status, profileId]);
 
   useEffect(() => {
     fetchApplications();

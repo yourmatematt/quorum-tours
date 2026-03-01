@@ -8,3 +8,4 @@ export { TrustTransparency } from './TrustTransparency';
 export { SocialProof } from './SocialProof';
 export { FAQSection } from './FAQSection';
 export { OperatorCTA } from './OperatorCTA';
+export { ApplicationStatus } from './ApplicationStatus';

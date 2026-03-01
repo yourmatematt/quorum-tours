@@ -98,12 +98,33 @@ export async function PATCH(
         return NextResponse.json({ error: 'Failed to create operator record.' }, { status: 500 });
       }
 
+      // Resolve profile_id: if anonymous, check if a matching profile exists now
+      let resolvedProfileId = application.profile_id;
+
+      if (!resolvedProfileId) {
+        const { data: matchingProfile } = await serviceClient
+          .from('profiles')
+          .select('id')
+          .eq('email', application.contact_email)
+          .maybeSingle();
+
+        if (matchingProfile) {
+          resolvedProfileId = matchingProfile.id;
+
+          // Link the application to the discovered profile
+          await serviceClient
+            .from('operator_applications')
+            .update({ profile_id: resolvedProfileId })
+            .eq('id', id);
+        }
+      }
+
       // If applicant has an account, set up their membership and role
-      if (application.profile_id) {
+      if (resolvedProfileId) {
         // Create operator_members entry
         const { error: memberError } = await serviceClient.from('operator_members').insert({
           operator_id: operator.id,
-          profile_id: application.profile_id,
+          profile_id: resolvedProfileId,
           is_active: true,
         });
 
@@ -116,13 +137,15 @@ export async function PATCH(
         const { error: profileError } = await serviceClient
           .from('profiles')
           .update({ role: 'operator', linked_operator_id: operator.id })
-          .eq('id', application.profile_id);
+          .eq('id', resolvedProfileId);
 
         if (profileError) {
           console.error('Failed to update profile role:', profileError);
           return NextResponse.json({ error: 'Failed to update profile role.' }, { status: 500 });
         }
       }
+
+      const needsAccount = !resolvedProfileId;
 
       // Update application status
       const { error: statusError } = await serviceClient
@@ -142,13 +165,17 @@ export async function PATCH(
       }
 
       // Send approval email
+      const signupUrl = `${siteUrl}/signup?email=${encodeURIComponent(application.contact_email)}&redirect=/operator`;
       sendEmail({
         template: 'operator_application_approved',
         to: application.contact_email,
         data: {
           contactName: application.contact_name,
+          contactEmail: application.contact_email,
           businessName: application.business_name,
           dashboardUrl: `${siteUrl}/operator`,
+          signupUrl,
+          needsAccount,
           siteUrl,
         },
       }).catch(err => console.error('Failed to send approval email:', err));

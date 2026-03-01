@@ -6,13 +6,16 @@ import { baseTemplate, colors, primaryButton, highlightBox } from './_base.ts'
 
 interface ApplicationApprovedData {
   contactName: string
+  contactEmail: string
   businessName: string
   dashboardUrl: string
+  signupUrl?: string
+  needsAccount?: boolean
   siteUrl: string
 }
 
 export function operatorApplicationApprovedEmail(data: Record<string, unknown>): { subject: string; html: string } {
-  const { contactName, businessName, dashboardUrl, siteUrl } = data as unknown as ApplicationApprovedData
+  const { contactName, contactEmail, businessName, dashboardUrl, signupUrl, needsAccount, siteUrl } = data as unknown as ApplicationApprovedData
 
   const subject = `Your application has been approved — Welcome to Quorum Tours`
   const previewText = `${businessName} is now live on Quorum Tours. Set up your profile and list your first tour.`
@@ -54,7 +57,14 @@ export function operatorApplicationApprovedEmail(data: Record<string, unknown>):
     `)}
 
     <div style="text-align: center; margin: 32px 0;">
-      ${primaryButton('Go to Your Dashboard', dashboardUrl)}
+      ${needsAccount && signupUrl ? `
+        ${primaryButton('Create Your Account', signupUrl)}
+        <p style="font-size: 13px; color: ${colors.inkSubtle}; line-height: 1.5; margin-top: 12px;">
+          Sign up using <strong>${contactEmail || 'the email you applied with'}</strong> to access your dashboard.
+        </p>
+      ` : `
+        ${primaryButton('Go to Your Dashboard', dashboardUrl)}
+      `}
     </div>
 
     <p style="font-size: 14px; color: ${colors.inkSubtle}; line-height: 1.6; margin-top: 32px;">
