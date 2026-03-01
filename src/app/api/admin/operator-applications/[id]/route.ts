@@ -188,15 +188,35 @@ export async function PATCH(
 
     // === REQUEST INFO ===
     if (action === 'request_info') {
-      await serviceClient
+      if (!adminNotes?.trim()) {
+        return NextResponse.json({ error: 'Please specify what information you need.' }, { status: 400 });
+      }
+
+      const { error: statusError } = await serviceClient
         .from('operator_applications')
         .update({
           status: 'more_info_requested',
-          admin_notes: adminNotes || null,
+          admin_notes: adminNotes,
           reviewed_by: user.id,
           reviewed_at: new Date().toISOString(),
         })
         .eq('id', id);
+
+      if (statusError) {
+        console.error('Failed to update application status:', statusError);
+        return NextResponse.json({ error: 'Failed to update application.' }, { status: 500 });
+      }
+
+      sendEmail({
+        template: 'operator_application_info_requested',
+        to: application.contact_email,
+        data: {
+          contactName: application.contact_name,
+          businessName: application.business_name,
+          message: adminNotes,
+          siteUrl,
+        },
+      }).catch(err => console.error('Failed to send info request email:', err));
 
       return NextResponse.json({ success: true });
     }

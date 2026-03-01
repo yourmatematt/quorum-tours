@@ -1,5 +1,5 @@
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { OperatorVerificationQueue } from '@/components/admin';
+import { OperatorDirectory, OperatorVerificationQueue } from '@/components/admin';
 
 export default function AdminOperatorsPage() {
   return (
@@ -8,13 +8,14 @@ export default function AdminOperatorsPage() {
         {/* Page Header */}
         <div className="mb-6">
           <h1 className="font-display text-3xl font-semibold text-[var(--color-ink)]">
-            Operator Verification
+            Operator Management
           </h1>
           <p className="text-[var(--color-ink-muted)] mt-2">
-            Review and approve operator applications
+            Monitor operator performance and review applications
           </p>
         </div>
 
+        <OperatorDirectory />
         <OperatorVerificationQueue />
       </div>
     </ErrorBoundary>

@@ -23,6 +23,7 @@ import { operatorApplicationReceivedEmail } from './templates/operator-applicati
 import { operatorApplicationConfirmationEmail } from './templates/operator-application-confirmation.ts'
 import { operatorApplicationApprovedEmail } from './templates/operator-application-approved.ts'
 import { operatorApplicationRejectedEmail } from './templates/operator-application-rejected.ts'
+import { operatorApplicationInfoRequestedEmail } from './templates/operator-application-info-requested.ts'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 const EMAIL_FROM = Deno.env.get('EMAIL_FROM') || 'Quorum Tours <tours@quorumtours.com>'
@@ -47,6 +48,7 @@ const templates: Record<string, (data: Record<string, unknown>) => { subject: st
   operator_application_confirmation: operatorApplicationConfirmationEmail,
   operator_application_approved: operatorApplicationApprovedEmail,
   operator_application_rejected: operatorApplicationRejectedEmail,
+  operator_application_info_requested: operatorApplicationInfoRequestedEmail,
 }
 
 interface EmailRequest {

@@ -23,6 +23,8 @@ export function OperatorVerificationQueue() {
   const [actionError, setActionError] = useState<string | null>(null);
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
+  const [requestingInfoId, setRequestingInfoId] = useState<string | null>(null);
+  const [requestInfoMessage, setRequestInfoMessage] = useState('');
 
   const { selectedIds, setSelectedIds, toggleSelection, isSelected } =
     useBulkSelection();
@@ -49,6 +51,8 @@ export function OperatorVerificationQueue() {
       setSelectedIds(newSelected);
       setRejectingId(null);
       setRejectReason('');
+      setRequestingInfoId(null);
+      setRequestInfoMessage('');
       refetch();
     } catch (err) {
       setActionError(err instanceof Error ? err.message : 'Action failed');
@@ -177,7 +181,21 @@ export function OperatorVerificationQueue() {
                 setRejectingId(null);
                 setRejectReason('');
               }}
-              onRequestInfo={() => handleAction(app.id, 'request_info')}
+              isRequestingInfo={requestingInfoId === app.id}
+              requestInfoMessage={requestInfoMessage}
+              onRequestInfoMessageChange={setRequestInfoMessage}
+              onRequestInfo={() => {
+                if (requestingInfoId === app.id) {
+                  handleAction(app.id, 'request_info', requestInfoMessage);
+                } else {
+                  setRequestingInfoId(app.id);
+                  setRequestInfoMessage('');
+                }
+              }}
+              onCancelRequestInfo={() => {
+                setRequestingInfoId(null);
+                setRequestInfoMessage('');
+              }}
             />
           ))}
         </div>
@@ -194,10 +212,14 @@ interface ApplicationCardProps {
   isRejecting: boolean;
   rejectReason: string;
   onRejectReasonChange: (value: string) => void;
+  isRequestingInfo: boolean;
+  requestInfoMessage: string;
+  onRequestInfoMessageChange: (value: string) => void;
   onApprove: () => void;
   onReject: () => void;
   onCancelReject: () => void;
   onRequestInfo: () => void;
+  onCancelRequestInfo: () => void;
 }
 
 function ApplicationCard({
@@ -208,10 +230,14 @@ function ApplicationCard({
   isRejecting,
   rejectReason,
   onRejectReasonChange,
+  isRequestingInfo,
+  requestInfoMessage,
+  onRequestInfoMessageChange,
   onApprove,
   onReject,
   onCancelReject,
   onRequestInfo,
+  onCancelRequestInfo,
 }: ApplicationCardProps) {
   return (
     <div
@@ -299,6 +325,22 @@ function ApplicationCard({
         </div>
       )}
 
+      {/* Request info input */}
+      {isRequestingInfo && (
+        <div className="mb-4 ml-8">
+          <label className="block text-sm font-medium text-[var(--color-ink)] mb-1">
+            What information do you need? (sent to applicant)
+          </label>
+          <textarea
+            value={requestInfoMessage}
+            onChange={(e) => onRequestInfoMessageChange(e.target.value)}
+            placeholder="e.g. Could you provide proof of your guide certification, or a link to past trip reviews?"
+            rows={3}
+            className="w-full px-3 py-2 text-sm rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-ink)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+          />
+        </div>
+      )}
+
       {/* Actions */}
       <div className="flex items-center gap-3 pt-4 ml-8 border-t-2 border-[var(--color-border)]">
         {isRejecting ? (
@@ -312,6 +354,22 @@ function ApplicationCard({
             </button>
             <button
               onClick={onCancelReject}
+              className="px-4 py-2 text-sm font-medium text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+            >
+              Cancel
+            </button>
+          </>
+        ) : isRequestingInfo ? (
+          <>
+            <button
+              onClick={onRequestInfo}
+              disabled={isLoading || !requestInfoMessage.trim()}
+              className="flex-1 px-4 py-2 text-sm font-medium text-white bg-[var(--color-primary)] hover:brightness-90 rounded-[var(--radius-organic)] transition-all disabled:opacity-50"
+            >
+              {isLoading ? 'Sending...' : 'Send Info Request'}
+            </button>
+            <button
+              onClick={onCancelRequestInfo}
               className="px-4 py-2 text-sm font-medium text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
             >
               Cancel

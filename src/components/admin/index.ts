@@ -19,6 +19,7 @@ export {
 
 // Section components
 export { DashboardOverview } from './DashboardOverview';
+export { OperatorDirectory } from './OperatorDirectory';
 export { OperatorVerificationQueue } from './OperatorVerificationQueue';
 export { TourOversight } from './TourOversight';
 export { UserManagement } from './UserManagement';
