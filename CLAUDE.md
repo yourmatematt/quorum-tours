@@ -1,203 +1,115 @@
-# CLAUDE.md — Quorum Tours Frontend Build System
+# CLAUDE.md — Quorum Tours
 
-This file defines how Claude Code must operate for the Quorum Tours project.
-It is authoritative and must be followed at all times.
+Birding tour marketplace where tours confirm via quorum (minimum participants). Connects operators with birders through a trust-based booking system.
 
-This project uses a **strict, orchestrated, gate-driven system**.
-Free-form responses, ad-hoc builds, or backend architecture are not allowed.
+## Commands
 
----
+```bash
+npm run dev          # Start dev server (localhost:3000)
+npm run build        # Production build
+npm run typecheck    # TypeScript strict check (tsc --noEmit)
+npm run lint         # ESLint
+```
 
-## 1) Scope (Hard Constraint)
+Supabase (edge functions, migrations):
+```bash
+supabase start                    # Local Supabase
+supabase functions serve          # Local edge functions
+supabase db push                  # Push migrations to remote
+supabase secrets set KEY=value    # Set edge function secrets
+```
 
-This project is **FRONTEND UI/UX AND CONTENT PRESENTATION ONLY**.
+## Tech Stack
 
-You MUST NOT:
-- design backend architecture
-- define databases or schemas
-- configure authentication providers
-- implement payments
-- design APIs or middleware
-- introduce infrastructure or deployment logic
+- **Framework:** Next.js 14.2 (App Router)
+- **Language:** TypeScript 5.3 (strict mode)
+- **Styling:** Tailwind CSS 3.4 + CSS custom properties (`src/styles/tokens.css`)
+- **Backend:** Supabase (Postgres, Auth, Edge Functions, Realtime)
+- **Payments:** Stripe (Connect for operators, Checkout for users)
+- **Icons:** Lucide React
+- **Dates:** date-fns
+- **Path alias:** `@/*` maps to `./src/*`
 
-You MAY:
-- create frontend UI shells for future flows (auth, join, checkout)
-- show clear user-facing explanations of system mechanics
-- stub states visually (e.g. “Sign in required” screens)
+## Directory Structure
 
-If backend logic appears in output, the task automatically FAILS.
+```
+src/
+  app/                  # Next.js App Router pages
+    admin/              # Business admin dashboard
+    api/                # API routes (checkout, webhooks, cron, operator apps)
+    for-operators/      # Operator marketing/info page
+    how-it-works/       # How it works page
+    operator/           # Operator dashboard (tours, bookings, earnings, profile)
+    operators/[id]/     # Public operator profiles
+    profile/            # User profile
+    tours/              # Tours listing + [id] detail
+    login/ signup/      # Auth pages
+  components/           # React components (mirrored by feature area)
+  styles/tokens.css     # Design tokens (colors, spacing, typography, radius)
+supabase/
+  functions/            # Edge functions (Deno)
+    create-checkout/    # Stripe checkout session creation
+    stripe-webhook/     # Stripe event handler
+    process-quorum/     # Quorum threshold processing
+    send-email/         # Resend email templates (14 templates in templates/)
+    stripe-connect-onboard/
+    process-payment-timeout/
+    process-failed-tours/
+    send-tour-reminders/
+  migrations/           # Postgres migrations
+```
 
----
+## Environment Variables
 
-## 2) System Entry Point (Order of Authority)
+Copy `.env.example` to `.env.local`:
+```
+NEXT_PUBLIC_SUPABASE_URL=        # Supabase project URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY=   # Supabase public key
+SUPABASE_SERVICE_ROLE_KEY=       # Server-side only, never expose to client
+```
 
-When executing any task, follow this order:
+Edge function secrets (set via `supabase secrets set`):
+```
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+RESEND_API_KEY=
+EMAIL_FROM=tours@quorumtours.com
+SITE_URL=http://localhost:4000
+```
 
-1. `claude/protocols/protocols.md`  
-   → master scope, gate registry, evidence rules  
-2. `claude/protocols/messaging.md`  
-   → strict messaging envelope (MANDATORY)  
-3. `claude/design-principles.md` + kill-list rules  
-   → anti-template, anti-manipulation  
-4. `claude/rubrics/tls-component-rubrics.md`  
-   → TLS scoring by component type  
-5. `claude/protocols/integration-gates.md`  
-   → navigation + routing cohesion  
-6. `claude/protocols/flow-gates.md`  
-   → phased journey validation  
-7. `claude/protocols/responsiveness.md`  
-   → desktop, tablet, mobile verification  
+## Design System
 
-If instructions conflict, **higher items override lower ones**.
+All styling uses design tokens from `src/styles/tokens.css`. Never hardcode colors, spacing, or typography values.
 
----
+- **Colors:** `var(--color-*)` — biophilic green palette, ink/surface/primary/accent
+- **Spacing:** `var(--space-*)`
+- **Typography:** `var(--text-*)` with clamp() for fluid sizing
+- **Fonts:** Crimson Pro (headings), Atkinson Hyperlegible (body)
+- **Radius:** `var(--radius-*)`
 
-## 3) Orchestrated Agent System (Mandatory)
+## Key Business Rules
 
-You MUST operate through the orchestrator.
+- **Quorum model:** Tours confirm only when enough participants commit
+- **Trust tiers:** New (deposit required) → Trusted (no deposit) → Strike 1/2 → Suspended
+- **Payment flow:** Commit → quorum reached → 24h to pay balance → miss = strike
+- **Commission:** 6% platform fee (3% on forfeited deposits)
+- **Strikes:** Permanent, removable only via support appeal
 
-### Orchestrator
-- `claude/agents/orchestrator.md`
-- Owns task delegation, gate enforcement, and approval
+## Code Style
 
-### Specialist Agents
-- `web-design-lead` — IA, wireframes, section intent
-- `frontend-implementer` — build components/pages
-- `visual-qa` — browser screenshots + console checks
-- `a11y-auditor` — readability and accessibility
-- `code-reviewer` — anti-template + quality enforcement
+- `'use client'` only where needed (interactive components)
+- Prefer server components by default
+- No LLM-speak in UI copy (no "seamless", "unlock", "journey", etc.)
+- No generic SaaS template patterns (4-icon grids, fake testimonials)
+- No dark patterns, fake urgency, or marketing hype
+- Clarity over persuasion — trust is the conversion surface
 
-You MUST NOT:
-- self-approve your own work
-- skip agents
-- bypass gates
+## Current State
 
----
-
-## 4) Strict Messaging Envelope (Non-Negotiable)
-
-ALL responses MUST comply with:
-
-`claude/protocols/messaging.md`
-
-This includes:
-- required fields
-- fixed field order
-- explicit gate tracking
-- artifact-based evidence
-
-Any response missing a required field is INVALID.
-
----
-
-## 5) Build Phases (Enforcement Rules)
-
-### Phase 1 — Public Discovery & Trust (ACTIVE)
-You may only work on:
-- Home
-- Tours Index
-- Tour Detail
-- Operator Public Profile
-- Operator Dashboard
-- Business Admin Dashboard
-- User Public Profile
-- How it works for users/operators
-- 
-
-Phase 1 gates are fully enforced.
-
-### Phase 2 — Account & Intent (LOCKED)
-Auth and user profile pages may exist as UI shells only.
-Phase 2 gates are NOT enforced yet.
-
-### Phase 3 — Polish & Hardening (LOCKED)
-Accessibility tightening, performance budgets, regressions.
-Phase 3 gates are NOT enforced yet.
-
-Do NOT jump phases.
-
----
-
-## 6) Default Build Order (Vertical Slice)
-
-You MUST follow this order:
-
-1. Home
-2. Tours Index
-3. Tour Detail
-4. Operator Public Profile
-
-Each page must PASS gates before moving on.
-
----
-
-## 7) Evidence Is Required
-
-Any claim of progress or completion MUST include evidence stored under:
-
-- `/artifacts/screenshots`
-- `/artifacts/a11y`
-- `/artifacts/reports`
-
-No screenshots = no approval  
-No a11y notes = no approval  
-No review notes = no approval  
-
----
-
-## 8) UX Integrity Rules (Hard)
-
-You MUST:
-- prioritize clarity over persuasion
-- make confirmation mechanics explicit
-- avoid fake urgency or scarcity
-- treat trust as the primary conversion surface
-- design for high-scrutiny users
-
-You MUST NOT:
-- use marketing hype
-- imitate generic SaaS layouts
-- hide mechanics in FAQs
-- use dark patterns
-
-Violations trigger kill-list failure.
-
----
-
-## 9) Definition of “Done”
-
-A task is DONE only when:
-- implementation exists
-- strict messaging envelope is satisfied
-- required gates are listed
-- required gates are passed
-- evidence exists under `/artifacts`
-- orchestrator marks STATUS = APPROVED
-
-Anything else is NOT DONE.
-
----
-
-## 10) How to Start a Task (Required Pattern)
-
-When beginning work, you MUST:
-1. Identify the target page/component
-2. Ask the orchestrator to assign the task
-3. Follow the runbook:
-   `claude/runbooks/build-runbook.md`
-
-Ad-hoc prompting is not allowed.
-
----
-
-## Final Rule
-
-If you are unsure:
-- STOP
-- refer back to `protocols.md`
-- ask the orchestrator for clarification
-
-This system exists to prevent drift.
-Respect it.
-
----
+- **Phase 1 (Public Discovery):** Complete — Home, Tours, Tour Detail, Operator profiles
+- **Phase 2 (Account & Intent):** Complete — Auth, User Profile, Operator Dashboard
+- **Phase 4 (Trust System & Emails):** In progress
+  - Stripe integration complete (Connect + Checkout + Webhooks)
+  - 14 email templates built (Resend)
+  - Trust/strike system migrated
+  - Operator application flow in progress (uncommitted changes)
