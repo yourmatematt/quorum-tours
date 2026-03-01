@@ -3,6 +3,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import {
   ProfileHeader,
   EnhancedTourCard,
+  TrustStatusCard,
   ChaseListSection,
   ChaseListMatchAlert,
   PastToursSection,
@@ -178,6 +179,13 @@ export default function ProfilePage() {
 
             {/* Right Column: Sidebar (4 cols on desktop) */}
             <div className="lg:col-span-4 space-y-4">
+              {/* Trust Status */}
+              <TrustStatusCard
+                trustTier={exampleUser.trustTier}
+                completedTours={2}
+                strikeCount={0}
+              />
+
               {/* Chase List - Primary sidebar element */}
               <ChaseListSection birds={exampleChaseList} />
 

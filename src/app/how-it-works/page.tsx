@@ -5,6 +5,7 @@ import {
   HowItWorksHero,
   MechanicSection,
   BenefitsSection,
+  TrustSystemSection,
   ClosingCTA,
 } from '@/components/how-it-works';
 
@@ -27,7 +28,10 @@ export default function HowItWorksPage() {
         {/* Section 3: Two-column benefits split */}
         <BenefitsSection />
 
-        {/* Section 4: Final CTA */}
+        {/* Section 4: Trust System - Tiers, deposits, strikes */}
+        <TrustSystemSection />
+
+        {/* Section 5: Final CTA */}
         <ClosingCTA />
       </main>
     </ErrorBoundary>

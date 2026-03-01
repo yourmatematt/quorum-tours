@@ -127,6 +127,33 @@ export function TrustTransparency(): JSX.Element {
             </table>
           </div>
         </div>
+
+        {/* Deposit Protection */}
+        <div className="mt-10 sm:mt-[var(--space-3xl)]">
+          <h3 className="text-lg sm:text-[var(--text-xl)] font-semibold text-[var(--color-ink)] text-center mb-6 sm:mb-[var(--space-xl)]">
+            Deposit Protection for Operators
+          </h3>
+          <div className="max-w-2xl mx-auto bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-[var(--radius-lg)] p-6 sm:p-[var(--space-lg)]">
+            <ul className="space-y-[var(--space-md)] text-sm sm:text-base text-[var(--color-ink-muted)]">
+              <li className="flex items-start gap-[var(--space-sm)]">
+                <span className="text-[var(--color-confirmed)] mt-0.5 shrink-0"><CheckIcon /></span>
+                <span>Set your own deposit amounts for new users</span>
+              </li>
+              <li className="flex items-start gap-[var(--space-sm)]">
+                <span className="text-[var(--color-confirmed)] mt-0.5 shrink-0"><CheckIcon /></span>
+                <span>Receive 97% of forfeited deposits as compensation for no-shows</span>
+              </li>
+              <li className="flex items-start gap-[var(--space-sm)]">
+                <span className="text-[var(--color-confirmed)] mt-0.5 shrink-0"><CheckIcon /></span>
+                <span>Trust system handles repeat no-shows automatically with strikes</span>
+              </li>
+              <li className="flex items-start gap-[var(--space-sm)]">
+                <span className="text-[var(--color-confirmed)] mt-0.5 shrink-0"><CheckIcon /></span>
+                <span>Trusted users (with completed tours) commit without deposits</span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
   );

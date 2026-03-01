@@ -145,6 +145,16 @@ export function CommitmentSummary({
                 <span className="text-[var(--color-forming)] mt-0.5">•</span>
                 <span>Your ${deposit} deposit is applied to the total</span>
               </li>
+              <li className="flex items-start gap-[var(--space-sm)]">
+                <span className="text-[var(--color-forming)] mt-0.5">•</span>
+                <span>
+                  If you miss the 24-hour payment window after quorum, your deposit is forfeited and a{' '}
+                  <a href="/how-it-works#trust-system" className="text-[var(--color-primary)] hover:underline">
+                    strike
+                  </a>{' '}
+                  is added to your account
+                </span>
+              </li>
             </ul>
           </div>
         </div>

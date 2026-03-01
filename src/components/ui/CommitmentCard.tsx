@@ -81,8 +81,16 @@ export function CommitmentCard({
           </span>
         </div>
         <p className="text-sm text-[var(--color-ink-subtle)] mt-1">
-          ${deposit} deposit to commit
+          {deposit > 0 ? `$${deposit} deposit to commit` : 'No deposit required'}
         </p>
+        {status === 'forming' && deposit > 0 && (
+          <p className="text-xs text-[var(--color-ink-subtle)] mt-1">
+            Based on your trust status ·{' '}
+            <a href="/how-it-works#trust-system" className="text-[var(--color-primary)] hover:underline">
+              Learn about trust tiers
+            </a>
+          </p>
+        )}
       </div>
 
       {/* Deposit Info - Only show for forming tours */}
