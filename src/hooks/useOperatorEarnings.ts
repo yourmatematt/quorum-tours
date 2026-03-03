@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 export interface OperatorEarnings {
   escrowed: { amount: number; tours: number; bookings: number };
   confirmed: { amount: number; tours: number; bookings: number };
+  forfeited: { amount: number; count: number };
   paidAllTime: number;
   isLoading: boolean;
   error: string | null;
@@ -15,6 +16,7 @@ export function useOperatorEarnings(operatorId: string | null) {
   const [earnings, setEarnings] = useState<Omit<OperatorEarnings, 'isLoading' | 'error'>>({
     escrowed: { amount: 0, tours: 0, bookings: 0 },
     confirmed: { amount: 0, tours: 0, bookings: 0 },
+    forfeited: { amount: 0, count: 0 },
     paidAllTime: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -57,6 +59,18 @@ export function useOperatorEarnings(operatorId: string | null) {
         .in('tour_id', tourIds)
         .not('status', 'in', '("cancelled","abandoned")');
 
+      // Fetch forfeited reservations separately (they may have been excluded above depending on status)
+      const { data: forfeitedRes, error: forfeitError } = await supabase
+        .from('reservations')
+        .select('deposit_cents')
+        .in('tour_id', tourIds)
+        .eq('status', 'forfeited');
+
+      if (forfeitError) {
+        setError(forfeitError.message);
+        return;
+      }
+
       if (resError) {
         setError(resError.message);
         return;
@@ -67,7 +81,17 @@ export function useOperatorEarnings(operatorId: string | null) {
 
       let escrowed = { amount: 0, tours: new Set<string>(), bookings: 0 };
       let confirmed = { amount: 0, tours: new Set<string>(), bookings: 0 };
+      let forfeited = { amount: 0, count: 0 };
       let paid = 0;
+
+      // Calculate forfeit income (97% of deposit — 3% platform commission)
+      for (const r of (forfeitedRes || [])) {
+        const deposit = r.deposit_cents || 0;
+        if (deposit > 0) {
+          forfeited.amount += Math.round(deposit * 0.97);
+          forfeited.count++;
+        }
+      }
 
       for (const r of (reservations || [])) {
         const tourStatus = tourStatusMap.get(r.tour_id);
@@ -97,6 +121,10 @@ export function useOperatorEarnings(operatorId: string | null) {
           amount: confirmed.amount / 100,
           tours: confirmed.tours.size,
           bookings: confirmed.bookings,
+        },
+        forfeited: {
+          amount: forfeited.amount / 100,
+          count: forfeited.count,
         },
         paidAllTime: paid / 100,
       });

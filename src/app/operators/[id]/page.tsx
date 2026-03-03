@@ -396,6 +396,15 @@ export default function OperatorProfilePage({ params }: PageProps) {
           yearsExperience={operator.yearsExperience}
         />
 
+        {/* Track Record Trust Strip — immediate trust signal */}
+        <div className="mb-[var(--space-3xl)]">
+          <TrackRecordSummary
+            toursCompleted={operator.trackRecord.toursCompleted}
+            confirmationRate={operator.trackRecord.confirmationRate}
+            totalParticipants={operator.trackRecord.totalParticipants}
+          />
+        </div>
+
         {/* Section 2: Authority Signals */}
         <AuthoritySection
           specializations={operator.specializations}

@@ -11,6 +11,7 @@ import { FAQAccordion } from '@/components/ui/FAQAccordion';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useTour } from '@/lib/supabase/useTours';
 import { useAuth } from '@/lib/supabase/useAuth';
+import { usePersonalizedDeposit } from '@/hooks/usePersonalizedDeposit';
 
 type ConfirmationStatus = 'confirmed' | 'forming' | 'not-running';
 
@@ -172,6 +173,7 @@ export default function TourDetailPage() {
   const tourId = params.id as string;
   const { tour: dbTour, isLoading, error } = useTour(tourId);
   const { user } = useAuth();
+  const { depositCents: personalizedDepositCents } = usePersonalizedDeposit(user?.id ?? null, tourId);
   const [imageError, setImageError] = useState(false);
 
   // Loading state
@@ -223,7 +225,7 @@ export default function TourDetailPage() {
     location: (dbTour.operator as any)?.base_location || 'Australia',
     description: dbTour.description || 'Join us for an unforgettable birding experience.',
     price: dbTour.price_cents / 100,
-    deposit: dbTour.deposit_cents / 100,
+    deposit: (user && personalizedDepositCents !== null ? personalizedDepositCents : dbTour.deposit_cents) / 100,
     image: dbTour.image_url || undefined,
     species: generateSpeciesGroups(dbTour.target_species || []),
     logistics: generateLogistics({
@@ -436,6 +438,13 @@ export default function TourDetailPage() {
                   quorum={tour.threshold}
                   capacity={tour.capacity}
                   isLoggedIn={!!user}
+                  trustMessage={
+                    user
+                      ? tour.deposit === 0
+                        ? 'No deposit required for Trusted members'
+                        : 'Based on your trust status'
+                      : null
+                  }
                 />
               </div>
             </div>

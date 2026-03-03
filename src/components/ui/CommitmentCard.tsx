@@ -10,12 +10,13 @@ type ConfirmationStatus = 'confirmed' | 'forming' | 'not-running';
 interface CommitmentCardProps {
   status: ConfirmationStatus;
   price: number;
-  deposit: number; // Actual deposit amount from database
+  deposit: number; // Actual deposit amount (personalized if logged in)
   currentParticipants: number;
   quorum: number;
   capacity: number;
   tourId: string;
   isLoggedIn?: boolean;
+  trustMessage?: string | null;
 }
 
 const ctaConfig: Record<ConfirmationStatus, {
@@ -49,6 +50,7 @@ export function CommitmentCard({
   capacity,
   tourId,
   isLoggedIn = false,
+  trustMessage,
 }: CommitmentCardProps) {
   const [isWhyDepositsOpen, setIsWhyDepositsOpen] = useState(false);
   const cta = ctaConfig[status];
@@ -83,9 +85,9 @@ export function CommitmentCard({
         <p className="text-sm text-[var(--color-ink-subtle)] mt-1">
           {deposit > 0 ? `$${deposit} deposit to commit` : 'No deposit required'}
         </p>
-        {status === 'forming' && deposit > 0 && (
+        {status === 'forming' && trustMessage && (
           <p className="text-xs text-[var(--color-ink-subtle)] mt-1">
-            Based on your trust status ·{' '}
+            {trustMessage} ·{' '}
             <a href="/how-it-works#trust-system" className="text-[var(--color-primary)] hover:underline">
               Learn about trust tiers
             </a>

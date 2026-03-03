@@ -304,7 +304,7 @@ async function processExpiredReservation(supabase: any, reservation: any) {
       maxStrikes: 3,
       depositForfeited: reservation.deposit_charged,
       depositAmount: reservation.deposit_cents ? (reservation.deposit_cents / 100).toFixed(2) : '0',
-      appealUrl: `${APP_URL}/profile/trust`,
+      appealUrl: `${APP_URL}/profile/appeal`,
     })
 
     // Update email log status

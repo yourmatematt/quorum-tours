@@ -17,6 +17,8 @@ export {
   KeyboardShortcutsHelp,
 } from './AdminKeyboardShortcuts';
 
+export { AppealsQueue } from './AppealsQueue';
+
 // Section components
 export { DashboardOverview } from './DashboardOverview';
 export { OperatorDirectory } from './OperatorDirectory';

@@ -27,7 +27,7 @@ const TOUR_FILTER_OPTIONS = [
 export function EarningsView() {
   const [tourFilter, setTourFilter] = useState<string>('all');
   const { operator, operatorId } = useOperatorContext();
-  const { escrowed, confirmed, paidAllTime, isLoading: earningsLoading } = useOperatorEarnings(operatorId);
+  const { escrowed, confirmed, forfeited, paidAllTime, isLoading: earningsLoading } = useOperatorEarnings(operatorId);
   const { tours, isLoading: toursLoading } = useOperatorTours(operatorId);
   const { stripeStatus, startOnboarding, isRedirecting, error: stripeError } = useStripeConnect(operator);
 
@@ -150,7 +150,7 @@ export function EarningsView() {
         <h2 className="text-sm font-medium text-[var(--color-ink-muted)] mb-3 uppercase tracking-wide">
           Revenue Pipeline
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <RevenueStageCard
             stage="escrowed"
             label="Escrowed"
@@ -166,6 +166,14 @@ export function EarningsView() {
             amount={confirmed.amount}
             detail={`${confirmed.bookings} bookings across ${confirmed.tours} tours`}
             hint={stripeStatus.chargesEnabled ? 'Payout on tour completion' : 'Connect Stripe to receive payouts'}
+          />
+          <RevenueStageCard
+            stage="forfeited"
+            label="Forfeit Income"
+            sublabel="No-show deposits"
+            amount={forfeited.amount}
+            detail={`${forfeited.count} forfeited deposit${forfeited.count !== 1 ? 's' : ''}`}
+            hint="97% of forfeited deposits (3% platform fee)"
           />
           <RevenueStageCard
             stage="paid"
@@ -229,7 +237,7 @@ function RevenueStageCard({
   hint,
   trend
 }: {
-  stage: 'escrowed' | 'confirmed' | 'paid';
+  stage: 'escrowed' | 'confirmed' | 'forfeited' | 'paid';
   label: string;
   sublabel: string;
   amount: number;
@@ -249,6 +257,12 @@ function RevenueStageCard({
       bg: 'bg-[var(--color-confirmed-bg)]/50',
       amount: 'text-[var(--color-confirmed)]',
       indicator: 'bg-[var(--color-confirmed)]',
+    },
+    forfeited: {
+      border: 'border-[var(--color-accent)]/30',
+      bg: 'bg-[var(--color-accent)]/5',
+      amount: 'text-[var(--color-accent)]',
+      indicator: 'bg-[var(--color-accent)]',
     },
     paid: {
       border: 'border-[var(--color-border)]',

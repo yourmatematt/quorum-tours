@@ -11,6 +11,7 @@ import {
   AlertTriangle,
   ScrollText,
   Activity,
+  Scale,
   LogOut,
 } from 'lucide-react';
 
@@ -27,6 +28,7 @@ const navItems: NavItem[] = [
   { label: 'Tours', href: '/admin/tours', icon: MapPin },
   { label: 'Users', href: '/admin/users', icon: Users },
   { label: 'Metrics', href: '/admin/metrics', icon: BarChart3 },
+  { label: 'Appeals', href: '/admin/appeals', icon: Scale },
   { label: 'Alerts', href: '/admin/alerts', icon: AlertTriangle },
   { label: 'Audit Log', href: '/admin/audit', icon: ScrollText },
   { label: 'System Health', href: '/admin/system', icon: Activity },

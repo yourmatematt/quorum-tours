@@ -156,9 +156,21 @@ export default function JoinTourPage() {
         // For forming tours with deposit: redirect to embedded payment page for deposit
         router.push(`/tours/${tour.slug}/join/payment?type=deposit`);
       } else {
-        // For forming tours without deposit: express interest only
-        // TODO: Create reservation in database
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        // For forming tours without deposit (trusted users): create reservation directly
+        const res = await fetch('/api/reservations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tourId: dbTour.id }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || 'Failed to create reservation.');
+          setIsSubmitting(false);
+          return;
+        }
+
         router.push(`/tours/${tour.slug}/join/success?type=interest`);
       }
     } catch (error) {
@@ -166,7 +178,7 @@ export default function JoinTourPage() {
       alert('An error occurred. Please try again.');
       setIsSubmitting(false);
     }
-  };;;
+  };
 
   // Auth gate - redirect to login if not authenticated
   if (!user) {

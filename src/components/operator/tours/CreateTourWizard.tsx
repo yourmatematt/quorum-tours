@@ -26,6 +26,7 @@ interface TourFormData {
   startTime?: string;
   duration?: number;
   pricePerPerson: string;
+  depositPercentage: string;
   minParticipants: string;
   maxParticipants: string;
   included: string;
@@ -48,6 +49,7 @@ export function CreateTourWizard() {
     description: '',
     targetSpecies: [],
     pricePerPerson: '',
+    depositPercentage: '20',
     minParticipants: '',
     maxParticipants: '',
     included: '',
@@ -130,6 +132,15 @@ export function CreateTourWizard() {
       newErrors.pricePerPerson = 'Price must be greater than 0';
     }
 
+    if (!formData.depositPercentage) {
+      newErrors.depositPercentage = 'Deposit percentage is required';
+    } else {
+      const pct = parseFloat(formData.depositPercentage);
+      if (pct < 0 || pct > 100) {
+        newErrors.depositPercentage = 'Deposit must be between 0% and 100%';
+      }
+    }
+
     if (!formData.minParticipants) {
       newErrors.minParticipants = 'Minimum participants is required';
     } else if (parseInt(formData.minParticipants) < 1) {
@@ -187,7 +198,15 @@ export function CreateTourWizard() {
       const response = await fetch('/api/operator/tours', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tourType, ...formData }),
+        body: JSON.stringify({
+          tourType,
+          ...formData,
+          deposit_cents: Math.round(
+            parseFloat(formData.pricePerPerson || '0') *
+            (parseFloat(formData.depositPercentage || '20') / 100) *
+            100
+          ),
+        }),
       });
 
       if (!response.ok) {
@@ -791,6 +810,51 @@ function PricingStep({
               </p>
             )}
           </div>
+        </div>
+
+        {/* Deposit Setting */}
+        <div className="mt-2">
+          <label htmlFor="deposit-percentage" className="block text-sm font-medium text-[var(--color-ink)] mb-1.5">
+            Deposit Percentage *
+          </label>
+          <div className="flex items-center gap-3">
+            <div className="relative w-32">
+              <input
+                id="deposit-percentage"
+                type="number"
+                min="0"
+                max="100"
+                step="5"
+                value={formData.depositPercentage}
+                onChange={(e) => updateFormData('depositPercentage', e.target.value)}
+                aria-invalid={!!errors.depositPercentage}
+                aria-describedby={errors.depositPercentage ? 'deposit-error' : 'deposit-help'}
+                className={`w-full px-3 pr-7 py-3 border-2 rounded-[var(--radius-organic)] focus:outline-none transition-colors duration-200 ${
+                  errors.depositPercentage
+                    ? 'border-[var(--color-destructive)] focus:border-[var(--color-destructive)]'
+                    : 'border-[var(--color-border)] focus:border-[var(--color-primary)]'
+                }`}
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-ink-muted)]">
+                %
+              </span>
+            </div>
+            {formData.pricePerPerson && parseFloat(formData.pricePerPerson) > 0 && formData.depositPercentage && (
+              <span className="text-sm text-[var(--color-ink-muted)]">
+                {formData.depositPercentage}% of ${parseFloat(formData.pricePerPerson).toLocaleString()} = ${Math.round(parseFloat(formData.pricePerPerson) * (parseFloat(formData.depositPercentage) / 100)).toLocaleString()} deposit
+              </span>
+            )}
+          </div>
+          {errors.depositPercentage ? (
+            <p id="deposit-error" className="text-xs text-[var(--color-destructive)] mt-1 flex items-center gap-1">
+              <AlertCircle className="w-3.5 h-3.5" />
+              {errors.depositPercentage}
+            </p>
+          ) : (
+            <p id="deposit-help" className="text-xs text-[var(--color-ink-muted)] mt-1">
+              New users and those with missed payments pay this deposit when they commit. Trusted users with a clean history skip the deposit.
+            </p>
+          )}
         </div>
 
         {/* Pricing summary info box */}

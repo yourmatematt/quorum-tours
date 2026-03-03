@@ -33,6 +33,16 @@ const FAQ_CATEGORIES = [
       { q: 'Can I export participants?', a: 'Yes, "Export CSV" on the Bookings page.' },
     ],
   },
+  {
+    id: 'deposits',
+    name: 'Deposits & Trust',
+    questions: [
+      { q: 'How do deposits protect me from no-shows?', a: 'When a participant commits to your tour, users without an established trust history pay a deposit upfront. If they fail to pay the balance after quorum is reached, the deposit is forfeited and you receive 97% of it (3% platform commission).' },
+      { q: 'How do I set the deposit amount?', a: 'In the Create Tour wizard (Step 4: Pricing), set the deposit as a percentage of the tour price. The default is 20%. For example, a $150 tour with a 20% deposit means $30 upfront.' },
+      { q: 'What are the trust tiers?', a: 'New users pay a deposit on every commitment. After completing a tour with no issues, they become Trusted and can commit without a deposit. Missing a payment adds a strike (permanent unless removed via support appeal). Two strikes result in suspension from the platform.' },
+      { q: 'What happens to forfeited deposits?', a: 'You receive 97% of any forfeited deposit. The 3% platform commission covers payment processing. Forfeit income appears as a separate card in your Earnings dashboard.' },
+    ],
+  },
 ];
 
 export function HelpView() {

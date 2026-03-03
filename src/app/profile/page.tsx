@@ -1,130 +1,117 @@
-import { Metadata } from 'next';
+'use client';
+
+import Link from 'next/link';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import {
   ProfileHeader,
   EnhancedTourCard,
   TrustStatusCard,
   ChaseListSection,
-  ChaseListMatchAlert,
   PastToursSection,
   SettingsSection,
 } from '@/components/profile';
-
-export const metadata: Metadata = {
-  title: 'Your Dashboard — Quorum Tours',
-  description: 'Manage your tour commitments, chase list, and account settings.',
-};
+import { useAuth } from '@/lib/supabase/useAuth';
+import { useProfileDashboard } from '@/hooks/useProfileDashboard';
 
 /**
  * Profile Page - User Dashboard
  *
- * Redesigned layout per spec:
+ * Layout:
  * - Compact inline header with trust badge
  * - UPCOMING TOURS section with Browse more link
  * - Tour cards as main content
  * - Past Tours collapsed below tours
- * - Right sidebar: Chase List (primary), Match Alert, Account (demoted)
+ * - Right sidebar: Trust Status, Chase List, Account
  */
 
-// Example user data (UI shell - would come from auth in production)
-const exampleUser = {
-  displayName: 'Sarah Mitchell',
-  memberSince: 'January 2025',
-  trustTier: 'trusted' as const,
-};
-
-// Enhanced commitment data
-const exampleCommitments = [
-  {
-    tourId: 'kakadu-wetlands-2026',
-    tourName: 'Kakadu Wetlands Expedition',
-    tourDates: 'Mar 15–18, 2026',
-    operatorId: 'outback-birding',
-    operatorName: 'Outback Birding Co',
-    location: 'Northern Territory',
-    status: 'confirmed' as const,
-    currentParticipants: 8,
-    quorum: 10,
-    capacity: 12,
-    paymentStatus: 'paid' as const,
-    departureDate: new Date('2026-03-15'),
-    fellowTravelers: [
-      { id: 'user-1', name: 'Michael Chen', initials: 'MC' },
-      { id: 'user-2', name: 'Emma Watson', initials: 'EW' },
-      { id: 'user-3', name: 'David Park', initials: 'DP' },
-      { id: 'user-4', name: 'Lisa Thompson', initials: 'LT' },
-      { id: 'user-5', name: 'James Miller', initials: 'JM' },
-      { id: 'user-6', name: 'Anna Rodriguez', initials: 'AR' },
-      { id: 'user-7', name: 'Chris Lee', initials: 'CL' },
-    ],
-    targetSpecies: [
-      { id: 'sp-1', name: 'Gouldian Finch' },
-      { id: 'sp-2', name: 'Rainbow Pitta' },
-    ],
-  },
-  {
-    tourId: 'tasmania-raptors-2026',
-    tourName: 'Tasmania Raptor Circuit',
-    tourDates: 'Apr 22–25, 2026',
-    operatorId: 'wings-wilderness',
-    operatorName: 'Wings & Wilderness',
-    location: 'Tasmania',
-    status: 'forming' as const,
-    currentParticipants: 4,
-    quorum: 6,
-    capacity: 10,
-    paymentStatus: 'deposit-paid' as const,
-    departureDate: new Date('2026-04-22'),
-    fellowTravelers: [
-      { id: 'user-8', name: 'Robert Kim', initials: 'RK' },
-      { id: 'user-9', name: 'Sophie Brown', initials: 'SB' },
-      { id: 'user-10', name: 'Andrew White', initials: 'AW' },
-    ],
-    targetSpecies: [
-      { id: 'sp-3', name: 'Wedge-tailed Eagle' },
-      { id: 'sp-4', name: 'Grey Goshawk' },
-    ],
-  },
-];
-
-// Example chase list with match indicator
-const exampleChaseList = [
-  { id: 'bird-1', commonName: 'Gouldian Finch', region: 'NT', addedDate: '2025-12-01', isMatched: true },
-  { id: 'bird-2', commonName: 'Regent Honeyeater', region: 'NSW', addedDate: '2025-11-15' },
-  { id: 'bird-3', commonName: 'Plains-wanderer', region: 'VIC', addedDate: '2025-10-20' },
-  { id: 'bird-4', commonName: 'Night Parrot', region: 'QLD', addedDate: '2025-09-05' },
-  { id: 'bird-5', commonName: 'Helmeted Honeyeater', region: 'VIC', addedDate: '2025-08-10' },
-];
-
-// Example past tours
-const examplePastTours = [
-  {
-    id: 'broome-shorebirds-2025',
-    title: 'Broome Shorebird Migration',
-    date: 'Sep 12–15, 2025',
-    outcome: 'completed' as const,
-    participantCount: 8,
-  },
-  {
-    id: 'cairns-rainforest-2025',
-    title: 'Cairns Rainforest Endemics',
-    date: 'Jul 5–8, 2025',
-    outcome: 'completed' as const,
-    participantCount: 6,
-  },
-];
-
 export default function ProfilePage() {
+  const { user, isLoading: authLoading } = useAuth();
+  const {
+    displayName,
+    memberSince,
+    trustTier,
+    completedTours,
+    strikeCount,
+    commitments,
+    pastTours,
+    isLoading: profileLoading,
+    error,
+  } = useProfileDashboard(user?.id ?? null);
+
+  const isLoading = authLoading || profileLoading;
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <main className="bg-[var(--color-surface)] min-h-screen">
+        <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 pt-6">
+          <div className="animate-pulse">
+            <div className="flex items-center justify-between py-4 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-full bg-[var(--color-border)]" />
+                <div>
+                  <div className="h-5 bg-[var(--color-border)] rounded w-32 mb-1" />
+                  <div className="h-4 bg-[var(--color-border)] rounded w-24" />
+                </div>
+              </div>
+              <div className="h-8 bg-[var(--color-border)] rounded-full w-40" />
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8">
+              <div className="lg:col-span-8 space-y-4">
+                <div className="h-48 bg-[var(--color-border)] rounded-[var(--radius-organic)]" />
+                <div className="h-48 bg-[var(--color-border)] rounded-[var(--radius-organic)]" />
+              </div>
+              <div className="lg:col-span-4 space-y-4">
+                <div className="h-36 bg-[var(--color-border)] rounded-[var(--radius-organic)]" />
+                <div className="h-48 bg-[var(--color-border)] rounded-[var(--radius-organic)]" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Auth gate
+  if (!user) {
+    return (
+      <main className="bg-[var(--color-surface)] min-h-screen">
+        <div className="min-h-[calc(100vh-80px)] flex items-center">
+          <div className="w-full max-w-md mx-auto px-4 text-center">
+            <h1 className="font-display text-2xl font-semibold text-[var(--color-ink)] mb-[var(--space-sm)]">
+              Sign in to view your dashboard
+            </h1>
+            <p className="text-[var(--color-ink-muted)] mb-[var(--space-lg)]">
+              Your tour commitments, chase list, and account settings live here.
+            </p>
+            <Link
+              href="/login?redirect=/profile"
+              className="inline-block px-6 py-3 bg-[var(--color-primary)] text-white rounded-[var(--radius-organic)] font-medium hover:bg-[var(--color-primary-hover)] transition-colors"
+            >
+              Sign in
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <ErrorBoundary>
       <main className="bg-[var(--color-surface)] min-h-screen">
         <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 pt-6">
           {/* Compact Profile Header */}
           <ProfileHeader
-            displayName={exampleUser.displayName}
-            memberSince={exampleUser.memberSince}
-            trustTier={exampleUser.trustTier}
+            displayName={displayName}
+            memberSince={memberSince}
+            trustTier={trustTier}
           />
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-[var(--radius-sm)] text-sm text-red-700">
+              {error}
+            </div>
+          )}
 
           {/* Main Dashboard Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8">
@@ -144,9 +131,9 @@ export default function ProfilePage() {
               </div>
 
               {/* Tour Cards */}
-              {exampleCommitments.length > 0 ? (
+              {commitments.length > 0 ? (
                 <div className="space-y-4">
-                  {exampleCommitments.map((commitment) => (
+                  {commitments.map((commitment) => (
                     <EnhancedTourCard
                       key={commitment.tourId}
                       {...commitment}
@@ -170,9 +157,9 @@ export default function ProfilePage() {
               )}
 
               {/* Past Tours - collapsed, below tour cards */}
-              {examplePastTours.length > 0 && (
+              {pastTours.length > 0 && (
                 <div className="mt-4">
-                  <PastToursSection tours={examplePastTours} />
+                  <PastToursSection tours={pastTours} />
                 </div>
               )}
             </div>
@@ -181,20 +168,13 @@ export default function ProfilePage() {
             <div className="lg:col-span-4 space-y-4">
               {/* Trust Status */}
               <TrustStatusCard
-                trustTier={exampleUser.trustTier}
-                completedTours={2}
-                strikeCount={0}
+                trustTier={trustTier}
+                completedTours={completedTours}
+                strikeCount={strikeCount}
               />
 
               {/* Chase List - Primary sidebar element */}
-              <ChaseListSection birds={exampleChaseList} />
-
-              {/* Chase List Match Alert */}
-              <ChaseListMatchAlert
-                speciesName="Gouldian Finch"
-                tourName="NT"
-                context="A new tour targeting Gouldian Finch was just listed in the NT. Your Kakadu trip already covers this — you're set."
-              />
+              <ChaseListSection birds={[]} />
 
               {/* Account Section - Demoted to bottom */}
               <SettingsSection />
