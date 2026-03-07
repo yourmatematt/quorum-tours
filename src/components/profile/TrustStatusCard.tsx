@@ -74,7 +74,7 @@ export function TrustStatusCard({
         bg-[var(--color-surface-raised)]
         border-2 border-[var(--color-border)]
         rounded-[var(--radius-organic)]
-        p-4 h-full
+        p-4
       "
     >
       {/* Compact header */}

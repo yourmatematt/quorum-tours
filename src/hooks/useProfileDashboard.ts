@@ -143,7 +143,7 @@ export function useProfileDashboard(userId: string | null) {
           id, status, deposit_charged, balance_paid_at, tour_id,
           tours (
             id, slug, title, status, date_start, date_end,
-            current_participants, threshold, capacity, target_species,
+            current_participant_count, threshold, capacity, target_species,
             operator_id,
             operators ( id, slug, name, base_location )
           )
@@ -176,7 +176,7 @@ export function useProfileDashboard(userId: string | null) {
             title: tour.title,
             date: formatDateRange(tour.date_start, tour.date_end),
             outcome: tour.status === 'cancelled' ? 'cancelled' : 'completed',
-            participantCount: tour.current_participants,
+            participantCount: tour.current_participant_count,
           });
           continue;
         }
@@ -213,7 +213,7 @@ export function useProfileDashboard(userId: string | null) {
           operatorName: operator?.name || 'Unknown Operator',
           location: operator?.base_location || 'Australia',
           status: tourStatus,
-          currentParticipants: tour.current_participants,
+          currentParticipants: tour.current_participant_count,
           quorum: tour.threshold,
           capacity: tour.capacity,
           paymentStatus: mapPaymentStatus(res),

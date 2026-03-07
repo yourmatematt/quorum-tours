@@ -1,5 +1,5 @@
 -- strike_history (referenced by existing apply_payment_timeout_strike function)
-CREATE TABLE public.strike_history (
+CREATE TABLE IF NOT EXISTS public.strike_history (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id),
   reservation_id UUID REFERENCES public.reservations(id),
@@ -10,16 +10,22 @@ CREATE TABLE public.strike_history (
 
 ALTER TABLE public.strike_history ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view own strikes" ON public.strike_history
-  FOR SELECT USING (auth.uid() = user_id);
+DO $$ BEGIN
+  CREATE POLICY "Users can view own strikes" ON public.strike_history
+    FOR SELECT USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
-CREATE POLICY "Service role can insert strikes" ON public.strike_history
-  FOR INSERT WITH CHECK (true);
+DO $$ BEGIN
+  CREATE POLICY "Service role can insert strikes" ON public.strike_history
+    FOR INSERT WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
-CREATE INDEX idx_strike_history_user ON public.strike_history(user_id);
+CREATE INDEX IF NOT EXISTS idx_strike_history_user ON public.strike_history(user_id);
 
 -- appeals
-CREATE TABLE public.appeals (
+CREATE TABLE IF NOT EXISTS public.appeals (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id),
   strike_history_id UUID REFERENCES public.strike_history(id),
@@ -33,10 +39,16 @@ CREATE TABLE public.appeals (
 
 ALTER TABLE public.appeals ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view own appeals" ON public.appeals
-  FOR SELECT USING (auth.uid() = user_id);
+DO $$ BEGIN
+  CREATE POLICY "Users can view own appeals" ON public.appeals
+    FOR SELECT USING (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
-CREATE POLICY "Users can insert own appeals" ON public.appeals
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
+DO $$ BEGIN
+  CREATE POLICY "Users can insert own appeals" ON public.appeals
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
-CREATE INDEX idx_appeals_status ON public.appeals(status) WHERE status = 'pending';
+CREATE INDEX IF NOT EXISTS idx_appeals_status ON public.appeals(status) WHERE status = 'pending';
