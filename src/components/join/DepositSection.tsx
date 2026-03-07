@@ -1,8 +1,11 @@
 'use client';
 
+type TrustTier = 'new' | 'trusted' | 'strike-1' | 'strike-2' | 'suspended';
+
 interface DepositSectionProps {
   price: number;
   deposit: number;
+  trustTier?: TrustTier | null;
 }
 
 /**
@@ -15,9 +18,18 @@ interface DepositSectionProps {
  * Uses actual deposit amount from tour settings (database),
  * not calculated from trust tier.
  */
+const trustTierLabels: Record<TrustTier, string> = {
+  'new': 'First-time birder deposit',
+  'trusted': 'No deposit required',
+  'strike-1': 'Deposit required (1 strike)',
+  'strike-2': 'Higher deposit required (2 strikes)',
+  'suspended': 'Account suspended',
+};
+
 export function DepositSection({
   price,
   deposit,
+  trustTier,
 }: DepositSectionProps) {
   const balance = price - deposit;
   const depositPercent = Math.round((deposit / price) * 100);
@@ -43,6 +55,29 @@ export function DepositSection({
       >
         Payment breakdown
       </h3>
+
+      {/* Trust tier context */}
+      {trustTier && trustTier !== 'trusted' && (
+        <div className="
+          flex items-center gap-[var(--space-sm)]
+          mb-[var(--space-md)]
+          px-[var(--space-md)] py-[var(--space-sm)]
+          bg-[var(--color-surface-sunken)]
+          rounded-[var(--radius-sm)]
+          border border-[var(--color-border)]
+        ">
+          <span className="text-sm text-[var(--color-ink-muted)]">
+            {trustTierLabels[trustTier]}
+          </span>
+          <span className="text-[var(--color-ink-subtle)]">·</span>
+          <a
+            href="/how-it-works#trust-system"
+            className="text-sm text-[var(--color-primary)] hover:underline"
+          >
+            How trust tiers work
+          </a>
+        </div>
+      )}
 
       {/* Payment breakdown */}
       <div className="space-y-[var(--space-sm)] mb-[var(--space-lg)]">

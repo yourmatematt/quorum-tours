@@ -17,6 +17,8 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { QuorumProgressBar } from '@/components/ui/QuorumProgressBar';
 import { useTour } from '@/lib/supabase/useTours';
 import { useAuth } from '@/lib/supabase/useAuth';
+import { usePersonalizedDeposit } from '@/hooks/usePersonalizedDeposit';
+import { useUserTrust } from '@/hooks/useUserTrust';
 
 /**
  * Join Tour Page - Commitment flow for tours
@@ -81,6 +83,8 @@ export default function JoinTourPage() {
   // Fetch tour data from database
   const { tour: dbTour, isLoading, error } = useTour(tourId);
   const { user } = useAuth();
+  const { depositCents: personalizedDepositCents } = usePersonalizedDeposit(user?.id ?? null, tourId);
+  const { trustTier } = useUserTrust(user?.id ?? null);
 
   // Loading state
   if (isLoading) {
@@ -131,7 +135,7 @@ export default function JoinTourPage() {
     threshold: dbTour.threshold,
     capacity: dbTour.capacity,
     price: dbTour.price_cents / 100,
-    deposit: dbTour.deposit_cents / 100,
+    deposit: (personalizedDepositCents !== null ? personalizedDepositCents : dbTour.deposit_cents) / 100,
     cancellationDeadline: formatCancellationDeadline(dbTour.booking_deadline),
     included: dbTour.included || ['Transport', 'Guide fees'],
   };
@@ -343,6 +347,7 @@ export default function JoinTourPage() {
                     <DepositSection
                       price={tour.price}
                       deposit={tour.deposit}
+                      trustTier={trustTier}
                     />
                   ) : null}
 
@@ -409,7 +414,7 @@ export default function JoinTourPage() {
 
                   {/* Confirmed badge for confirmed tours */}
                   {isConfirmed && (
-                    <div className="p-[var(--space-lg)] border-b border-[var(--color-border)] bg-[var(--color-primary-subtle)]">
+                    <div className="p-[var(--space-lg)] border-b border-[var(--color-border)] bg-[var(--color-success-bg)]">
                       <div className="flex items-center gap-[var(--space-sm)]">
                         <svg
                           width="20"
