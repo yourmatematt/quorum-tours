@@ -143,7 +143,7 @@ export function useProfileDashboard(userId: string | null) {
           id, status, deposit_charged, balance_paid_at, tour_id,
           tours (
             id, slug, title, status, date_start, date_end,
-            current_participant_count, threshold, capacity, target_species,
+            current_participant_count, threshold, capacity, highlights,
             operator_id,
             operators ( id, slug, name, base_location )
           )
@@ -200,7 +200,7 @@ export function useProfileDashboard(userId: string | null) {
           };
         });
 
-        const targetSpecies = (tour.target_species || []).slice(0, 4).map((name: string, i: number) => ({
+        const targetSpecies = (tour.highlights || []).slice(0, 4).map((name: string, i: number) => ({
           id: `sp-${i}`,
           name,
         }));
