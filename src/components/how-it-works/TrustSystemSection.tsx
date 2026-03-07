@@ -137,7 +137,7 @@ export function TrustSystemSection() {
                   rounded-[var(--radius-organic)]
                   border-2
                   ${tier.name === 'Trusted'
-                    ? 'bg-[var(--color-primary-subtle)] border-[var(--color-primary)]'
+                    ? 'bg-[var(--color-success-bg)] border-[var(--color-primary)]'
                     : tier.name === 'Suspended'
                     ? 'bg-[var(--color-surface-sunken)] border-[var(--color-border)] opacity-75'
                     : 'bg-[var(--color-surface-raised)] border-[var(--color-border)]'

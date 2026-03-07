@@ -12,6 +12,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { useTour } from '@/lib/supabase/useTours';
 import { useAuth } from '@/lib/supabase/useAuth';
 import { usePersonalizedDeposit } from '@/hooks/usePersonalizedDeposit';
+import { useUserTrust } from '@/hooks/useUserTrust';
 
 type ConfirmationStatus = 'confirmed' | 'forming' | 'not-running';
 
@@ -174,6 +175,7 @@ export default function TourDetailPage() {
   const { tour: dbTour, isLoading, error } = useTour(tourId);
   const { user } = useAuth();
   const { depositCents: personalizedDepositCents } = usePersonalizedDeposit(user?.id ?? null, tourId);
+  const { trustTier } = useUserTrust(user?.id ?? null);
   const [imageError, setImageError] = useState(false);
 
   // Loading state
@@ -440,10 +442,16 @@ export default function TourDetailPage() {
                   isLoggedIn={!!user}
                   trustMessage={
                     user
-                      ? tour.deposit === 0
-                        ? 'No deposit required for Trusted members'
-                        : 'Based on your trust status'
-                      : null
+                      ? trustTier === 'trusted'
+                        ? 'No deposit — Trusted member'
+                        : trustTier === 'new'
+                        ? 'Deposit required for first-time birders'
+                        : trustTier === 'strike-1'
+                        ? 'Deposit required — 1 strike on account'
+                        : trustTier === 'strike-2'
+                        ? 'Higher deposit required — 2 strikes on account'
+                        : null
+                      : 'Deposit varies by trust tier'
                   }
                 />
               </div>
