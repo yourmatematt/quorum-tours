@@ -12,6 +12,7 @@ import {
 } from '@/components/profile';
 import { useAuth } from '@/lib/supabase/useAuth';
 import { useProfileDashboard } from '@/hooks/useProfileDashboard';
+import { useChaseList } from '@/hooks/useChaseList';
 
 /**
  * Profile Page - User Dashboard
@@ -37,6 +38,7 @@ export default function ProfilePage() {
     isLoading: profileLoading,
     error,
   } = useProfileDashboard(user?.id ?? null);
+  const { birds: chaseBirds, addBird, removeBird } = useChaseList(user?.id ?? null);
 
   const isLoading = authLoading || profileLoading;
 
@@ -174,7 +176,11 @@ export default function ProfilePage() {
               />
 
               {/* Chase List - Primary sidebar element */}
-              <ChaseListSection birds={[]} />
+              <ChaseListSection
+                birds={chaseBirds}
+                onAdd={addBird}
+                onRemove={removeBird}
+              />
 
               {/* Account Section - Demoted to bottom */}
               <SettingsSection />
