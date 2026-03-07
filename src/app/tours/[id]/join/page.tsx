@@ -414,7 +414,7 @@ export default function JoinTourPage() {
 
                   {/* Confirmed badge for confirmed tours */}
                   {isConfirmed && (
-                    <div className="p-[var(--space-lg)] border-b border-[var(--color-border)] bg-[var(--color-success-bg)]">
+                    <div className="p-[var(--space-lg)] border-b border-[var(--color-border)] bg-[var(--color-primary-subtle)]">
                       <div className="flex items-center gap-[var(--space-sm)]">
                         <svg
                           width="20"
