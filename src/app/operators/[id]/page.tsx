@@ -11,6 +11,7 @@ import { TrackRecordSummary } from '@/components/ui/TrackRecordSummary';
 import { TourCard } from '@/components/TourCard';
 import { PastTourItem } from '@/components/ui/PastTourItem';
 import { CapabilitiesSection } from '@/components/ui/CapabilitiesSection';
+import { OperatorNoToursCard } from '@/components/ui/OperatorNoToursCard';
 
 /* ---- Types for DB data ---- */
 interface OperatorRow {
@@ -214,6 +215,11 @@ export default function OperatorProfilePage() {
               ))}
             </div>
           </section>
+        )}
+
+        {/* Empty state: no active tours */}
+        {activeTours.length === 0 && (
+          <OperatorNoToursCard operatorFirstName={operator.name.split(' ')[0]} />
         )}
 
         {/* Why I Joined Quorum — public quote block */}
