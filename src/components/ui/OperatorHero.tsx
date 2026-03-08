@@ -22,13 +22,13 @@ export function OperatorHero({
   return (
     <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)]">
       {/* Cover banner + overlapping photo wrapper */}
-      <div className="relative">
-        {/* Cover banner */}
+      <div className="relative -mx-[var(--space-lg)]">
+        {/* Cover banner — breaks out of container padding for full width */}
         <div
           className="
             w-full
             h-[140px] sm:h-[180px] lg:h-[220px]
-            rounded-[var(--radius-organic)]
+            sm:rounded-[var(--radius-organic)]
             overflow-hidden
           "
         >
@@ -53,7 +53,7 @@ export function OperatorHero({
         <div
           className="
             absolute
-            left-[var(--space-md)] sm:left-[var(--space-lg)]
+            left-[var(--space-lg)] sm:left-[calc(var(--space-lg)+var(--space-md))]
             bottom-0 translate-y-1/2
             z-10
           "
