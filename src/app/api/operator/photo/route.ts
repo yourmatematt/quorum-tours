@@ -25,10 +25,31 @@ async function getOperatorForUser() {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
+  // Find operator via operator_members or profiles.linked_operator_id
+  const { data: membership } = await serviceClient
+    .from('operator_members')
+    .select('operator_id')
+    .eq('profile_id', user.id)
+    .eq('is_active', true)
+    .maybeSingle();
+
+  let operatorId = membership?.operator_id;
+
+  if (!operatorId) {
+    const { data: profile } = await serviceClient
+      .from('profiles')
+      .select('linked_operator_id')
+      .eq('id', user.id)
+      .single();
+    operatorId = profile?.linked_operator_id;
+  }
+
+  if (!operatorId) return { error: 'Operator not found', status: 404 };
+
   const { data: operator } = await serviceClient
     .from('operators')
-    .select('id, user_id, logo_url')
-    .eq('user_id', user.id)
+    .select('id, logo_url')
+    .eq('id', operatorId)
     .single();
 
   if (!operator) return { error: 'Operator not found', status: 404 };
@@ -60,12 +81,12 @@ export async function POST(request: Request) {
     }
 
     // Delete old photo if exists
-    const oldPath = `${user.id}/profile`;
+    const oldPath = `${operator.id}/profile`;
     await serviceClient.storage.from(BUCKET).remove([`${oldPath}.webp`, `${oldPath}.jpg`, `${oldPath}.png`]);
 
     // Upload new photo
     const ext = file.type === 'image/webp' ? 'webp' : file.type === 'image/png' ? 'png' : 'jpg';
-    const filePath = `${user.id}/profile.${ext}`;
+    const filePath = `${operator.id}/profile.${ext}`;
     const arrayBuffer = await file.arrayBuffer();
 
     const { error: uploadError } = await serviceClient.storage
@@ -112,7 +133,7 @@ export async function DELETE() {
     const { user, operator, serviceClient } = auth;
 
     // Remove all possible extensions
-    const basePath = `${user.id}/profile`;
+    const basePath = `${operator.id}/profile`;
     await serviceClient.storage.from(BUCKET).remove([
       `${basePath}.webp`,
       `${basePath}.jpg`,

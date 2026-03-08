@@ -151,21 +151,30 @@ export function ProfilePhotoCropModal({ file, onSave, onClose }: ProfilePhotoCro
 
     octx.drawImage(img, drawX, drawY, drawW, drawH);
 
-    out.toBlob(
-      async (blob) => {
-        if (!blob) {
-          setIsSaving(false);
-          return;
-        }
-        try {
-          await onSave(blob);
-        } finally {
-          setIsSaving(false);
-        }
-      },
-      'image/webp',
-      0.85
-    );
+    // Try WebP first, fall back to JPEG (Safari doesn't support WebP canvas encoding)
+    function tryExport(mime: string, quality: number) {
+      out.toBlob(
+        async (blob) => {
+          if (!blob && mime === 'image/webp') {
+            // WebP not supported, fall back to JPEG
+            tryExport('image/jpeg', 0.9);
+            return;
+          }
+          if (!blob) {
+            setIsSaving(false);
+            return;
+          }
+          try {
+            await onSave(blob);
+          } finally {
+            setIsSaving(false);
+          }
+        },
+        mime,
+        quality,
+      );
+    }
+    tryExport('image/webp', 0.85);
   }
 
   return (

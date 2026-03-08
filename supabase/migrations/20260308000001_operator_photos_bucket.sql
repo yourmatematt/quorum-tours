@@ -8,34 +8,24 @@ VALUES (
   ARRAY['image/jpeg', 'image/png', 'image/webp']
 );
 
--- Allow authenticated users to upload to their own operator folder
-CREATE POLICY "Operators can upload their own photos"
+-- Uploads go through API routes which handle authorization.
+-- Service role client bypasses RLS, but keep policies as safety net.
+CREATE POLICY "Authenticated users can upload operator photos"
 ON storage.objects FOR INSERT
 TO authenticated
-WITH CHECK (
-  bucket_id = 'operator-photos'
-  AND (storage.foldername(name))[1] = auth.uid()::text
-);
+WITH CHECK (bucket_id = 'operator-photos');
 
--- Allow authenticated users to update/overwrite their own photos
-CREATE POLICY "Operators can update their own photos"
+CREATE POLICY "Authenticated users can update operator photos"
 ON storage.objects FOR UPDATE
 TO authenticated
-USING (
-  bucket_id = 'operator-photos'
-  AND (storage.foldername(name))[1] = auth.uid()::text
-);
+USING (bucket_id = 'operator-photos');
 
--- Allow authenticated users to delete their own photos
-CREATE POLICY "Operators can delete their own photos"
+CREATE POLICY "Authenticated users can delete operator photos"
 ON storage.objects FOR DELETE
 TO authenticated
-USING (
-  bucket_id = 'operator-photos'
-  AND (storage.foldername(name))[1] = auth.uid()::text
-);
+USING (bucket_id = 'operator-photos');
 
--- Public read access (bucket is public, but explicit policy)
+-- Public read access
 CREATE POLICY "Anyone can view operator photos"
 ON storage.objects FOR SELECT
 TO public

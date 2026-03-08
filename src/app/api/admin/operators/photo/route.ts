@@ -42,9 +42,10 @@ export async function POST(request: Request) {
     }
 
     // Get operator's user_id for storage path
+    // Verify operator exists
     const { data: operator } = await serviceClient
       .from('operators')
-      .select('id, user_id')
+      .select('id')
       .eq('id', operatorId)
       .single();
 
@@ -52,15 +53,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Operator not found' }, { status: 404 });
     }
 
-    // Delete old photos
-    const basePath = `${operator.user_id}/profile`;
+    // Delete old photos (stored by operator id)
+    const basePath = `${operatorId}/profile`;
     await serviceClient.storage.from(BUCKET).remove([
       `${basePath}.webp`, `${basePath}.jpg`, `${basePath}.png`,
     ]);
 
     // Upload
     const ext = file.type === 'image/webp' ? 'webp' : file.type === 'image/png' ? 'png' : 'jpg';
-    const filePath = `${operator.user_id}/profile.${ext}`;
+    const filePath = `${operatorId}/profile.${ext}`;
     const arrayBuffer = await file.arrayBuffer();
 
     const { error: uploadError } = await serviceClient.storage
