@@ -176,7 +176,7 @@ export default function OperatorProfilePage() {
         {/* Section cards — each section is its own card */}
         <div className="flex flex-col gap-3 sm:gap-4 lg:gap-6">
 
-        {/* Card 1: Hero — banner + photo + identity */}
+        {/* Card 1: Hero — identity card */}
         <div className="
           bg-white
           rounded-[var(--radius-organic)]
@@ -190,11 +190,32 @@ export default function OperatorProfilePage() {
             coverImage={operator.hero_image_url ?? undefined}
             verified={operator.is_verified}
             isFoundingOperator={operator.is_founding_operator}
-            expertise={operator.tagline ?? ''}
             location={operator.base_location ?? ''}
             yearsExperience={yearsExperience}
           />
+          {/* Bio — desktop only, inside hero card */}
+          {operator.tagline && (
+            <p className="hidden lg:block px-[var(--space-lg)] mt-[var(--space-sm)] text-[var(--text-lg)] text-[var(--color-ink-muted)]">
+              {operator.tagline}
+            </p>
+          )}
         </div>
+
+        {/* Card 1b: Bio — mobile only */}
+        {operator.tagline && (
+          <div className="
+            lg:hidden
+            bg-white
+            rounded-[var(--radius-organic)]
+            border border-[var(--color-border)]
+            shadow-sm
+            p-4 sm:p-6
+          ">
+            <p className="text-[var(--color-ink-muted)] leading-relaxed">
+              {operator.tagline}
+            </p>
+          </div>
+        )}
 
         {/* Card 2: Why I Joined Quorum */}
         {whyQuorum && (

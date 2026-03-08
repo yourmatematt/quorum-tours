@@ -4,7 +4,6 @@ interface OperatorHeroProps {
   coverImage?: string;
   verified: boolean;
   isFoundingOperator?: boolean;
-  expertise: string;
   location: string;
   yearsExperience: number;
 }
@@ -15,7 +14,6 @@ export function OperatorHero({
   coverImage,
   verified,
   isFoundingOperator,
-  expertise,
   location,
   yearsExperience,
 }: OperatorHeroProps) {
@@ -60,7 +58,7 @@ export function OperatorHero({
         >
           <div
             className="
-              w-[72px] h-[72px] sm:w-28 sm:h-28 lg:w-36 lg:h-36
+              w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36
               rounded-full
               bg-[var(--color-surface-sunken)]
               border-4 border-white
@@ -94,7 +92,7 @@ export function OperatorHero({
       </div>
 
       {/* Spacer for overflowing photo + identity info */}
-      <div className="pt-10 sm:pt-16 lg:pt-20 px-[var(--space-md)] sm:px-[var(--space-lg)]">
+      <div className="pt-14 sm:pt-16 lg:pt-20 px-[var(--space-md)] sm:px-[var(--space-lg)]">
         {/* Name */}
         <h1 className="font-display text-xl sm:text-3xl lg:text-4xl font-semibold text-[var(--color-ink)] leading-tight">
           {name}
@@ -181,12 +179,6 @@ export function OperatorHero({
           </div>
         </div>
 
-        {/* Expertise / tagline */}
-        {expertise && (
-          <p className="text-[var(--text-base)] sm:text-[var(--text-lg)] text-[var(--color-ink-muted)] mt-[var(--space-sm)] sm:mt-[var(--space-md)]">
-            {expertise}
-          </p>
-        )}
       </div>
     </section>
   );
