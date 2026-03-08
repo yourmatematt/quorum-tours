@@ -2,227 +2,101 @@
 
 /**
  * Dashboard Overview Section
- * Compact single-viewport view with grouped metrics, alerts, and quick actions
+ * Compact single-viewport view with real metrics and quick actions
  */
 
-import { AlertTriangle, CheckCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { SystemStatusWidget } from './SystemStatusWidget';
+import { createClient } from '@/lib/supabase/client';
 
-interface Alert {
-  id: string;
-  level: 'critical' | 'warning' | 'info';
-  message: string;
-  timestamp: string;
-  actionLabel?: string;
+interface DashboardMetrics {
+  operators: { verified: number; pending: number };
+  tours: { active: number; completed: number; quorumRate: number | null };
+  users: { total: number };
 }
 
 export function DashboardOverview() {
-  // Mock data - would come from API
-  const criticalAlerts: Alert[] = [
-    {
-      id: '1',
-      level: 'critical',
-      message: 'Payment processing error on 3 operator payouts',
-      timestamp: '5 min ago',
-      actionLabel: 'Review',
-    },
-    {
-      id: '2',
-      level: 'warning',
-      message: '12 operator credentials expiring within 7 days',
-      timestamp: '1 hr ago',
-      actionLabel: 'View',
-    },
-  ];
+  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const metrics = {
-    revenue: {
-      escrowed: 284750,
-      paidOut: 156230,
-      commission: 28475,
-    },
-    tours: {
-      quorumRate: 73,
-      active: 47,
-      completedThisMonth: 12,
-    },
-    users: {
-      totalActive: 3847,
-      newThisWeek: 142,
-      retentionRate: 68,
-    },
-    operators: {
-      verified: 89,
-      pending: 8,
-      completionRate: 82,
-    },
-  };
+  useEffect(() => {
+    async function fetchMetrics() {
+      const supabase = createClient();
 
-  const alertLevelStyles = {
-    critical: 'border-l-4 border-[var(--color-destructive-border)] bg-[var(--color-destructive-bg)]',
-    warning: 'border-l-4 border-[var(--color-warning-border)] bg-[var(--color-warning-bg)]',
-    info: 'border-l-4 border-[var(--color-info-border)] bg-[var(--color-info-bg)]',
-  };
+      try {
+        // Fetch counts in parallel
+        const [operatorsRes, pendingRes, toursRes, completedRes, cancelledRes, usersRes] = await Promise.all([
+          supabase.from('operators').select('id', { count: 'exact', head: true }).eq('is_verified', true),
+          supabase.from('operator_applications').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+          supabase.from('tours').select('id', { count: 'exact', head: true }).in('status', ['forming', 'payment_pending', 'confirmed']),
+          supabase.from('tours').select('id', { count: 'exact', head: true }).eq('status', 'completed'),
+          supabase.from('tours').select('id', { count: 'exact', head: true }).eq('status', 'cancelled'),
+          supabase.from('profiles').select('id', { count: 'exact', head: true }),
+        ]);
 
-  const alertIcons = {
-    critical: <AlertTriangle className="w-4 h-4 text-[var(--color-destructive)] flex-shrink-0" />,
-    warning: <AlertTriangle className="w-4 h-4 text-[var(--color-warning-text)] flex-shrink-0" />,
-    info: <CheckCircle className="w-4 h-4 text-[var(--color-info-text)] flex-shrink-0" />,
-  };
+        const completed = completedRes.count ?? 0;
+        const cancelled = cancelledRes.count ?? 0;
+        const quorumDenom = completed + cancelled;
+
+        setMetrics({
+          operators: {
+            verified: operatorsRes.count ?? 0,
+            pending: pendingRes.count ?? 0,
+          },
+          tours: {
+            active: toursRes.count ?? 0,
+            completed,
+            quorumRate: quorumDenom > 0 ? Math.round((completed / quorumDenom) * 100) : null,
+          },
+          users: {
+            total: usersRes.count ?? 0,
+          },
+        });
+      } catch (err) {
+        console.error('Failed to fetch dashboard metrics:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchMetrics();
+  }, []);
 
   return (
     <div className="space-y-4">
-      {/* Metrics Grid - 2x2 compact cards */}
-      <div className="grid grid-cols-2 gap-3">
-        {/* Revenue */}
-        <div className="bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-3">
-          <h4 className="text-xs font-medium text-[var(--color-ink-muted)] uppercase tracking-wide mb-2">
-            Revenue
-          </h4>
-          <div className="space-y-1">
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs text-[var(--color-ink-muted)]">Escrowed</span>
-              <span className="font-mono text-sm font-semibold text-[var(--color-forming)]">
-                ${metrics.revenue.escrowed.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs text-[var(--color-ink-muted)]">Paid Out</span>
-              <span className="font-mono text-sm font-semibold text-[var(--color-confirmed)]">
-                ${metrics.revenue.paidOut.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between items-baseline pt-1 border-t border-[var(--color-border)]">
-              <span className="text-xs text-[var(--color-ink-muted)]">Commission</span>
-              <span className="font-mono text-sm font-semibold text-[var(--color-primary)]">
-                ${metrics.revenue.commission.toLocaleString()}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Tours */}
-        <div className="bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-3">
-          <h4 className="text-xs font-medium text-[var(--color-ink-muted)] uppercase tracking-wide mb-2">
-            Tours
-          </h4>
-          <div className="space-y-1">
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs text-[var(--color-ink-muted)]">Quorum Rate</span>
-              <span className="font-mono text-sm font-semibold text-[var(--color-confirmed)]">
-                {metrics.tours.quorumRate}%
-              </span>
-            </div>
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs text-[var(--color-ink-muted)]">Active</span>
-              <span className="font-mono text-sm font-semibold text-[var(--color-ink)]">
-                {metrics.tours.active}
-              </span>
-            </div>
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs text-[var(--color-ink-muted)]">Completed (mo)</span>
-              <span className="font-mono text-sm font-semibold text-[var(--color-ink)]">
-                {metrics.tours.completedThisMonth}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Users */}
-        <div className="bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-3">
-          <h4 className="text-xs font-medium text-[var(--color-ink-muted)] uppercase tracking-wide mb-2">
-            Users
-          </h4>
-          <div className="space-y-1">
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs text-[var(--color-ink-muted)]">Total Active</span>
-              <span className="font-mono text-sm font-semibold text-[var(--color-ink)]">
-                {metrics.users.totalActive.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs text-[var(--color-ink-muted)]">New (week)</span>
-              <span className="font-mono text-sm font-semibold text-[var(--color-confirmed)]">
-                +{metrics.users.newThisWeek}
-              </span>
-            </div>
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs text-[var(--color-ink-muted)]">Retention</span>
-              <span className="font-mono text-sm font-semibold text-[var(--color-ink)]">
-                {metrics.users.retentionRate}%
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Operators */}
-        <div className="bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-3">
-          <h4 className="text-xs font-medium text-[var(--color-ink-muted)] uppercase tracking-wide mb-2">
-            Operators
-          </h4>
-          <div className="space-y-1">
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs text-[var(--color-ink-muted)]">Verified</span>
-              <span className="font-mono text-sm font-semibold text-[var(--color-ink)]">
-                {metrics.operators.verified}
-              </span>
-            </div>
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs text-[var(--color-ink-muted)]">Pending</span>
-              <span className="font-mono text-sm font-semibold text-[var(--color-forming)]">
-                {metrics.operators.pending}
-              </span>
-            </div>
-            <div className="flex justify-between items-baseline">
-              <span className="text-xs text-[var(--color-ink-muted)]">Completion</span>
-              <span className="font-mono text-sm font-semibold text-[var(--color-ink)]">
-                {metrics.operators.completionRate}%
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Alerts Section */}
-      <div className="bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-3">
-        <div className="flex items-center justify-between mb-2">
-          <h4 className="text-xs font-medium text-[var(--color-ink-muted)] uppercase tracking-wide">
-            Active Alerts
-          </h4>
-          <span className="text-xs text-[var(--color-ink-muted)]">
-            {criticalAlerts.length} requiring attention
-          </span>
-        </div>
-
-        {criticalAlerts.length === 0 ? (
-          <p className="text-sm text-[var(--color-ink-muted)] text-center py-2">
-            No active alerts
-          </p>
-        ) : (
-          <div className="space-y-2">
-            {criticalAlerts.map((alert) => (
-              <div
-                key={alert.id}
-                className={`${alertLevelStyles[alert.level]} rounded-[var(--radius-organic)] px-3 py-2`}
-              >
-                <div className="flex items-center gap-2">
-                  {alertIcons[alert.level]}
-                  <p className="flex-1 text-sm text-[var(--color-ink)]">
-                    {alert.message}
-                  </p>
-                  <span className="text-xs text-[var(--color-ink-muted)] hidden sm:inline">
-                    {alert.timestamp}
-                  </span>
-                  {alert.actionLabel && (
-                    <button className="text-xs font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-hover)]">
-                      {alert.actionLabel} →
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+      {/* Metrics Grid - compact cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <MetricCard
+          title="Operators"
+          items={[
+            { label: 'Verified', value: metrics?.operators.verified ?? 0 },
+            { label: 'Pending', value: metrics?.operators.pending ?? 0, variant: 'forming' },
+          ]}
+          isLoading={isLoading}
+        />
+        <MetricCard
+          title="Tours"
+          items={[
+            { label: 'Active', value: metrics?.tours.active ?? 0 },
+            { label: 'Completed', value: metrics?.tours.completed ?? 0, variant: 'confirmed' },
+            { label: 'Quorum Rate', value: metrics?.tours.quorumRate !== null && metrics?.tours.quorumRate !== undefined ? `${metrics.tours.quorumRate}%` : '—' },
+          ]}
+          isLoading={isLoading}
+        />
+        <MetricCard
+          title="Users"
+          items={[
+            { label: 'Total', value: metrics?.users.total ?? 0 },
+          ]}
+          isLoading={isLoading}
+        />
+        <MetricCard
+          title="Revenue"
+          items={[
+            { label: 'Status', value: 'Pre-launch' },
+          ]}
+          isLoading={isLoading}
+        />
       </div>
 
       {/* System Status + Quick Actions Row */}
@@ -249,18 +123,6 @@ export function DashboardOverview() {
               Tour Oversight
             </a>
             <a
-              href="/admin/alerts"
-              className="px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] bg-[var(--color-surface-sunken)] border border-[var(--color-border)] rounded-[var(--radius-organic)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
-            >
-              All Alerts
-            </a>
-            <a
-              href="/admin/audit"
-              className="px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] bg-[var(--color-surface-sunken)] border border-[var(--color-border)] rounded-[var(--radius-organic)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
-            >
-              Audit Log
-            </a>
-            <a
               href="/admin/system"
               className="px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] bg-[var(--color-surface-sunken)] border border-[var(--color-border)] rounded-[var(--radius-organic)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
             >
@@ -269,6 +131,48 @@ export function DashboardOverview() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function MetricCard({
+  title,
+  items,
+  isLoading,
+}: {
+  title: string;
+  items: { label: string; value: string | number; variant?: 'confirmed' | 'forming' | 'destructive' }[];
+  isLoading: boolean;
+}) {
+  const variantColors: Record<string, string> = {
+    confirmed: 'text-[var(--color-confirmed)]',
+    forming: 'text-[var(--color-forming)]',
+    destructive: 'text-[var(--color-destructive)]',
+  };
+
+  return (
+    <div className="bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-3">
+      <h4 className="text-xs font-medium text-[var(--color-ink-muted)] uppercase tracking-wide mb-2">
+        {title}
+      </h4>
+      {isLoading ? (
+        <div className="space-y-2">
+          {items.map((_, i) => (
+            <div key={i} className="h-4 bg-[var(--color-border)] rounded animate-pulse" />
+          ))}
+        </div>
+      ) : (
+        <div className="space-y-1">
+          {items.map((item) => (
+            <div key={item.label} className="flex justify-between items-baseline">
+              <span className="text-xs text-[var(--color-ink-muted)]">{item.label}</span>
+              <span className={`font-mono text-sm font-semibold ${item.variant ? variantColors[item.variant] : 'text-[var(--color-ink)]'}`}>
+                {item.value}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

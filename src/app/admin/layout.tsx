@@ -16,8 +16,7 @@ export default function AdminLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shortcutsHelpOpen, setShortcutsHelpOpen] = useState(false);
 
-  // TODO: Fetch actual alert count from API
-  const alertCount = 3;
+  const alertCount = 0;
 
   // Handle ? key for shortcuts help
   const handleQuestionMark = useCallback((e: KeyboardEvent) => {
