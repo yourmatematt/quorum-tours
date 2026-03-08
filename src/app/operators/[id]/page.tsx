@@ -1,363 +1,145 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams, notFound } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { OperatorHero } from '@/components/ui/OperatorHero';
 import { AuthoritySection } from '@/components/ui/AuthoritySection';
-import { RatingDistribution } from '@/components/ui/RatingDistribution';
-import { ReviewCard } from '@/components/ui/ReviewCard';
-import { CapabilitiesSection } from '@/components/ui/CapabilitiesSection';
-import { PastTourItem } from '@/components/ui/PastTourItem';
 import { TrackRecordSummary } from '@/components/ui/TrackRecordSummary';
 import { TourCard } from '@/components/TourCard';
+import { PastTourItem } from '@/components/ui/PastTourItem';
+import { CapabilitiesSection } from '@/components/ui/CapabilitiesSection';
 
-// TypeScript interfaces per IA specification
-interface Credential {
-  title: string;
-  issuer: string;
-  year?: number;
-}
-
-interface Review {
-  id: string;
-  reviewerName: string;
-  tourId: string;
-  tourTitle: string;
-  tourDate: string;
-  reviewDate: string;
-  rating: number;
-  text: string;
-  operatorResponse?: string;
-}
-
-interface EquipmentItem {
-  name: string;
-  description?: string;
-}
-
-interface CapacityInfo {
-  typical: string;
-  maximum: number;
-  privateAvailable: boolean;
-}
-
-interface TourPreview {
-  id: string;
-  title: string;
-  status: 'confirmed' | 'forming' | 'not-running';
-  currentParticipants: number;
-  threshold: number;
-  capacity: number;
-  date: string;
-  location: string;
-  speciesHighlight?: string;
-}
-
-interface PastTour {
-  id: string;
-  title: string;
-  date: string;
-  outcome: 'completed' | 'cancelled';
-  participantCount?: number;
-}
-
-interface OperatorProfile {
+/* ---- Types for DB data ---- */
+interface OperatorRow {
   id: string;
   slug: string;
   name: string;
-  photo?: string;
-  verified: boolean;
-  expertise: string;
-  location: string;
-  yearsExperience: number;
-  specializations: string[];
-  credentials: Credential[];
-  affiliations: string[];
-  bio: string;
-  philosophy?: string;
-  whyQuorum?: string;
-  reviews: Review[];
-  ratingDistribution: number[];
-  averageRating: number;
-  totalReviews: number;
-  equipment: EquipmentItem[];
-  capacity: CapacityInfo;
-  accessibility: string[];
-  languages: string[];
-  activeTours: TourPreview[];
-  pastTours: PastTour[];
-  trackRecord: {
-    toursCompleted: number;
-    confirmationRate: number;
-    totalParticipants: number;
-  };
+  tagline: string | null;
+  description: string | null;
+  logo_url: string | null;
+  base_location: string | null;
+  established_year: number | null;
+  specialties: string[] | null;
+  languages: string[] | null;
+  is_verified: boolean;
+  rating_avg: number | null;
+  rating_count: number | null;
+  tours_completed: number | null;
+  guests_served: number | null;
+  vessel_name: string | null;
+  vessel_capacity: number | null;
+  vessel_features: string[] | null;
+  equipment_summary: string | null;
+  metadata: Record<string, unknown> | null;
 }
 
-// Example operator data
-const exampleOperators: Record<string, OperatorProfile> = {
-  'sarah-mitchell': {
-    id: 'sarah-mitchell',
-    slug: 'sarah-mitchell',
-    name: 'Sarah Mitchell',
-    photo: undefined,
-    verified: true,
-    expertise: 'Wetland and waterbird specialist',
-    location: 'Melbourne, Victoria',
-    yearsExperience: 12,
-    specializations: [
-      'Wetland habitats',
-      'Waterbird identification',
-      'Shorebird migration',
-      'Victorian grasslands',
-    ],
-    credentials: [
-      {
-        title: 'BirdLife Australia Guide Certification',
-        issuer: 'BirdLife Australia',
-        year: 2014,
-      },
-      {
-        title: 'Wildlife Tourism Operator License',
-        issuer: 'Parks Victoria',
-        year: 2012,
-      },
-    ],
-    affiliations: [
-      'BirdLife Australia',
-      'Victorian Ornithological Research Group',
-      'Australasian Wader Studies Group',
-    ],
-    bio: `I've been guiding birding tours across Victoria since 2012, with a particular focus on the internationally significant wetlands at Werribee and the Western Treatment Plant. My background in environmental science informs my approach to bird identification and habitat understanding.
-
-I believe the best birding experiences come from patience and attention to habitat. Rather than rushing between sites, I prefer to spend time in productive areas, allowing the birds to reveal themselves naturally.`,
-    philosophy: 'Small groups, expert guidance, and respect for wildlife. Every tour is an opportunity to deepen your connection with the natural world.',
-    whyQuorum: 'I was spending half my time chasing deposits and fielding cancellation calls. Now I list a tour, and it either fills or it doesn\'t — no risk, no awkward conversations.',
-    reviews: [
-      {
-        id: 'r1',
-        reviewerName: 'Michael Thompson',
-        tourId: '1',
-        tourTitle: 'Dawn Chorus at Werribee',
-        tourDate: 'February 2026',
-        reviewDate: 'March 2, 2026',
-        rating: 5,
-        text: 'Sarah\'s knowledge of the wetlands is exceptional. She helped us identify several tricky shorebirds and knew exactly where to find the Brolgas. The early start was worth it for the dawn chorus.',
-        operatorResponse: 'Thanks Michael! Those Brolgas were particularly cooperative that morning. Hope to see you on a future tour.',
-      },
-      {
-        id: 'r2',
-        reviewerName: 'Jennifer Liu',
-        tourId: '1',
-        tourTitle: 'Dawn Chorus at Werribee',
-        tourDate: 'January 2026',
-        reviewDate: 'January 28, 2026',
-        rating: 5,
-        text: 'Fantastic experience. Sarah was patient with beginners and helped me improve my identification skills. We saw over 60 species including a Freckled Duck, which was a lifer for me.',
-      },
-      {
-        id: 'r3',
-        reviewerName: 'Robert Chen',
-        tourId: 'past-1',
-        tourTitle: 'Winter Waterbirds at Western Port',
-        tourDate: 'July 2025',
-        reviewDate: 'August 5, 2025',
-        rating: 4,
-        text: 'Good tour overall. Weather wasn\'t ideal but Sarah made the best of it. Saw some great species including a Hooded Plover.',
-      },
-      {
-        id: 'r4',
-        reviewerName: 'Amanda Foster',
-        tourId: 'past-2',
-        tourTitle: 'Grassland Specialists Tour',
-        tourDate: 'October 2025',
-        reviewDate: 'October 22, 2025',
-        rating: 5,
-        text: 'The grassland tour exceeded expectations. Sarah\'s ability to locate Plains-wanderers is remarkable. Professional, knowledgeable, and genuinely passionate about conservation.',
-      },
-    ],
-    ratingDistribution: [0, 0, 0, 1, 3],
-    averageRating: 4.8,
-    totalReviews: 4,
-    equipment: [
-      { name: 'Swarovski telescope', description: 'Available for group use' },
-      { name: 'Spare binoculars', description: '8x42 for those without their own' },
-      { name: 'Field guides', description: 'Regional guides provided' },
-    ],
-    capacity: {
-      typical: '6-8 participants',
-      maximum: 12,
-      privateAvailable: true,
-    },
-    accessibility: [
-      'Tours on flat terrain available',
-      'Vehicle-based viewing options for mobility limitations',
-      'Dietary requirements accommodated',
-    ],
-    languages: ['English'],
-    activeTours: [
-      {
-        id: '1',
-        title: 'Dawn Chorus at Werribee',
-        status: 'confirmed',
-        currentParticipants: 8,
-        threshold: 6,
-        capacity: 12,
-        date: 'Saturday, March 15, 2026',
-        location: 'Werribee, VIC',
-        speciesHighlight: 'Brolga, Latham\'s Snipe',
-      },
-    ],
-    pastTours: [
-      {
-        id: 'past-1',
-        title: 'Winter Waterbirds at Western Port',
-        date: 'July 2025',
-        outcome: 'completed',
-        participantCount: 8,
-      },
-      {
-        id: 'past-2',
-        title: 'Grassland Specialists Tour',
-        date: 'October 2025',
-        outcome: 'completed',
-        participantCount: 6,
-      },
-      {
-        id: 'past-3',
-        title: 'You Yangs Woodland Walk',
-        date: 'September 2025',
-        outcome: 'cancelled',
-      },
-      {
-        id: 'past-4',
-        title: 'Werribee Dawn Chorus',
-        date: 'August 2025',
-        outcome: 'completed',
-        participantCount: 10,
-      },
-    ],
-    trackRecord: {
-      toursCompleted: 47,
-      confirmationRate: 89,
-      totalParticipants: 342,
-    },
-  },
-  'david-chen': {
-    id: 'david-chen',
-    slug: 'david-chen',
-    name: 'David Chen',
-    photo: undefined,
-    verified: true,
-    expertise: 'Shorebird identification specialist',
-    location: 'Cairns, Queensland',
-    yearsExperience: 8,
-    specializations: [
-      'Migratory shorebirds',
-      'Tropical wetlands',
-      'Far North Queensland endemics',
-      'Pelagic birding',
-    ],
-    credentials: [
-      {
-        title: 'Shorebird Identification Certification',
-        issuer: 'Australasian Wader Studies Group',
-        year: 2018,
-      },
-    ],
-    affiliations: [
-      'Birds Queensland',
-      'Australasian Wader Studies Group',
-    ],
-    bio: `Based in Cairns since 2016, I specialise in the migratory shorebirds that pass through Queensland's coastline. My background in marine biology gives me insight into the tidal patterns and feeding behaviors that make shorebird watching so rewarding.
-
-I've documented over 380 species in the Cairns region and maintain detailed records of migration timing and shorebird counts for citizen science projects.`,
-    reviews: [
-      {
-        id: 'r1',
-        reviewerName: 'Patricia Wong',
-        tourId: '2',
-        tourTitle: 'Shorebird Migration Watch',
-        tourDate: 'March 2025',
-        reviewDate: 'April 2, 2025',
-        rating: 5,
-        text: 'David\'s shorebird identification skills are incredible. He spotted a Nordmann\'s Greenshank that I would have completely missed. Patient teacher who explains the key field marks clearly.',
-      },
-      {
-        id: 'r2',
-        reviewerName: 'James Murray',
-        tourId: 'past-1',
-        tourTitle: 'Cairns Esplanade at High Tide',
-        tourDate: 'February 2025',
-        reviewDate: 'February 20, 2025',
-        rating: 4,
-        text: 'Good introduction to shorebirding. The timing with tides was perfect. David knows his stuff.',
-      },
-    ],
-    ratingDistribution: [0, 0, 0, 1, 1],
-    averageRating: 4.5,
-    totalReviews: 2,
-    equipment: [
-      { name: 'Spotting scope', description: 'Essential for shorebird ID' },
-      { name: 'Tide charts', description: 'Planning around optimal viewing' },
-    ],
-    capacity: {
-      typical: '4-6 participants',
-      maximum: 10,
-      privateAvailable: true,
-    },
-    accessibility: [
-      'Flat terrain suitable for all abilities',
-      'Beach wheelchair available on request',
-    ],
-    languages: ['English', 'Mandarin'],
-    activeTours: [
-      {
-        id: '2',
-        title: 'Shorebird Migration Watch',
-        status: 'forming',
-        currentParticipants: 5,
-        threshold: 8,
-        capacity: 12,
-        date: 'Thursday, April 2, 2026',
-        location: 'Cairns, QLD',
-        speciesHighlight: 'Eastern Curlew, Bar-tailed Godwit',
-      },
-    ],
-    pastTours: [
-      {
-        id: 'past-1',
-        title: 'Cairns Esplanade at High Tide',
-        date: 'February 2025',
-        outcome: 'completed',
-        participantCount: 6,
-      },
-      {
-        id: 'past-2',
-        title: 'Atherton Tablelands Endemics',
-        date: 'January 2025',
-        outcome: 'completed',
-        participantCount: 4,
-      },
-    ],
-    trackRecord: {
-      toursCompleted: 23,
-      confirmationRate: 82,
-      totalParticipants: 124,
-    },
-  },
-};
-
-function getOperatorById(id: string): OperatorProfile {
-  return exampleOperators[id] || exampleOperators['sarah-mitchell'];
+interface TourRow {
+  id: string;
+  slug: string;
+  title: string;
+  status: string;
+  location: string | null;
+  date_start: string | null;
+  threshold: number | null;
+  capacity: number | null;
+  current_participant_count: number | null;
+  highlights: string[] | null;
 }
 
-interface PageProps {
-  params: { id: string };
-}
+export default function OperatorProfilePage() {
+  const params = useParams();
+  const slug = params.id as string;
 
-export default function OperatorProfilePage({ params }: PageProps) {
-  const operator = useMemo(() => getOperatorById(params.id), [params.id]);
+  const [operator, setOperator] = useState<OperatorRow | null>(null);
+  const [tours, setTours] = useState<TourRow[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [notFoundState, setNotFoundState] = useState(false);
   const [activeTab, setActiveTab] = useState<'active' | 'past'>('active');
+
+  useEffect(() => {
+    async function fetchOperator() {
+      const supabase = createClient();
+
+      // Try slug first, then UUID
+      let query = supabase
+        .from('operators')
+        .select('*')
+        .eq('is_active', true);
+
+      // If it looks like a UUID, query by id; otherwise by slug
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+      query = isUuid ? query.eq('id', slug) : query.eq('slug', slug);
+
+      const { data: op, error } = await query.single();
+
+      if (error || !op) {
+        setNotFoundState(true);
+        setIsLoading(false);
+        return;
+      }
+
+      setOperator(op);
+
+      // Fetch tours for this operator
+      const { data: tourData } = await supabase
+        .from('tours')
+        .select('id, slug, title, status, location, date_start, threshold, capacity, current_participant_count, highlights')
+        .eq('operator_id', op.id)
+        .order('date_start', { ascending: false });
+
+      setTours(tourData ?? []);
+      setIsLoading(false);
+    }
+
+    fetchOperator();
+  }, [slug]);
+
+  if (isLoading) {
+    return (
+      <main className="min-h-screen bg-[var(--color-surface)] flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--color-ink-muted)]" />
+      </main>
+    );
+  }
+
+  if (notFoundState || !operator) {
+    notFound();
+  }
+
+  const metadata = (operator.metadata ?? {}) as Record<string, unknown>;
+  const currentYear = new Date().getFullYear();
+  const yearsExperience = metadata.years_experience
+    ? Number(metadata.years_experience)
+    : operator.established_year
+      ? currentYear - operator.established_year
+      : 0;
+
+  const whyQuorum = (metadata.why_quorum as string) ?? null;
+
+  // Split tours into active vs past
+  const now = new Date();
+  const activeTours = tours.filter(
+    (t) => t.status === 'forming' || t.status === 'confirmed' || (t.date_start && new Date(t.date_start) > now)
+  );
+  const pastTours = tours.filter(
+    (t) => t.status === 'completed' || t.status === 'cancelled' || (t.date_start && new Date(t.date_start) <= now && t.status !== 'forming' && t.status !== 'confirmed')
+  );
+
+  // Build equipment/capabilities from DB fields
+  const equipmentItems: { name: string; description?: string }[] = [];
+  if (operator.vessel_name) {
+    const desc = [
+      operator.vessel_capacity ? `Capacity: ${operator.vessel_capacity}` : null,
+      operator.vessel_features?.length ? operator.vessel_features.join(', ') : null,
+    ].filter(Boolean).join('. ');
+    equipmentItems.push({ name: operator.vessel_name, description: desc || undefined });
+  }
+  if (operator.equipment_summary) {
+    equipmentItems.push({ name: operator.equipment_summary });
+  }
 
   return (
     <ErrorBoundary>
@@ -391,31 +173,33 @@ export default function OperatorProfilePage({ params }: PageProps) {
         {/* Section 1: Identity & Legitimacy */}
         <OperatorHero
           name={operator.name}
-          photo={operator.photo}
-          verified={operator.verified}
-          expertise={operator.expertise}
-          location={operator.location}
-          yearsExperience={operator.yearsExperience}
+          photo={operator.logo_url ?? undefined}
+          verified={operator.is_verified}
+          expertise={operator.tagline ?? ''}
+          location={operator.base_location ?? ''}
+          yearsExperience={yearsExperience}
         />
 
-        {/* Track Record Trust Strip — immediate trust signal */}
-        <div className="mb-[var(--space-3xl)]">
-          <TrackRecordSummary
-            toursCompleted={operator.trackRecord.toursCompleted}
-            confirmationRate={operator.trackRecord.confirmationRate}
-            totalParticipants={operator.trackRecord.totalParticipants}
-          />
-        </div>
+        {/* Track Record Trust Strip */}
+        {(operator.tours_completed ?? 0) > 0 && (
+          <div className="mb-[var(--space-3xl)]">
+            <TrackRecordSummary
+              toursCompleted={operator.tours_completed ?? 0}
+              confirmationRate={0}
+              totalParticipants={operator.guests_served ?? 0}
+            />
+          </div>
+        )}
 
         {/* Section 2: Authority Signals */}
         <AuthoritySection
-          specializations={operator.specializations}
-          credentials={operator.credentials}
-          affiliations={operator.affiliations}
+          specializations={operator.specialties ?? []}
+          credentials={[]}
+          affiliations={[]}
         />
 
-        {/* Section 3: Narrative */}
-        {operator.bio && (
+        {/* Section 3: Narrative — About */}
+        {operator.description && (
           <section className="mb-[var(--space-3xl)]">
             <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
               About
@@ -425,26 +209,15 @@ export default function OperatorProfilePage({ params }: PageProps) {
               leading-relaxed
               space-y-[var(--space-md)]
             ">
-              {operator.bio.split('\n\n').map((paragraph, index) => (
+              {operator.description.split('\n\n').map((paragraph, index) => (
                 <p key={index}>{paragraph}</p>
               ))}
             </div>
-            {operator.philosophy && (
-              <p className="
-                mt-[var(--space-lg)]
-                text-[var(--color-ink)]
-                italic
-                border-l-2 border-[var(--color-primary)]
-                pl-[var(--space-md)]
-              ">
-                {operator.philosophy}
-              </p>
-            )}
           </section>
         )}
 
         {/* Why I Joined Quorum — public quote block */}
-        {operator.whyQuorum && (
+        {whyQuorum && (
           <section className="mb-[var(--space-3xl)]">
             <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
               Why I Joined Quorum
@@ -458,7 +231,7 @@ export default function OperatorProfilePage({ params }: PageProps) {
               italic
               text-lg
             ">
-              <p>&ldquo;{operator.whyQuorum}&rdquo;</p>
+              <p>&ldquo;{whyQuorum}&rdquo;</p>
               <footer className="mt-[var(--space-sm)] text-sm not-italic text-[var(--color-ink-subtle)]">
                 — {operator.name}
               </footer>
@@ -466,160 +239,122 @@ export default function OperatorProfilePage({ params }: PageProps) {
           </section>
         )}
 
-        {/* Section 4: Reviews & Feedback */}
-        {operator.reviews.length > 0 && (
-          <section className="mb-[var(--space-3xl)]">
-            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
-              Reviews
-            </h2>
-
-            {/* Rating Distribution */}
-            <div className="mb-[var(--space-xl)]">
-              <RatingDistribution
-                distribution={operator.ratingDistribution}
-                averageRating={operator.averageRating}
-                totalReviews={operator.totalReviews}
-              />
-            </div>
-
-            {/* Individual Reviews */}
-            <div className="space-y-[var(--space-lg)]">
-              {operator.reviews.map((review) => (
-                <ReviewCard
-                  key={review.id}
-                  reviewerName={review.reviewerName}
-                  tourId={review.tourId}
-                  tourTitle={review.tourTitle}
-                  tourDate={review.tourDate}
-                  reviewDate={review.reviewDate}
-                  rating={review.rating}
-                  text={review.text}
-                  operatorResponse={review.operatorResponse}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
         {/* Section 5: Assets & Capabilities */}
         <CapabilitiesSection
-          equipment={operator.equipment}
-          capacity={operator.capacity}
-          accessibility={operator.accessibility}
-          languages={operator.languages}
+          equipment={equipmentItems}
+          capacity={{
+            typical: operator.vessel_capacity ? `Up to ${operator.vessel_capacity}` : '',
+            maximum: operator.vessel_capacity ?? 0,
+            privateAvailable: false,
+          }}
+          accessibility={[]}
+          languages={operator.languages ?? []}
         />
 
-        {/* Section 6: Active & Past Tours */}
-        <section className="mb-[var(--space-3xl)]">
-          <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
-            Tours
-          </h2>
+        {/* Section 6: Tours */}
+        {tours.length > 0 && (
+          <section className="mb-[var(--space-3xl)]">
+            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
+              Tours
+            </h2>
 
-          {/* Track Record Summary */}
-          <div className="mb-[var(--space-xl)]">
-            <TrackRecordSummary
-              toursCompleted={operator.trackRecord.toursCompleted}
-              confirmationRate={operator.trackRecord.confirmationRate}
-              totalParticipants={operator.trackRecord.totalParticipants}
-            />
-          </div>
-
-          {/* Tab Navigation */}
-          <div className="flex gap-[var(--space-md)] mb-[var(--space-lg)] border-b border-[var(--color-border)]">
-            <button
-              type="button"
-              onClick={() => setActiveTab('active')}
-              className={`
-                pb-[var(--space-sm)]
-                py-3 px-2 min-h-[48px]
-                text-sm font-medium
-                border-b-2
-                transition-colors duration-[var(--transition-normal)]
-                ${activeTab === 'active'
-                  ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
-                  : 'border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]'
-                }
-              `}
-            >
-              Active Tours ({operator.activeTours.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('past')}
-              className={`
-                pb-[var(--space-sm)]
-                py-3 px-2 min-h-[48px]
-                text-sm font-medium
-                border-b-2
-                transition-colors duration-[var(--transition-normal)]
-                ${activeTab === 'past'
-                  ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
-                  : 'border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]'
-                }
-              `}
-            >
-              Past Tours ({operator.pastTours.length})
-            </button>
-          </div>
-
-          {/* Tab Content */}
-          {activeTab === 'active' && (
-            <div>
-              {operator.activeTours.length > 0 ? (
-                <div className="grid gap-[var(--space-lg)] sm:grid-cols-2 lg:grid-cols-3">
-                  {operator.activeTours.map((tour) => (
-                    <TourCard
-                      key={tour.id}
-                      title={tour.title}
-                      operatorName={operator.name}
-                      status={tour.status}
-                      currentParticipants={tour.currentParticipants}
-                      quorum={tour.threshold}
-                      capacity={tour.capacity}
-                      date={tour.date}
-                      location={tour.location}
-                      href={`/tours/${tour.id}`}
-                      speciesHighlight={tour.speciesHighlight}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <p className="text-[var(--color-ink-muted)] py-[var(--space-xl)]">
-                  No active tours at the moment. Check back soon.
-                </p>
-              )}
+            {/* Tab Navigation */}
+            <div className="flex gap-[var(--space-md)] mb-[var(--space-lg)] border-b border-[var(--color-border)]">
+              <button
+                type="button"
+                onClick={() => setActiveTab('active')}
+                className={`
+                  pb-[var(--space-sm)]
+                  py-3 px-2 min-h-[48px]
+                  text-sm font-medium
+                  border-b-2
+                  transition-colors duration-[var(--transition-normal)]
+                  ${activeTab === 'active'
+                    ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
+                    : 'border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]'
+                  }
+                `}
+              >
+                Active Tours ({activeTours.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('past')}
+                className={`
+                  pb-[var(--space-sm)]
+                  py-3 px-2 min-h-[48px]
+                  text-sm font-medium
+                  border-b-2
+                  transition-colors duration-[var(--transition-normal)]
+                  ${activeTab === 'past'
+                    ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
+                    : 'border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]'
+                  }
+                `}
+              >
+                Past Tours ({pastTours.length})
+              </button>
             </div>
-          )}
 
-          {activeTab === 'past' && (
-            <div className="
-              bg-[var(--color-surface-raised)]
-              border-2 border-[var(--color-border)]
-              rounded-[var(--radius-organic)]
-              shadow-[var(--shadow-card)]
-              p-[var(--space-lg)]
-            ">
-              {operator.pastTours.length > 0 ? (
-                <div>
-                  {operator.pastTours.map((tour) => (
-                    <PastTourItem
-                      key={tour.id}
-                      id={tour.id}
-                      title={tour.title}
-                      date={tour.date}
-                      outcome={tour.outcome}
-                      participantCount={tour.participantCount}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <p className="text-[var(--color-ink-muted)]">
-                  No past tours to display.
-                </p>
-              )}
-            </div>
-          )}
-        </section>
+            {/* Tab Content */}
+            {activeTab === 'active' && (
+              <div>
+                {activeTours.length > 0 ? (
+                  <div className="grid gap-[var(--space-lg)] sm:grid-cols-2 lg:grid-cols-3">
+                    {activeTours.map((tour) => (
+                      <TourCard
+                        key={tour.id}
+                        title={tour.title}
+                        operatorName={operator.name}
+                        status={tour.status as 'confirmed' | 'forming' | 'not-running'}
+                        currentParticipants={tour.current_participant_count ?? 0}
+                        quorum={tour.threshold ?? 0}
+                        capacity={tour.capacity ?? 0}
+                        date={tour.date_start ? new Date(tour.date_start).toLocaleDateString('en-AU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : ''}
+                        location={tour.location ?? ''}
+                        href={`/tours/${tour.slug ?? tour.id}`}
+                        speciesHighlight={tour.highlights?.[0]}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-[var(--color-ink-muted)] py-[var(--space-xl)]">
+                    No active tours at the moment. Check back soon.
+                  </p>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'past' && (
+              <div className="
+                bg-[var(--color-surface-raised)]
+                border-2 border-[var(--color-border)]
+                rounded-[var(--radius-organic)]
+                shadow-[var(--shadow-card)]
+                p-[var(--space-lg)]
+              ">
+                {pastTours.length > 0 ? (
+                  <div>
+                    {pastTours.map((tour) => (
+                      <PastTourItem
+                        key={tour.id}
+                        id={tour.id}
+                        title={tour.title}
+                        date={tour.date_start ? new Date(tour.date_start).toLocaleDateString('en-AU', { year: 'numeric', month: 'long' }) : ''}
+                        outcome={tour.status === 'cancelled' ? 'cancelled' : 'completed'}
+                        participantCount={tour.current_participant_count ?? undefined}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-[var(--color-ink-muted)]">
+                    No past tours to display.
+                  </p>
+                )}
+              </div>
+            )}
+          </section>
+        )}
       </div>
     </main>
     </ErrorBoundary>
