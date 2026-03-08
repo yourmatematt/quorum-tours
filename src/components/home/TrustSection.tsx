@@ -1,13 +1,23 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { OperatorPreviewCard } from '../OperatorPreviewCard';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
+import { createClient } from '@/lib/supabase/client';
 
 interface TrustSignal {
   icon: string;
   title: string;
   description: string;
+}
+
+interface FeaturedOperator {
+  id: string;
+  slug: string;
+  name: string;
+  tagline: string | null;
+  logo_url: string | null;
+  is_verified: boolean;
 }
 
 export function TrustSection() {
@@ -29,12 +39,23 @@ export function TrustSection() {
     },
   ], []);
 
-  // Featured operators - empty until real data is available
-  const featuredOperators: Array<{
-    name: string;
-    expertise: string;
-    verified: boolean;
-  }> = [];
+  const [featuredOperators, setFeaturedOperators] = useState<FeaturedOperator[]>([]);
+
+  useEffect(() => {
+    async function fetchFeatured() {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from('operators')
+        .select('id, slug, name, tagline, logo_url, is_verified')
+        .eq('is_featured', true)
+        .eq('is_active', true)
+        .order('name', { ascending: true })
+        .limit(4);
+
+      setFeaturedOperators(data || []);
+    }
+    fetchFeatured();
+  }, []);
   return (
     <section className="
       py-12 sm:py-16 lg:py-[var(--space-section-normal)]
@@ -137,10 +158,14 @@ export function TrustSection() {
 
               {featuredOperators.length > 0 ? (
                 <>
-                  {featuredOperators.map((operator, index) => (
+                  {featuredOperators.map((operator) => (
                     <OperatorPreviewCard
-                      key={index}
-                      {...operator}
+                      key={operator.id}
+                      name={operator.name}
+                      expertise={operator.tagline ?? ''}
+                      imageUrl={operator.logo_url ?? undefined}
+                      verified={operator.is_verified}
+                      href={`/operators/${operator.slug}`}
                     />
                   ))}
                   <a

@@ -3,7 +3,6 @@ import { HowItWorksSection } from '../components/home/HowItWorksSection';
 import { ComparisonSection } from '../components/home/ComparisonSection';
 import { TourStatesSection } from '../components/home/TourStatesSection';
 import { TrustSection } from '../components/home/TrustSection';
-import { FeaturedOperatorsSection } from '../components/home/FeaturedOperatorsSection';
 import { PathwaysSection } from '../components/home/PathwaysSection';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 
@@ -52,12 +51,7 @@ export default function HomePage() {
         <TrustSection />
       </ErrorBoundary>
 
-      {/* Section 6: Featured Operators */}
-      <ErrorBoundary>
-        <FeaturedOperatorsSection />
-      </ErrorBoundary>
-
-      {/* Section 7: Pathways Forward - CTAs */}
+      {/* Section 6: Pathways Forward - CTAs */}
       <ErrorBoundary>
         <PathwaysSection />
       </ErrorBoundary>
