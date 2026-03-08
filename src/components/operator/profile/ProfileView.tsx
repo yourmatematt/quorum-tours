@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Eye, Upload, X, Loader2 } from 'lucide-react';
+import { Eye, Upload, X, Loader2, Trash2 } from 'lucide-react';
 import { DashboardViewContainer, DashboardViewHeader } from '@/components/operator';
 import { FormAlert } from '@/components/auth/FormAlert';
 import { useOperatorContext } from '@/hooks/useOperatorContext';
+import { ProfilePhotoCropModal } from './ProfilePhotoCropModal';
 
 const TABS = [
   { id: 'public', name: 'Public Profile', description: 'Information visible to participants' },
@@ -298,7 +299,9 @@ export function ProfileView() {
             <PublicProfileTab
               data={formState.public}
               initials={getInitials(formState.public.fullName || operator.name)}
+              photoUrl={operator.logo_url}
               onChange={updatePublicField}
+              onFeedback={setFeedback}
             />
           )}
           {activeTab === 'account' && (
@@ -352,31 +355,132 @@ export function ProfileView() {
 interface PublicProfileTabProps {
   data: PublicFormData;
   initials: string;
+  photoUrl: string | null | undefined;
   onChange: (field: keyof PublicFormData, value: string) => void;
+  onFeedback: (fb: { variant: 'success' | 'error'; message: string } | null) => void;
 }
 
-function PublicProfileTab({ data, initials, onChange }: PublicProfileTabProps) {
+const ACCEPTED_IMAGE_TYPES = '.jpg,.jpeg,.png,.webp';
+
+function PublicProfileTab({ data, initials, photoUrl, onChange, onFeedback }: PublicProfileTabProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [cropFile, setCropFile] = useState<File | null>(null);
+  const [currentPhoto, setCurrentPhoto] = useState(photoUrl);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => { setCurrentPhoto(photoUrl); }, [photoUrl]);
+
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      onFeedback({ variant: 'error', message: 'Invalid file type. Use JPG, PNG, or WebP.' });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      onFeedback({ variant: 'error', message: 'File too large. Maximum 5MB.' });
+      return;
+    }
+
+    setCropFile(file);
+    // Reset input so re-selecting same file works
+    e.target.value = '';
+  }
+
+  async function handleCropSave(blob: Blob) {
+    const formData = new FormData();
+    formData.append('photo', blob, 'profile.webp');
+
+    const res = await fetch('/api/operator/photo', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({ error: 'Upload failed' }));
+      onFeedback({ variant: 'error', message: body.error ?? 'Failed to upload photo.' });
+      setCropFile(null);
+      return;
+    }
+
+    const { url } = await res.json();
+    setCurrentPhoto(url);
+    setCropFile(null);
+    onFeedback({ variant: 'success', message: 'Profile photo updated.' });
+  }
+
+  async function handleRemovePhoto() {
+    setIsDeleting(true);
+    onFeedback(null);
+
+    const res = await fetch('/api/operator/photo', { method: 'DELETE' });
+    if (!res.ok) {
+      onFeedback({ variant: 'error', message: 'Failed to remove photo.' });
+      setIsDeleting(false);
+      return;
+    }
+
+    setCurrentPhoto(null);
+    onFeedback({ variant: 'success', message: 'Photo removed.' });
+    setIsDeleting(false);
+  }
+
   return (
     <div className="space-y-4">
-      {/* Photo Upload - Compact */}
+      {/* Photo Upload */}
       <div className="flex items-center gap-4">
-        <div className="w-16 h-16 bg-[var(--color-surface-sunken)] rounded-full flex items-center justify-center text-xl font-display font-semibold text-[var(--color-primary)] flex-shrink-0">
-          {initials}
-        </div>
+        {currentPhoto ? (
+          <img
+            src={currentPhoto}
+            alt="Profile photo"
+            className="w-16 h-16 rounded-full object-cover flex-shrink-0 border-2 border-[var(--color-border)]"
+          />
+        ) : (
+          <div className="w-16 h-16 bg-[var(--color-surface-sunken)] rounded-full flex items-center justify-center text-xl font-display font-semibold text-[var(--color-primary)] flex-shrink-0">
+            {initials}
+          </div>
+        )}
         <div>
           <div className="flex gap-2 mb-1">
-            <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] font-medium hover:border-[var(--color-primary)] transition-colors">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={ACCEPTED_IMAGE_TYPES}
+              onChange={handleFileSelect}
+              className="hidden"
+              aria-label="Choose profile photo"
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] font-medium hover:border-[var(--color-primary)] transition-colors"
+            >
               <Upload className="w-3.5 h-3.5" />
-              Upload
+              {currentPhoto ? 'Change' : 'Upload'}
             </button>
-            <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border-2 border-[var(--color-destructive-border)] text-[var(--color-destructive)] rounded-[var(--radius-organic)] font-medium hover:border-[var(--color-destructive)] transition-colors">
-              <X className="w-3.5 h-3.5" />
-              Remove
-            </button>
+            {currentPhoto && (
+              <button
+                onClick={handleRemovePhoto}
+                disabled={isDeleting}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border-2 border-[var(--color-destructive-border)] text-[var(--color-destructive)] rounded-[var(--radius-organic)] font-medium hover:border-[var(--color-destructive)] transition-colors disabled:opacity-50"
+              >
+                {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                Remove
+              </button>
+            )}
           </div>
-          <p className="text-xs text-[var(--color-ink-muted)]">Square, 400x400px min</p>
+          <p className="text-xs text-[var(--color-ink-muted)]">JPG, PNG, or WebP. Max 5MB.</p>
         </div>
       </div>
+
+      {/* Crop Modal */}
+      {cropFile && (
+        <ProfilePhotoCropModal
+          file={cropFile}
+          onSave={handleCropSave}
+          onClose={() => setCropFile(null)}
+        />
+      )}
 
       {/* Basic Info - Compact grid */}
       <div className="grid grid-cols-2 gap-3">

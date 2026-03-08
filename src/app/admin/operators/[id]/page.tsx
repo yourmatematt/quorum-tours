@@ -5,7 +5,7 @@
  * Shows full metrics, profile health, improvement suggestions, and tour list.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft,
@@ -20,7 +20,10 @@ import {
   Plus,
   Loader2,
   Check,
+  Upload,
+  Trash2,
 } from 'lucide-react';
+import { ProfilePhotoCropModal } from '@/components/operator/profile/ProfilePhotoCropModal';
 import { AdminSection, AdminStatCard, AdminCard } from '@/components/admin/AdminSection';
 
 interface OperatorDetail {
@@ -248,6 +251,112 @@ function Field({
 
 const inputClass =
   'w-full px-3 py-2 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] focus:border-[var(--color-primary)] focus:outline-none';
+
+const ACCEPTED_IMAGE_TYPES = '.jpg,.jpeg,.png,.webp';
+
+/* ---- Admin Photo Upload ---- */
+function AdminPhotoUpload({
+  currentUrl,
+  operatorId,
+  onUploaded,
+  onRemoved,
+}: {
+  currentUrl: string;
+  operatorId: string;
+  onUploaded: (url: string) => void;
+  onRemoved: () => void;
+}) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [cropFile, setCropFile] = useState<File | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setCropFile(file);
+    e.target.value = '';
+  }
+
+  async function handleCropSave(blob: Blob) {
+    const formData = new FormData();
+    formData.append('photo', blob, 'profile.webp');
+    formData.append('operatorId', operatorId);
+
+    const res = await fetch('/api/admin/operators/photo', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!res.ok) {
+      setCropFile(null);
+      return;
+    }
+
+    const { url } = await res.json();
+    onUploaded(url);
+    setCropFile(null);
+  }
+
+  async function handleRemove() {
+    setIsDeleting(true);
+    // Clear via the PATCH endpoint by saving empty logo_url
+    onRemoved();
+    setIsDeleting(false);
+  }
+
+  return (
+    <div className="flex items-center gap-4">
+      {currentUrl ? (
+        <img
+          src={currentUrl}
+          alt="Operator photo"
+          className="w-14 h-14 rounded-full object-cover flex-shrink-0 border-2 border-[var(--color-border)]"
+        />
+      ) : (
+        <div className="w-14 h-14 bg-[var(--color-surface-sunken)] rounded-full flex items-center justify-center text-sm text-[var(--color-ink-muted)] flex-shrink-0">
+          No photo
+        </div>
+      )}
+      <div className="flex gap-2">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept={ACCEPTED_IMAGE_TYPES}
+          onChange={handleFileSelect}
+          className="hidden"
+          aria-label="Choose operator photo"
+        />
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] font-medium hover:border-[var(--color-primary)] transition-colors"
+        >
+          <Upload className="w-3.5 h-3.5" />
+          {currentUrl ? 'Change' : 'Upload'}
+        </button>
+        {currentUrl && (
+          <button
+            type="button"
+            onClick={handleRemove}
+            disabled={isDeleting}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border-2 border-[var(--color-destructive-border)] text-[var(--color-destructive)] rounded-[var(--radius-organic)] font-medium hover:border-[var(--color-destructive)] transition-colors disabled:opacity-50"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            Remove
+          </button>
+        )}
+      </div>
+
+      {cropFile && (
+        <ProfilePhotoCropModal
+          file={cropFile}
+          onSave={handleCropSave}
+          onClose={() => setCropFile(null)}
+        />
+      )}
+    </div>
+  );
+}
 
 export default function AdminOperatorDetailPage() {
   const params = useParams();
@@ -557,14 +666,12 @@ export default function AdminOperatorDetailPage() {
               />
             </Field>
 
-            <Field label="Profile Photo URL" htmlFor="ed-photo" span2 hint="Direct URL to a square image (400x400 min)">
-              <input
-                id="ed-photo"
-                type="url"
-                value={form.logo_url}
-                onChange={(e) => updateField('logo_url', e.target.value)}
-                placeholder="https://..."
-                className={inputClass}
+            <Field label="Profile Photo" span2>
+              <AdminPhotoUpload
+                currentUrl={form.logo_url}
+                operatorId={operatorId as string}
+                onUploaded={(url) => updateField('logo_url', url)}
+                onRemoved={() => updateField('logo_url', '')}
               />
             </Field>
 
