@@ -9,9 +9,9 @@ interface CoverImageCropModalProps {
   onClose: () => void;
 }
 
-const OUTPUT_WIDTH = 1920;
-const OUTPUT_HEIGHT = 400;
-const ASPECT_RATIO = OUTPUT_WIDTH / OUTPUT_HEIGHT; // ~4.8:1
+const OUTPUT_WIDTH = 1584;
+const OUTPUT_HEIGHT = 396;
+const ASPECT_RATIO = OUTPUT_WIDTH / OUTPUT_HEIGHT; // 4:1
 
 export function CoverImageCropModal({ file, onSave, onClose }: CoverImageCropModalProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
