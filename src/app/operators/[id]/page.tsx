@@ -21,6 +21,7 @@ interface OperatorRow {
   tagline: string | null;
   description: string | null;
   logo_url: string | null;
+  hero_image_url: string | null;
   base_location: string | null;
   established_year: number | null;
   specialties: string[] | null;
@@ -176,6 +177,7 @@ export default function OperatorProfilePage() {
         <OperatorHero
           name={operator.name}
           photo={operator.logo_url ?? undefined}
+          coverImage={operator.hero_image_url ?? undefined}
           verified={operator.is_verified}
           isFoundingOperator={operator.is_founding_operator}
           expertise={operator.tagline ?? ''}

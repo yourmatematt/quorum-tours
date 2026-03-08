@@ -7,6 +7,7 @@ import { DashboardViewContainer, DashboardViewHeader } from '@/components/operat
 import { FormAlert } from '@/components/auth/FormAlert';
 import { useOperatorContext } from '@/hooks/useOperatorContext';
 import { ProfilePhotoCropModal } from './ProfilePhotoCropModal';
+import { CoverImageCropModal } from './CoverImageCropModal';
 
 const TABS = [
   { id: 'public', name: 'Public Profile', description: 'Information visible to participants' },
@@ -300,6 +301,7 @@ export function ProfileView() {
               data={formState.public}
               initials={getInitials(formState.public.fullName || operator.name)}
               photoUrl={operator.logo_url}
+              coverUrl={operator.hero_image_url}
               onChange={updatePublicField}
               onFeedback={setFeedback}
             />
@@ -356,19 +358,25 @@ interface PublicProfileTabProps {
   data: PublicFormData;
   initials: string;
   photoUrl: string | null | undefined;
+  coverUrl: string | null | undefined;
   onChange: (field: keyof PublicFormData, value: string) => void;
   onFeedback: (fb: { variant: 'success' | 'error'; message: string } | null) => void;
 }
 
 const ACCEPTED_IMAGE_TYPES = '.jpg,.jpeg,.png,.webp';
 
-function PublicProfileTab({ data, initials, photoUrl, onChange, onFeedback }: PublicProfileTabProps) {
+function PublicProfileTab({ data, initials, photoUrl, coverUrl, onChange, onFeedback }: PublicProfileTabProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const coverFileInputRef = useRef<HTMLInputElement>(null);
   const [cropFile, setCropFile] = useState<File | null>(null);
+  const [coverCropFile, setCoverCropFile] = useState<File | null>(null);
   const [currentPhoto, setCurrentPhoto] = useState(photoUrl);
+  const [currentCover, setCurrentCover] = useState(coverUrl);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeletingCover, setIsDeletingCover] = useState(false);
 
   useEffect(() => { setCurrentPhoto(photoUrl); }, [photoUrl]);
+  useEffect(() => { setCurrentCover(coverUrl); }, [coverUrl]);
 
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -426,8 +434,114 @@ function PublicProfileTab({ data, initials, photoUrl, onChange, onFeedback }: Pu
     setIsDeleting(false);
   }
 
+  function handleCoverFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      onFeedback({ variant: 'error', message: 'Invalid file type. Use JPG, PNG, or WebP.' });
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      onFeedback({ variant: 'error', message: 'File too large. Maximum 10MB.' });
+      return;
+    }
+
+    setCoverCropFile(file);
+    e.target.value = '';
+  }
+
+  async function handleCoverCropSave(blob: Blob) {
+    const formData = new FormData();
+    formData.append('cover', blob, 'cover.webp');
+
+    const res = await fetch('/api/operator/cover', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({ error: 'Upload failed' }));
+      onFeedback({ variant: 'error', message: body.error ?? 'Failed to upload cover image.' });
+      setCoverCropFile(null);
+      return;
+    }
+
+    const { url } = await res.json();
+    setCurrentCover(url);
+    setCoverCropFile(null);
+    onFeedback({ variant: 'success', message: 'Cover image updated.' });
+  }
+
+  async function handleRemoveCover() {
+    setIsDeletingCover(true);
+    onFeedback(null);
+
+    const res = await fetch('/api/operator/cover', { method: 'DELETE' });
+    if (!res.ok) {
+      onFeedback({ variant: 'error', message: 'Failed to remove cover image.' });
+      setIsDeletingCover(false);
+      return;
+    }
+
+    setCurrentCover(null);
+    onFeedback({ variant: 'success', message: 'Cover image removed.' });
+    setIsDeletingCover(false);
+  }
+
   return (
     <div className="space-y-4">
+      {/* Cover Image Upload */}
+      <div>
+        <label className="block text-sm font-medium text-[var(--color-ink)] mb-1.5">Cover Image</label>
+        <div className="relative w-full h-24 rounded-[var(--radius-organic)] overflow-hidden bg-[var(--color-surface-sunken)] border-2 border-[var(--color-border)] mb-2">
+          {currentCover ? (
+            <img src={currentCover} alt="Cover image" className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-[var(--color-ink-subtle)] text-sm">
+              No cover image
+            </div>
+          )}
+        </div>
+        <div className="flex gap-2">
+          <input
+            ref={coverFileInputRef}
+            type="file"
+            accept={ACCEPTED_IMAGE_TYPES}
+            onChange={handleCoverFileSelect}
+            className="hidden"
+            aria-label="Choose cover image"
+          />
+          <button
+            onClick={() => coverFileInputRef.current?.click()}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] font-medium hover:border-[var(--color-primary)] transition-colors"
+          >
+            <Upload className="w-3.5 h-3.5" />
+            {currentCover ? 'Change' : 'Upload'}
+          </button>
+          {currentCover && (
+            <button
+              onClick={handleRemoveCover}
+              disabled={isDeletingCover}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border-2 border-[var(--color-destructive-border)] text-[var(--color-destructive)] rounded-[var(--radius-organic)] font-medium hover:border-[var(--color-destructive)] transition-colors disabled:opacity-50"
+            >
+              {isDeletingCover ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+              Remove
+            </button>
+          )}
+        </div>
+        <p className="text-xs text-[var(--color-ink-muted)] mt-1">Wide banner image. JPG, PNG, or WebP. Max 10MB.</p>
+      </div>
+
+      {/* Cover Crop Modal */}
+      {coverCropFile && (
+        <CoverImageCropModal
+          file={coverCropFile}
+          onSave={handleCoverCropSave}
+          onClose={() => setCoverCropFile(null)}
+        />
+      )}
+
       {/* Photo Upload */}
       <div className="flex items-center gap-4">
         {currentPhoto ? (

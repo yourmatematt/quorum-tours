@@ -1,6 +1,7 @@
 interface OperatorHeroProps {
   name: string;
   photo?: string;
+  coverImage?: string;
   verified: boolean;
   isFoundingOperator?: boolean;
   expertise: string;
@@ -11,6 +12,7 @@ interface OperatorHeroProps {
 export function OperatorHero({
   name,
   photo,
+  coverImage,
   verified,
   isFoundingOperator,
   expertise,
@@ -19,16 +21,43 @@ export function OperatorHero({
 }: OperatorHeroProps) {
   return (
     <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)]">
-      {/* Two-column row: photo left, identity right */}
-      <div className="flex items-start gap-[var(--space-md)] sm:gap-[var(--space-xl)]">
-        {/* Operator Photo */}
+      {/* Cover banner */}
+      <div
+        className="
+          relative w-full
+          h-[140px] sm:h-[180px] lg:h-[220px]
+          rounded-[var(--radius-organic)]
+          overflow-hidden
+        "
+      >
+        {coverImage ? (
+          <img
+            src={coverImage}
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div
+            className="w-full h-full"
+            style={{
+              background: 'linear-gradient(135deg, var(--color-primary-subtle) 0%, var(--color-surface-sunken) 50%, var(--color-secondary) 100%)',
+              opacity: 0.6,
+            }}
+          />
+        )}
+      </div>
+
+      {/* Photo + identity row — photo overlaps the banner */}
+      <div className="flex items-end gap-[var(--space-md)] sm:gap-[var(--space-lg)] -mt-8 sm:-mt-12 lg:-mt-16 px-[var(--space-md)] sm:px-[var(--space-lg)]">
+        {/* Profile photo overlapping banner */}
         <div
           className="
             flex-shrink-0
-            w-[72px] h-[72px] sm:w-32 sm:h-32 lg:w-40 lg:h-40
+            w-[72px] h-[72px] sm:w-28 sm:h-28 lg:w-36 lg:h-36
             rounded-full
             bg-[var(--color-surface-sunken)]
-            border-2 border-[var(--color-border)]
+            border-4 border-[var(--color-surface-raised)]
+            shadow-[var(--shadow-card)]
             overflow-hidden
             flex items-center justify-center
           "
@@ -41,8 +70,8 @@ export function OperatorHero({
             />
           ) : (
             <svg
-              width="48"
-              height="48"
+              width="40"
+              height="40"
               viewBox="0 0 48 48"
               fill="none"
               stroke="var(--color-ink-subtle)"
@@ -55,16 +84,13 @@ export function OperatorHero({
           )}
         </div>
 
-        {/* Identity Info */}
-        <div className="flex-1 min-w-0">
-          {/* Name */}
-          <h1 className="font-display text-xl sm:text-3xl lg:text-4xl font-semibold text-[var(--color-ink)] mb-0.5 sm:mb-1">
+        {/* Name + badges — sit beside the photo at the overlap boundary */}
+        <div className="flex-1 min-w-0 pb-1 sm:pb-2">
+          <h1 className="font-display text-xl sm:text-3xl lg:text-4xl font-semibold text-[var(--color-ink)] leading-tight">
             {name}
           </h1>
-
-          {/* Badges — inline, single line */}
           {(verified || isFoundingOperator) && (
-            <div className="flex items-center gap-1.5 sm:gap-[var(--space-sm)] mb-1.5 sm:mb-[var(--space-sm)] flex-nowrap">
+            <div className="flex items-center gap-1.5 sm:gap-[var(--space-sm)] mt-1 flex-nowrap">
               {verified && (
                 <span
                   className="
@@ -106,9 +132,13 @@ export function OperatorHero({
               )}
             </div>
           )}
+        </div>
+      </div>
 
-          {/* Location — single line, no wrap */}
-          <div className="flex items-center gap-[var(--space-xs)] text-sm text-[var(--color-ink-subtle)] whitespace-nowrap">
+      {/* Meta row: location + guiding since */}
+      <div className="mt-[var(--space-md)] px-[var(--space-md)] sm:px-[var(--space-lg)]">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-[var(--space-lg)] text-sm text-[var(--color-ink-subtle)]">
+          <div className="flex items-center gap-[var(--space-xs)] whitespace-nowrap">
             <svg
               width="16"
               height="16"
@@ -124,9 +154,7 @@ export function OperatorHero({
             </svg>
             <span className="truncate">{location}</span>
           </div>
-
-          {/* Guiding since — own line below location */}
-          <div className="flex items-center gap-[var(--space-xs)] text-sm text-[var(--color-ink-subtle)] mt-0.5">
+          <div className="flex items-center gap-[var(--space-xs)]">
             <svg
               width="16"
               height="16"
@@ -143,14 +171,14 @@ export function OperatorHero({
             <span>Guiding since {new Date().getFullYear() - yearsExperience}</span>
           </div>
         </div>
-      </div>
 
-      {/* Expertise / tagline — full width below the photo+name row */}
-      {expertise && (
-        <p className="text-[var(--text-base)] sm:text-[var(--text-lg)] text-[var(--color-ink-muted)] mt-[var(--space-md)] sm:mt-[var(--space-lg)]">
-          {expertise}
-        </p>
-      )}
+        {/* Expertise / tagline */}
+        {expertise && (
+          <p className="text-[var(--text-base)] sm:text-[var(--text-lg)] text-[var(--color-ink-muted)] mt-[var(--space-sm)] sm:mt-[var(--space-md)]">
+            {expertise}
+          </p>
+        )}
+      </div>
     </section>
   );
 }

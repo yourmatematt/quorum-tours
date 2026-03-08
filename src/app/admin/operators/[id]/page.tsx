@@ -24,6 +24,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { ProfilePhotoCropModal } from '@/components/operator/profile/ProfilePhotoCropModal';
+import { CoverImageCropModal } from '@/components/operator/profile/CoverImageCropModal';
 import { AdminSection, AdminStatCard, AdminCard } from '@/components/admin/AdminSection';
 
 interface OperatorDetail {
@@ -124,6 +125,7 @@ interface ProfileFormData {
   tagline: string;
   specialties: string[];
   logo_url: string;
+  hero_image_url: string;
   base_location: string;
   years_experience: string;
   vessel_name: string;
@@ -141,6 +143,7 @@ function buildFormData(op: OperatorDetail): ProfileFormData {
     tagline: op.tagline ?? '',
     specialties: op.specialties ?? [],
     logo_url: op.logo_url ?? '',
+    hero_image_url: op.hero_image_url ?? '',
     base_location: op.base_location ?? '',
     years_experience: meta.years_experience != null ? String(meta.years_experience) : '',
     vessel_name: (meta.vessel_name as string) ?? '',
@@ -358,6 +361,99 @@ function AdminPhotoUpload({
   );
 }
 
+/* ---- Admin Cover Upload ---- */
+function AdminCoverUpload({
+  currentUrl,
+  operatorId,
+  onUploaded,
+  onRemoved,
+}: {
+  currentUrl: string;
+  operatorId: string;
+  onUploaded: (url: string) => void;
+  onRemoved: () => void;
+}) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [cropFile, setCropFile] = useState<File | null>(null);
+
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setCropFile(file);
+    e.target.value = '';
+  }
+
+  async function handleCropSave(blob: Blob) {
+    const formData = new FormData();
+    formData.append('cover', blob, 'cover.webp');
+    formData.append('operatorId', operatorId);
+
+    const res = await fetch('/api/admin/operators/cover', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!res.ok) {
+      setCropFile(null);
+      return;
+    }
+
+    const { url } = await res.json();
+    onUploaded(url);
+    setCropFile(null);
+  }
+
+  return (
+    <div>
+      <div className="relative w-full h-20 rounded-[var(--radius-organic)] overflow-hidden bg-[var(--color-surface-sunken)] border-2 border-[var(--color-border)] mb-2">
+        {currentUrl ? (
+          <img src={currentUrl} alt="Cover image" className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-sm text-[var(--color-ink-muted)]">
+            No cover image
+          </div>
+        )}
+      </div>
+      <div className="flex gap-2">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept={ACCEPTED_IMAGE_TYPES}
+          onChange={handleFileSelect}
+          className="hidden"
+          aria-label="Choose cover image"
+        />
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] font-medium hover:border-[var(--color-primary)] transition-colors"
+        >
+          <Upload className="w-3.5 h-3.5" />
+          {currentUrl ? 'Change' : 'Upload'}
+        </button>
+        {currentUrl && (
+          <button
+            type="button"
+            onClick={onRemoved}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border-2 border-[var(--color-destructive-border)] text-[var(--color-destructive)] rounded-[var(--radius-organic)] font-medium hover:border-[var(--color-destructive)] transition-colors"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            Remove
+          </button>
+        )}
+      </div>
+
+      {cropFile && (
+        <CoverImageCropModal
+          file={cropFile}
+          onSave={handleCropSave}
+          onClose={() => setCropFile(null)}
+        />
+      )}
+    </div>
+  );
+}
+
 export default function AdminOperatorDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -401,6 +497,7 @@ export default function AdminOperatorDetailPage() {
       description: form.description || null,
       tagline: form.tagline || null,
       logo_url: form.logo_url || null,
+      hero_image_url: form.hero_image_url || null,
       base_location: form.base_location || null,
       specialties: form.specialties,
       established_year: form.established_year ? Number(form.established_year) : null,
@@ -672,6 +769,15 @@ export default function AdminOperatorDetailPage() {
                 operatorId={operatorId as string}
                 onUploaded={(url) => updateField('logo_url', url)}
                 onRemoved={() => updateField('logo_url', '')}
+              />
+            </Field>
+
+            <Field label="Cover Image" span2>
+              <AdminCoverUpload
+                currentUrl={form.hero_image_url}
+                operatorId={operatorId as string}
+                onUploaded={(url) => updateField('hero_image_url', url)}
+                onRemoved={() => updateField('hero_image_url', '')}
               />
             </Field>
 

@@ -151,6 +151,7 @@ const ALLOWED_COLUMNS = new Set([
   'tagline',
   'description',
   'logo_url',
+  'hero_image_url',
   'base_location',
   'established_year',
   'specialties',
