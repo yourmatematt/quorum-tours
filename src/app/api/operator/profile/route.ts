@@ -107,15 +107,32 @@ export async function PUT(request: Request) {
     );
 
     if (tab === 'public') {
+      // Merge metadata fields (years_experience, why_quorum)
+      const metadataFields: Record<string, unknown> = {};
+      if (data.years_experience !== undefined) metadataFields.years_experience = data.years_experience;
+      if (data.why_quorum !== undefined) metadataFields.why_quorum = data.why_quorum;
+
+      const directUpdate: Record<string, unknown> = {
+        name: data.name,
+        tagline: data.tagline || null,
+        description: data.description || null,
+        base_location: data.baseLocation || null,
+      };
+
+      if (Object.keys(metadataFields).length > 0) {
+        const { data: current } = await serviceClient
+          .from('operators')
+          .select('metadata')
+          .eq('id', operatorId)
+          .single();
+
+        directUpdate.metadata = { ...(current?.metadata || {}), ...metadataFields };
+      }
+
       // Update operator table
       const { error: opError } = await serviceClient
         .from('operators')
-        .update({
-          name: data.name,
-          tagline: data.tagline || null,
-          description: data.description || null,
-          base_location: data.baseLocation || null,
-        })
+        .update(directUpdate)
         .eq('id', operatorId);
 
       if (opError) {

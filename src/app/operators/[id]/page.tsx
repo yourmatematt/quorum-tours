@@ -75,6 +75,7 @@ interface OperatorProfile {
   affiliations: string[];
   bio: string;
   philosophy?: string;
+  whyQuorum?: string;
   reviews: Review[];
   ratingDistribution: number[];
   averageRating: number;
@@ -130,6 +131,7 @@ const exampleOperators: Record<string, OperatorProfile> = {
 
 I believe the best birding experiences come from patience and attention to habitat. Rather than rushing between sites, I prefer to spend time in productive areas, allowing the birds to reveal themselves naturally.`,
     philosophy: 'Small groups, expert guidance, and respect for wildlife. Every tour is an opportunity to deepen your connection with the natural world.',
+    whyQuorum: 'I was spending half my time chasing deposits and fielding cancellation calls. Now I list a tour, and it either fills or it doesn\'t — no risk, no awkward conversations.',
     reviews: [
       {
         id: 'r1',
@@ -438,6 +440,29 @@ export default function OperatorProfilePage({ params }: PageProps) {
                 {operator.philosophy}
               </p>
             )}
+          </section>
+        )}
+
+        {/* Why I Joined Quorum — public quote block */}
+        {operator.whyQuorum && (
+          <section className="mb-[var(--space-3xl)]">
+            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
+              Why I Joined Quorum
+            </h2>
+            <blockquote className="
+              border-l-4 border-[var(--color-primary)]
+              pl-[var(--space-lg)]
+              py-[var(--space-sm)]
+              text-[var(--color-ink-muted)]
+              leading-relaxed
+              italic
+              text-lg
+            ">
+              <p>&ldquo;{operator.whyQuorum}&rdquo;</p>
+              <footer className="mt-[var(--space-sm)] text-sm not-italic text-[var(--color-ink-subtle)]">
+                — {operator.name}
+              </footer>
+            </blockquote>
           </section>
         )}
 

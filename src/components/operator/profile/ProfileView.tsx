@@ -22,6 +22,7 @@ interface PublicFormData {
   tagline: string;
   description: string;
   yearsExperience: string;
+  whyQuorum: string;
 }
 
 interface BusinessFormData {
@@ -78,6 +79,7 @@ function buildFormStateFromOperator(
       tagline: operator?.tagline ?? '',
       description: operator?.description ?? '',
       yearsExperience,
+      whyQuorum: (metadata.why_quorum as string) ?? '',
     },
     business: {
       companyName: operator?.name ?? '',
@@ -183,6 +185,7 @@ export function ProfileView() {
         years_experience: formState.public.yearsExperience
           ? Number(formState.public.yearsExperience)
           : null,
+        why_quorum: formState.public.whyQuorum || null,
       };
     } else if (activeTab === 'business') {
       tabKey = 'business';
@@ -432,6 +435,19 @@ function PublicProfileTab({ data, initials, onChange }: PublicProfileTabProps) {
             onChange={(e) => onChange('yearsExperience', e.target.value)}
             className="w-full px-3 py-2 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] focus:border-[var(--color-primary)] focus:outline-none"
           />
+        </div>
+
+        <div className="col-span-2">
+          <label htmlFor="why-quorum" className="block text-sm font-medium text-[var(--color-ink)] mb-1">Why I Joined Quorum</label>
+          <textarea
+            id="why-quorum"
+            rows={3}
+            value={data.whyQuorum}
+            onChange={(e) => onChange('whyQuorum', e.target.value)}
+            placeholder="In your own words, why did you join the platform? This appears as a quote on your public profile."
+            className="w-full px-3 py-2 text-sm border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] focus:border-[var(--color-primary)] focus:outline-none resize-none"
+          />
+          <p className="text-xs text-[var(--color-ink-muted)] mt-1">Shown as a quote block on your public profile</p>
         </div>
       </div>
     </div>
