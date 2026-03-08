@@ -2,6 +2,7 @@ interface OperatorHeroProps {
   name: string;
   photo?: string;
   verified: boolean;
+  isFoundingOperator?: boolean;
   expertise: string;
   location: string;
   yearsExperience: number;
@@ -11,6 +12,7 @@ export function OperatorHero({
   name,
   photo,
   verified,
+  isFoundingOperator,
   expertise,
   location,
   yearsExperience,
@@ -80,6 +82,20 @@ export function OperatorHero({
                   <path d="M10.28 2.72a.75.75 0 010 1.06l-5.5 5.5a.75.75 0 01-1.06 0l-2.5-2.5a.75.75 0 111.06-1.06L4.25 7.69l4.97-4.97a.75.75 0 011.06 0z" />
                 </svg>
                 Verified
+              </span>
+            )}
+            {isFoundingOperator && (
+              <span
+                className="
+                  inline-flex items-center
+                  px-[var(--space-sm)] py-[var(--space-xs)]
+                  bg-[var(--color-founding-bg)]
+                  text-[var(--color-founding)]
+                  text-xs font-medium
+                  rounded-[var(--radius-sm)]
+                "
+              >
+                Founding Operator
               </span>
             )}
           </div>

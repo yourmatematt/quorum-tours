@@ -29,9 +29,6 @@ export function AuthoritySection({
         {/* Specializations */}
         {specializations.length > 0 && (
           <div>
-            <h3 className="text-sm font-medium text-[var(--color-ink-muted)] mb-[var(--space-sm)]">
-              Specializations
-            </h3>
             <div className="flex flex-wrap gap-[var(--space-sm)]">
               {specializations.map((spec, index) => (
                 <span

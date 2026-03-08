@@ -41,6 +41,8 @@
   /* Status colors (nature-themed) */
   --color-confirmed: #2E8B57;
   --color-confirmed-bg: #d1f4e0;
+  --color-founding: #92650A;
+  --color-founding-bg: #fef3c7;
   --color-forming: #d97706;
   --color-forming-bg: #fef3c7;
   --color-not-running: #6b7280;

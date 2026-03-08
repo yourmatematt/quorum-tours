@@ -26,6 +26,7 @@ interface OperatorRow {
   specialties: string[] | null;
   languages: string[] | null;
   is_verified: boolean;
+  is_founding_operator: boolean;
   rating_avg: number | null;
   rating_count: number | null;
   tours_completed: number | null;
@@ -176,51 +177,11 @@ export default function OperatorProfilePage() {
           name={operator.name}
           photo={operator.logo_url ?? undefined}
           verified={operator.is_verified}
+          isFoundingOperator={operator.is_founding_operator}
           expertise={operator.tagline ?? ''}
           location={operator.base_location ?? ''}
           yearsExperience={yearsExperience}
         />
-
-        {/* Track Record Trust Strip */}
-        {(operator.tours_completed ?? 0) > 0 && (
-          <div className="mb-[var(--space-3xl)]">
-            <TrackRecordSummary
-              toursCompleted={operator.tours_completed ?? 0}
-              confirmationRate={0}
-              totalParticipants={operator.guests_served ?? 0}
-            />
-          </div>
-        )}
-
-        {/* Section 2: Authority Signals */}
-        <AuthoritySection
-          specializations={operator.specialties ?? []}
-          credentials={[]}
-          affiliations={[]}
-        />
-
-        {/* Section 3: Narrative — About */}
-        {operator.description && (
-          <section className="mb-[var(--space-3xl)]">
-            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
-              About
-            </h2>
-            <div className="
-              text-[var(--color-ink-muted)]
-              leading-relaxed
-              space-y-[var(--space-md)]
-            ">
-              {operator.description.split('\n\n').map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Empty state: no active tours */}
-        {activeTours.length === 0 && (
-          <OperatorNoToursCard operatorFirstName={operator.name.split(' ')[0]} />
-        )}
 
         {/* Why I Joined Quorum — public quote block */}
         {whyQuorum && (
@@ -245,6 +206,42 @@ export default function OperatorProfilePage() {
           </section>
         )}
 
+        {/* Track Record Trust Strip */}
+        {(operator.tours_completed ?? 0) > 0 && (
+          <div className="mb-[var(--space-3xl)]">
+            <TrackRecordSummary
+              toursCompleted={operator.tours_completed ?? 0}
+              confirmationRate={0}
+              totalParticipants={operator.guests_served ?? 0}
+            />
+          </div>
+        )}
+
+        {/* Expertise */}
+        <AuthoritySection
+          specializations={operator.specialties ?? []}
+          credentials={[]}
+          affiliations={[]}
+        />
+
+        {/* About */}
+        {operator.description && (
+          <section className="mb-[var(--space-3xl)]">
+            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
+              About
+            </h2>
+            <div className="
+              text-[var(--color-ink-muted)]
+              leading-relaxed
+              space-y-[var(--space-md)]
+            ">
+              {operator.description.split('\n\n').map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Section 5: Assets & Capabilities */}
         <CapabilitiesSection
           equipment={equipmentItems}
@@ -257,7 +254,12 @@ export default function OperatorProfilePage() {
           languages={operator.languages ?? []}
         />
 
-        {/* Section 6: Tours */}
+        {/* Empty state: no active tours */}
+        {activeTours.length === 0 && (
+          <OperatorNoToursCard operatorFirstName={operator.name.split(' ')[0]} />
+        )}
+
+        {/* Tours */}
         {tours.length > 0 && (
           <section className="mb-[var(--space-3xl)]">
             <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
