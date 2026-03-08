@@ -16,6 +16,7 @@ export interface Operator {
   languages: string[];
   specialties: string[];
   is_verified: boolean;
+  is_founding_operator: boolean;
   created_at: string;
   // Computed
   tours_count: number;

@@ -3,6 +3,7 @@ interface OperatorCardProps {
   name: string;
   photo?: string;
   verified: boolean;
+  isFoundingOperator?: boolean;
   expertise: string;
   location: string;
   totalReviews: number;
@@ -15,6 +16,7 @@ export function OperatorCard({
   name,
   photo,
   verified,
+  isFoundingOperator,
   expertise,
   location,
   totalReviews,
@@ -62,12 +64,11 @@ export function OperatorCard({
 
         {/* Name and expertise */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-[var(--space-sm)] mb-[var(--space-xs)]">
+          <div className="flex flex-wrap items-center gap-[var(--space-sm)] mb-[var(--space-xs)]">
             <span className="
               font-medium text-[var(--color-ink)]
               group-hover:text-[var(--color-primary)]
               transition-colors duration-200
-              truncate
             ">
               {name}
             </span>
@@ -84,6 +85,21 @@ export function OperatorCard({
                 "
               >
                 Verified
+              </span>
+            )}
+            {isFoundingOperator && (
+              <span
+                className="
+                  inline-flex items-center
+                  px-[var(--space-xs)] py-0.5
+                  text-xs font-medium
+                  bg-[var(--color-founding-bg)]
+                  text-[var(--color-founding)]
+                  rounded-[var(--radius-sm)]
+                  flex-shrink-0
+                "
+              >
+                Founding Operator
               </span>
             )}
           </div>
@@ -124,38 +140,42 @@ export function OperatorCard({
       </p>
 
       {/* Stats row */}
-      <div className="
-        flex items-center gap-[var(--space-lg)]
-        pt-[var(--space-md)]
-        border-t border-[var(--color-border)]
-        text-sm text-[var(--color-ink-muted)]
-      ">
-        {/* Rating */}
-        {totalReviews > 0 && (
-          <span className="flex items-center gap-[var(--space-xs)]">
-            <svg
-              width="14"
-              height="14"
-              className="text-[var(--color-accent)] flex-shrink-0"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-            </svg>
-            <span className="font-medium text-[var(--color-ink)]">
-              {averageRating.toFixed(1)}
+      {(totalReviews > 0 || toursCompleted > 0) && (
+        <div className="
+          flex items-center gap-[var(--space-lg)]
+          pt-[var(--space-md)]
+          border-t border-[var(--color-border)]
+          text-sm text-[var(--color-ink-muted)]
+        ">
+          {/* Rating */}
+          {totalReviews > 0 && (
+            <span className="flex items-center gap-[var(--space-xs)]">
+              <svg
+                width="14"
+                height="14"
+                className="text-[var(--color-accent)] flex-shrink-0"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+              <span className="font-medium text-[var(--color-ink)]">
+                {averageRating.toFixed(1)}
+              </span>
+              <span>({totalReviews})</span>
             </span>
-            <span>({totalReviews})</span>
-          </span>
-        )}
+          )}
 
-        {/* Tours completed */}
-        <span>
-          <span className="font-medium text-[var(--color-ink)]">{toursCompleted}</span>
-          {' '}tours
-        </span>
-      </div>
+          {/* Tours completed */}
+          {toursCompleted > 0 && (
+            <span>
+              <span className="font-medium text-[var(--color-ink)]">{toursCompleted}</span>
+              {' '}tours
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Arrow indicator */}
       <div className="
