@@ -49,6 +49,10 @@ public/brand/
 # Serena MCP
 .serena/
 
+# Media releases and writing workflows
+media-releases/
+writing-skills/
+
 # Logs
 *.log
 

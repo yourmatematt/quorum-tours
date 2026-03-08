@@ -1,13 +1,36 @@
 /**
  * GET /api/admin/operators/[id]
+ * PATCH /api/admin/operators/[id]
  *
  * Detailed operator endpoint returning full metrics, tour list,
  * recent reservations, and profile completeness.
+ * PATCH allows admins to edit operator profile fields.
  */
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createClient as createServiceClient } from '@supabase/supabase-js';
+
+async function verifyAdmin() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: 'Unauthorized.', status: 401 };
+
+  const serviceClient = createServiceClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
+  const { data: profile } = await serviceClient
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (profile?.role !== 'admin') return { error: 'Forbidden.', status: 403 };
+
+  return { serviceClient, user };
+}
 
 export async function GET(
   _request: Request,
@@ -16,28 +39,11 @@ export async function GET(
   try {
     const { id } = await params;
 
-    // Verify admin
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+    const auth = await verifyAdmin();
+    if ('error' in auth) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status });
     }
-
-    const serviceClient = createServiceClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
-
-    const { data: profile } = await serviceClient
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden.' }, { status: 403 });
-    }
+    const { serviceClient } = auth;
 
     // Fetch operator
     const { data: operator, error: opError } = await serviceClient
@@ -55,6 +61,8 @@ export async function GET(
         languages,
         is_verified,
         created_at,
+        established_year,
+        metadata,
         stripe_charges_enabled,
         stripe_payouts_enabled
       `)
@@ -133,6 +141,87 @@ export async function GET(
     });
   } catch (error) {
     console.error('Admin operator detail error:', error);
+    return NextResponse.json({ error: 'Something went wrong.' }, { status: 500 });
+  }
+}
+
+// Allowed direct columns on the operators table
+const ALLOWED_COLUMNS = new Set([
+  'name',
+  'tagline',
+  'description',
+  'logo_url',
+  'base_location',
+  'established_year',
+  'specialties',
+]);
+
+// Fields stored inside the metadata JSONB column
+const METADATA_FIELDS = new Set([
+  'years_experience',
+  'vessel_name',
+  'why_quorum',
+  'access_areas',
+  'max_group_size',
+]);
+
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+
+    const auth = await verifyAdmin();
+    if ('error' in auth) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status });
+    }
+    const { serviceClient } = auth;
+
+    const body = await request.json();
+
+    // Separate direct columns from metadata fields
+    const directUpdate: Record<string, unknown> = {};
+    const metadataPatch: Record<string, unknown> = {};
+
+    for (const [key, value] of Object.entries(body)) {
+      if (ALLOWED_COLUMNS.has(key)) {
+        directUpdate[key] = value;
+      } else if (METADATA_FIELDS.has(key)) {
+        metadataPatch[key] = value;
+      }
+      // Unknown fields are silently ignored
+    }
+
+    // If metadata fields changed, merge with existing metadata
+    if (Object.keys(metadataPatch).length > 0) {
+      const { data: existing } = await serviceClient
+        .from('operators')
+        .select('metadata')
+        .eq('id', id)
+        .single();
+
+      const currentMetadata = (existing?.metadata ?? {}) as Record<string, unknown>;
+      directUpdate.metadata = { ...currentMetadata, ...metadataPatch };
+    }
+
+    if (Object.keys(directUpdate).length === 0) {
+      return NextResponse.json({ error: 'No valid fields provided.' }, { status: 400 });
+    }
+
+    const { error: updateError } = await serviceClient
+      .from('operators')
+      .update(directUpdate)
+      .eq('id', id);
+
+    if (updateError) {
+      console.error('Operator update error:', updateError);
+      return NextResponse.json({ error: 'Failed to update operator.' }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Admin operator PATCH error:', error);
     return NextResponse.json({ error: 'Something went wrong.' }, { status: 500 });
   }
 }
