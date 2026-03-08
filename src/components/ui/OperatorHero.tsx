@@ -22,14 +22,14 @@ export function OperatorHero({
   return (
     <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)]">
       {/* Cover banner + overlapping photo wrapper */}
-      <div className="relative -mx-[var(--space-lg)]">
-        {/* Cover banner — breaks out of container padding for full width */}
+      <div className="relative">
+        {/* Cover banner — full card width, no horizontal padding */}
         <div
           className="
             w-full
             h-[140px] sm:h-[180px] lg:h-[220px]
-            sm:rounded-[var(--radius-organic)]
             overflow-hidden
+            rounded-t-[var(--radius-organic)] lg:rounded-t-[var(--radius-organic)]
           "
         >
           {coverImage ? (
@@ -49,11 +49,11 @@ export function OperatorHero({
           )}
         </div>
 
-        {/* Profile photo — positioned to overlap bottom of banner */}
+        {/* Profile photo — overlaps bottom of banner */}
         <div
           className="
             absolute
-            left-[var(--space-lg)] sm:left-[calc(var(--space-lg)+var(--space-md))]
+            left-[var(--space-md)] sm:left-[var(--space-lg)]
             bottom-0 translate-y-1/2
             z-10
           "
@@ -63,7 +63,7 @@ export function OperatorHero({
               w-[72px] h-[72px] sm:w-28 sm:h-28 lg:w-36 lg:h-36
               rounded-full
               bg-[var(--color-surface-sunken)]
-              border-4 border-[var(--color-surface-raised)]
+              border-4 border-white
               shadow-[var(--shadow-card)]
               overflow-hidden
               flex items-center justify-center
@@ -93,7 +93,7 @@ export function OperatorHero({
         </div>
       </div>
 
-      {/* Spacer for the overflowing photo + identity info */}
+      {/* Spacer for overflowing photo + identity info */}
       <div className="pt-10 sm:pt-16 lg:pt-20 px-[var(--space-md)] sm:px-[var(--space-lg)]">
         {/* Name */}
         <h1 className="font-display text-xl sm:text-3xl lg:text-4xl font-semibold text-[var(--color-ink)] leading-tight">
@@ -102,7 +102,7 @@ export function OperatorHero({
 
         {/* Badges */}
         {(verified || isFoundingOperator) && (
-          <div className="flex items-center gap-1.5 sm:gap-[var(--space-sm)] mt-1 flex-nowrap">
+          <div className="flex flex-row flex-wrap items-center gap-1.5 sm:gap-[var(--space-sm)] mt-1">
             {verified && (
               <span
                 className="

@@ -45,7 +45,7 @@ export function OperatorNoToursCard({ operatorFirstName }: OperatorNoToursCardPr
   }
 
   return (
-    <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)] lg:mb-[var(--space-3xl)]" aria-label="Upcoming tours">
+    <section className="mb-[var(--space-md)] sm:mb-[var(--space-lg)]" aria-label="Upcoming tours">
       <div className="
         bg-[var(--color-primary-subtle)]
         border-2 border-[var(--color-border)]

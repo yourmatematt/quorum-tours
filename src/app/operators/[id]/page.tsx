@@ -146,14 +146,14 @@ export default function OperatorProfilePage() {
 
   return (
     <ErrorBoundary>
-      <main className="min-h-screen bg-[var(--color-surface)]">
+      <main className="min-h-screen bg-[var(--color-surface)] lg:bg-[var(--color-surface-sunken)]">
       <div className="
         w-full max-w-[var(--container-max)]
         mx-auto px-[var(--space-lg)]
-        py-[var(--space-2xl)]
+        py-[var(--space-lg)] lg:py-[var(--space-2xl)]
       ">
         {/* Breadcrumb */}
-        <nav className="mb-[var(--space-xl)] text-sm" aria-label="Breadcrumb">
+        <nav className="mb-[var(--space-md)] lg:mb-[var(--space-lg)] text-sm" aria-label="Breadcrumb">
           <ol className="flex items-center gap-[var(--space-sm)]">
             <li>
               <a href="/" className="text-[var(--color-ink-muted)] hover:text-[var(--color-primary)]">
@@ -173,7 +173,15 @@ export default function OperatorProfilePage() {
           </ol>
         </nav>
 
-        {/* Section 1: Identity & Legitimacy */}
+        {/* Profile card — white card on desktop, transparent on mobile */}
+        <div className="
+          lg:bg-white
+          lg:border lg:border-[var(--color-border)]
+          lg:rounded-[var(--radius-organic)]
+          lg:shadow-sm
+          lg:overflow-hidden
+        ">
+        {/* Hero — banner is full card width (no padding) */}
         <OperatorHero
           name={operator.name}
           photo={operator.logo_url ?? undefined}
@@ -184,6 +192,9 @@ export default function OperatorProfilePage() {
           location={operator.base_location ?? ''}
           yearsExperience={yearsExperience}
         />
+
+        {/* Card content — padded inside the card */}
+        <div className="lg:px-[var(--space-lg)] lg:pb-[var(--space-lg)]">
 
         {/* Why I Joined Quorum — public quote block */}
         {whyQuorum && (
@@ -365,6 +376,8 @@ export default function OperatorProfilePage() {
             )}
           </section>
         )}
+        </div>{/* end card content */}
+        </div>{/* end profile card */}
       </div>
     </main>
     </ErrorBoundary>
