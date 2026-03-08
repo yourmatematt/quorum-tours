@@ -74,12 +74,14 @@ export async function POST(request: Request) {
       .from(BUCKET)
       .getPublicUrl(filePath);
 
+    const cacheBustedUrl = `${publicUrl}?t=${Date.now()}`;
+
     await serviceClient
       .from('operators')
-      .update({ hero_image_url: publicUrl })
+      .update({ hero_image_url: cacheBustedUrl })
       .eq('id', operatorId);
 
-    return NextResponse.json({ url: publicUrl });
+    return NextResponse.json({ url: cacheBustedUrl });
   } catch (error) {
     console.error('Admin cover upload error:', error);
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });

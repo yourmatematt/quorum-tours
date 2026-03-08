@@ -101,15 +101,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to upload photo' }, { status: 500 });
     }
 
-    // Get public URL
+    // Get public URL with cache-buster
     const { data: { publicUrl } } = serviceClient.storage
       .from(BUCKET)
       .getPublicUrl(filePath);
 
+    const cacheBustedUrl = `${publicUrl}?t=${Date.now()}`;
+
     // Update operator record
     const { error: updateError } = await serviceClient
       .from('operators')
-      .update({ logo_url: publicUrl })
+      .update({ logo_url: cacheBustedUrl })
       .eq('id', operator.id);
 
     if (updateError) {
@@ -117,7 +119,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 });
     }
 
-    return NextResponse.json({ url: publicUrl });
+    return NextResponse.json({ url: cacheBustedUrl });
   } catch (error) {
     console.error('Photo upload error:', error);
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });

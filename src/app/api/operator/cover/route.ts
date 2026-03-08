@@ -104,9 +104,12 @@ export async function POST(request: Request) {
       .from(BUCKET)
       .getPublicUrl(filePath);
 
+    // Append cache-buster so browsers don't serve the old image
+    const cacheBustedUrl = `${publicUrl}?t=${Date.now()}`;
+
     const { error: updateError } = await serviceClient
       .from('operators')
-      .update({ hero_image_url: publicUrl })
+      .update({ hero_image_url: cacheBustedUrl })
       .eq('id', operator.id);
 
     if (updateError) {
@@ -114,7 +117,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 });
     }
 
-    return NextResponse.json({ url: publicUrl });
+    return NextResponse.json({ url: cacheBustedUrl });
   } catch (error) {
     console.error('Cover upload error:', error);
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
