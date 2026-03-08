@@ -21,123 +21,132 @@ export function OperatorHero({
 }: OperatorHeroProps) {
   return (
     <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)]">
-      {/* Cover banner */}
-      <div
-        className="
-          relative w-full
-          h-[140px] sm:h-[180px] lg:h-[220px]
-          rounded-[var(--radius-organic)]
-          overflow-hidden
-        "
-      >
-        {coverImage ? (
-          <img
-            src={coverImage}
-            alt=""
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div
-            className="w-full h-full"
-            style={{
-              background: 'linear-gradient(135deg, var(--color-primary-subtle) 0%, var(--color-surface-sunken) 50%, var(--color-secondary) 100%)',
-              opacity: 0.6,
-            }}
-          />
-        )}
-      </div>
-
-      {/* Photo + identity row — photo overlaps the banner */}
-      <div className="flex items-end gap-[var(--space-md)] sm:gap-[var(--space-lg)] -mt-8 sm:-mt-12 lg:-mt-16 px-[var(--space-md)] sm:px-[var(--space-lg)]">
-        {/* Profile photo overlapping banner */}
+      {/* Cover banner + overlapping photo wrapper */}
+      <div className="relative">
+        {/* Cover banner */}
         <div
           className="
-            flex-shrink-0
-            w-[72px] h-[72px] sm:w-28 sm:h-28 lg:w-36 lg:h-36
-            rounded-full
-            bg-[var(--color-surface-sunken)]
-            border-4 border-[var(--color-surface-raised)]
-            shadow-[var(--shadow-card)]
+            w-full
+            h-[140px] sm:h-[180px] lg:h-[220px]
+            rounded-[var(--radius-organic)]
             overflow-hidden
-            flex items-center justify-center
           "
         >
-          {photo ? (
+          {coverImage ? (
             <img
-              src={photo}
-              alt={`Photo of ${name}`}
+              src={coverImage}
+              alt=""
               className="w-full h-full object-cover"
             />
           ) : (
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 48 48"
-              fill="none"
-              stroke="var(--color-ink-subtle)"
-              strokeWidth="1.5"
-              aria-hidden="true"
-            >
-              <circle cx="24" cy="16" r="8" />
-              <path d="M8 42c0-8 8-12 16-12s16 4 16 12" />
-            </svg>
+            <div
+              className="w-full h-full"
+              style={{
+                background: 'linear-gradient(135deg, var(--color-primary-subtle) 0%, var(--color-surface-sunken) 50%, var(--color-secondary) 100%)',
+                opacity: 0.6,
+              }}
+            />
           )}
         </div>
 
-        {/* Name + badges — sit beside the photo at the overlap boundary */}
-        <div className="flex-1 min-w-0 pb-1 sm:pb-2">
-          <h1 className="font-display text-xl sm:text-3xl lg:text-4xl font-semibold text-[var(--color-ink)] leading-tight">
-            {name}
-          </h1>
-          {(verified || isFoundingOperator) && (
-            <div className="flex items-center gap-1.5 sm:gap-[var(--space-sm)] mt-1 flex-nowrap">
-              {verified && (
-                <span
-                  className="
-                    inline-flex items-center gap-[var(--space-xs)]
-                    px-[var(--space-sm)] py-[var(--space-xs)]
-                    bg-[var(--color-confirmed-bg)]
-                    text-[var(--color-confirmed)]
-                    text-xs font-medium
-                    rounded-[var(--radius-sm)]
-                    whitespace-nowrap
-                  "
-                >
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path d="M10.28 2.72a.75.75 0 010 1.06l-5.5 5.5a.75.75 0 01-1.06 0l-2.5-2.5a.75.75 0 111.06-1.06L4.25 7.69l4.97-4.97a.75.75 0 011.06 0z" />
-                  </svg>
-                  Verified
-                </span>
-              )}
-              {isFoundingOperator && (
-                <span
-                  className="
-                    inline-flex items-center
-                    px-[var(--space-sm)] py-[var(--space-xs)]
-                    bg-[var(--color-founding-bg)]
-                    text-[var(--color-founding)]
-                    text-xs font-medium
-                    rounded-[var(--radius-sm)]
-                    whitespace-nowrap
-                  "
-                >
-                  Founding Operator
-                </span>
-              )}
-            </div>
-          )}
+        {/* Profile photo — positioned to overlap bottom of banner */}
+        <div
+          className="
+            absolute
+            left-[var(--space-md)] sm:left-[var(--space-lg)]
+            bottom-0 translate-y-1/2
+            z-10
+          "
+        >
+          <div
+            className="
+              w-[72px] h-[72px] sm:w-28 sm:h-28 lg:w-36 lg:h-36
+              rounded-full
+              bg-[var(--color-surface-sunken)]
+              border-4 border-[var(--color-surface-raised)]
+              shadow-[var(--shadow-card)]
+              overflow-hidden
+              flex items-center justify-center
+            "
+          >
+            {photo ? (
+              <img
+                src={photo}
+                alt={`Photo of ${name}`}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 48 48"
+                fill="none"
+                stroke="var(--color-ink-subtle)"
+                strokeWidth="1.5"
+                aria-hidden="true"
+              >
+                <circle cx="24" cy="16" r="8" />
+                <path d="M8 42c0-8 8-12 16-12s16 4 16 12" />
+              </svg>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Meta row: location + guiding since */}
-      <div className="mt-[var(--space-md)] px-[var(--space-md)] sm:px-[var(--space-lg)]">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-[var(--space-lg)] text-sm text-[var(--color-ink-subtle)]">
+      {/* Spacer for the overflowing photo + identity info */}
+      <div className="pt-10 sm:pt-16 lg:pt-20 px-[var(--space-md)] sm:px-[var(--space-lg)]">
+        {/* Name */}
+        <h1 className="font-display text-xl sm:text-3xl lg:text-4xl font-semibold text-[var(--color-ink)] leading-tight">
+          {name}
+        </h1>
+
+        {/* Badges */}
+        {(verified || isFoundingOperator) && (
+          <div className="flex items-center gap-1.5 sm:gap-[var(--space-sm)] mt-1 flex-nowrap">
+            {verified && (
+              <span
+                className="
+                  inline-flex items-center gap-[var(--space-xs)]
+                  px-[var(--space-sm)] py-[var(--space-xs)]
+                  bg-[var(--color-confirmed-bg)]
+                  text-[var(--color-confirmed)]
+                  text-xs font-medium
+                  rounded-[var(--radius-sm)]
+                  whitespace-nowrap
+                "
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M10.28 2.72a.75.75 0 010 1.06l-5.5 5.5a.75.75 0 01-1.06 0l-2.5-2.5a.75.75 0 111.06-1.06L4.25 7.69l4.97-4.97a.75.75 0 011.06 0z" />
+                </svg>
+                Verified
+              </span>
+            )}
+            {isFoundingOperator && (
+              <span
+                className="
+                  inline-flex items-center
+                  px-[var(--space-sm)] py-[var(--space-xs)]
+                  bg-[var(--color-founding-bg)]
+                  text-[var(--color-founding)]
+                  text-xs font-medium
+                  rounded-[var(--radius-sm)]
+                  whitespace-nowrap
+                "
+              >
+                Founding Operator
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Location + guiding since */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-[var(--space-lg)] text-sm text-[var(--color-ink-subtle)] mt-[var(--space-sm)]">
           <div className="flex items-center gap-[var(--space-xs)] whitespace-nowrap">
             <svg
               width="16"
