@@ -21,6 +21,7 @@ interface OperatorData {
   base_location: string | null;
   specialties: string[] | null;
   is_verified: boolean;
+  is_featured: boolean;
   created_at: string;
   stripe_charges_enabled: boolean;
   stripe_payouts_enabled: boolean;

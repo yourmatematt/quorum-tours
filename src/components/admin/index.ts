@@ -18,6 +18,7 @@ export {
 } from './AdminKeyboardShortcuts';
 
 export { AppealsQueue } from './AppealsQueue';
+export { FeaturedOperators } from './FeaturedOperators';
 
 // Section components
 export { DashboardOverview } from './DashboardOverview';

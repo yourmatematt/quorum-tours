@@ -60,6 +60,7 @@ export async function GET(
         specialties,
         languages,
         is_verified,
+        is_featured,
         created_at,
         established_year,
         metadata,
@@ -155,6 +156,7 @@ const ALLOWED_COLUMNS = new Set([
   'base_location',
   'established_year',
   'specialties',
+  'is_featured',
 ]);
 
 // Fields stored inside the metadata JSONB column

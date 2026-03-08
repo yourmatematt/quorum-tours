@@ -1,5 +1,5 @@
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { OperatorDirectory, OperatorVerificationQueue } from '@/components/admin';
+import { OperatorDirectory, OperatorVerificationQueue, FeaturedOperators } from '@/components/admin';
 
 export default function AdminOperatorsPage() {
   return (
@@ -15,6 +15,7 @@ export default function AdminOperatorsPage() {
           </p>
         </div>
 
+        <FeaturedOperators />
         <OperatorDirectory />
         <OperatorVerificationQueue />
       </div>

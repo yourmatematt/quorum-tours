@@ -50,6 +50,7 @@ export async function GET(request: NextRequest) {
         base_location,
         specialties,
         is_verified,
+        is_featured,
         created_at,
         stripe_charges_enabled,
         stripe_payouts_enabled
