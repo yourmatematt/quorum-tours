@@ -20,7 +20,7 @@ export function OperatorHero({
   yearsExperience,
 }: OperatorHeroProps) {
   return (
-    <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)]">
+    <section>
       {/* Cover banner + overlapping photo wrapper */}
       <div className="relative">
         {/* Cover banner — full card width, no horizontal padding */}

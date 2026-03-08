@@ -173,211 +173,240 @@ export default function OperatorProfilePage() {
           </ol>
         </nav>
 
-        {/* Profile card — white card on desktop, transparent on mobile */}
+        {/* Section cards — each section is its own card */}
+        <div className="flex flex-col gap-3 sm:gap-4 lg:gap-6">
+
+        {/* Card 1: Hero — banner + photo + identity */}
         <div className="
-          lg:bg-white
-          lg:border lg:border-[var(--color-border)]
-          lg:rounded-[var(--radius-organic)]
-          lg:shadow-sm
-          lg:overflow-hidden
+          bg-white
+          rounded-[var(--radius-organic)]
+          border border-[var(--color-border)]
+          shadow-sm
+          pb-4 sm:pb-6 lg:pb-8
         ">
-        {/* Hero — banner is full card width (no padding) */}
-        <OperatorHero
-          name={operator.name}
-          photo={operator.logo_url ?? undefined}
-          coverImage={operator.hero_image_url ?? undefined}
-          verified={operator.is_verified}
-          isFoundingOperator={operator.is_founding_operator}
-          expertise={operator.tagline ?? ''}
-          location={operator.base_location ?? ''}
-          yearsExperience={yearsExperience}
-        />
+          <OperatorHero
+            name={operator.name}
+            photo={operator.logo_url ?? undefined}
+            coverImage={operator.hero_image_url ?? undefined}
+            verified={operator.is_verified}
+            isFoundingOperator={operator.is_founding_operator}
+            expertise={operator.tagline ?? ''}
+            location={operator.base_location ?? ''}
+            yearsExperience={yearsExperience}
+          />
+        </div>
 
-        {/* Card content — padded inside the card */}
-        <div className="lg:px-[var(--space-lg)] lg:pb-[var(--space-lg)]">
-
-        {/* Why I Joined Quorum — public quote block */}
+        {/* Card 2: Why I Joined Quorum */}
         {whyQuorum && (
-          <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)] lg:mb-[var(--space-3xl)]">
-            <h2 className="font-display text-[clamp(1.375rem,3.5vw,2.25rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
-              Why I Joined Quorum
-            </h2>
-            <blockquote className="
-              border-l-4 border-[var(--color-primary)]
-              pl-[var(--space-lg)]
-              py-[var(--space-sm)]
-              text-[var(--color-ink-muted)]
-              leading-relaxed
-              italic
-              text-lg
-            ">
-              <p>&ldquo;{whyQuorum}&rdquo;</p>
-              <footer className="mt-[var(--space-sm)] text-sm not-italic text-[var(--color-ink-subtle)]">
-                — {operator.name}
-              </footer>
-            </blockquote>
-          </section>
+          <div className="
+            bg-white
+            rounded-[var(--radius-organic)]
+            border border-[var(--color-border)]
+            shadow-sm
+            p-4 sm:p-6 lg:p-8
+          ">
+            <section>
+              <h2 className="font-display text-[clamp(1.375rem,3.5vw,2.25rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
+                Why I Joined Quorum
+              </h2>
+              <blockquote className="
+                border-l-4 border-[var(--color-primary)]
+                pl-[var(--space-lg)]
+                py-[var(--space-sm)]
+                text-[var(--color-ink-muted)]
+                leading-relaxed
+                italic
+                text-lg
+              ">
+                <p>&ldquo;{whyQuorum}&rdquo;</p>
+                <footer className="mt-[var(--space-sm)] text-sm not-italic text-[var(--color-ink-subtle)]">
+                  — {operator.name}
+                </footer>
+              </blockquote>
+            </section>
+          </div>
         )}
 
-        {/* Track Record Trust Strip */}
-        {(operator.tours_completed ?? 0) > 0 && (
-          <div className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)] lg:mb-[var(--space-3xl)]">
-            <TrackRecordSummary
-              toursCompleted={operator.tours_completed ?? 0}
-              confirmationRate={0}
-              totalParticipants={operator.guests_served ?? 0}
+        {/* Card 3: Expertise (+ Track Record if available) */}
+        <div className="
+          bg-white
+          rounded-[var(--radius-organic)]
+          border border-[var(--color-border)]
+          shadow-sm
+          p-4 sm:p-6 lg:p-8
+        ">
+          {(operator.tours_completed ?? 0) > 0 && (
+            <div className="mb-[var(--space-lg)]">
+              <TrackRecordSummary
+                toursCompleted={operator.tours_completed ?? 0}
+                confirmationRate={0}
+                totalParticipants={operator.guests_served ?? 0}
+              />
+            </div>
+          )}
+          <AuthoritySection
+            specializations={operator.specialties ?? []}
+            credentials={[]}
+            affiliations={[]}
+          />
+        </div>
+
+        {/* Card 4: About (+ Capabilities if available) */}
+        {(operator.description || equipmentItems.length > 0 || (operator.languages ?? []).length > 0) && (
+          <div className="
+            bg-white
+            rounded-[var(--radius-organic)]
+            border border-[var(--color-border)]
+            shadow-sm
+            p-4 sm:p-6 lg:p-8
+          ">
+            {operator.description && (
+              <section className={equipmentItems.length > 0 || (operator.languages ?? []).length > 0 ? 'mb-[var(--space-lg)]' : ''}>
+                <h2 className="font-display text-[clamp(1.375rem,3.5vw,2.25rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
+                  About
+                </h2>
+                <div className="
+                  text-[var(--color-ink-muted)]
+                  leading-relaxed
+                  space-y-[var(--space-sm)] sm:space-y-[var(--space-md)]
+                ">
+                  {operator.description.split('\n\n').map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
+                </div>
+              </section>
+            )}
+            <CapabilitiesSection
+              equipment={equipmentItems}
+              capacity={{
+                typical: operator.vessel_capacity ? `Up to ${operator.vessel_capacity}` : '',
+                maximum: operator.vessel_capacity ?? 0,
+                privateAvailable: false,
+              }}
+              accessibility={[]}
+              languages={operator.languages ?? []}
             />
           </div>
         )}
 
-        {/* Expertise */}
-        <AuthoritySection
-          specializations={operator.specialties ?? []}
-          credentials={[]}
-          affiliations={[]}
-        />
+        {/* Card 5: Tours (or empty state) */}
+        <div className="
+          bg-white
+          rounded-[var(--radius-organic)]
+          border border-[var(--color-border)]
+          shadow-sm
+          p-4 sm:p-6 lg:p-8
+        ">
+          {activeTours.length === 0 && (
+            <OperatorNoToursCard operatorFirstName={operator.name.split(' ')[0]} />
+          )}
 
-        {/* About */}
-        {operator.description && (
-          <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)] lg:mb-[var(--space-3xl)]">
-            <h2 className="font-display text-[clamp(1.375rem,3.5vw,2.25rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
-              About
-            </h2>
-            <div className="
-              text-[var(--color-ink-muted)]
-              leading-relaxed
-              space-y-[var(--space-sm)] sm:space-y-[var(--space-md)]
-            ">
-              {operator.description.split('\n\n').map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-              ))}
-            </div>
-          </section>
-        )}
+          {tours.length > 0 && (
+            <section>
+              <h2 className="font-display text-[clamp(1.375rem,3.5vw,2.25rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
+                Tours
+              </h2>
 
-        {/* Section 5: Assets & Capabilities */}
-        <CapabilitiesSection
-          equipment={equipmentItems}
-          capacity={{
-            typical: operator.vessel_capacity ? `Up to ${operator.vessel_capacity}` : '',
-            maximum: operator.vessel_capacity ?? 0,
-            privateAvailable: false,
-          }}
-          accessibility={[]}
-          languages={operator.languages ?? []}
-        />
-
-        {/* Empty state: no active tours */}
-        {activeTours.length === 0 && (
-          <OperatorNoToursCard operatorFirstName={operator.name.split(' ')[0]} />
-        )}
-
-        {/* Tours */}
-        {tours.length > 0 && (
-          <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)] lg:mb-[var(--space-3xl)]">
-            <h2 className="font-display text-[clamp(1.375rem,3.5vw,2.25rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
-              Tours
-            </h2>
-
-            {/* Tab Navigation */}
-            <div className="flex gap-[var(--space-md)] mb-[var(--space-lg)] border-b border-[var(--color-border)]">
-              <button
-                type="button"
-                onClick={() => setActiveTab('active')}
-                className={`
-                  pb-[var(--space-sm)]
-                  py-3 px-2 min-h-[48px]
-                  text-sm font-medium
-                  border-b-2
-                  transition-colors duration-[var(--transition-normal)]
-                  ${activeTab === 'active'
-                    ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
-                    : 'border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]'
-                  }
-                `}
-              >
-                Active Tours ({activeTours.length})
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('past')}
-                className={`
-                  pb-[var(--space-sm)]
-                  py-3 px-2 min-h-[48px]
-                  text-sm font-medium
-                  border-b-2
-                  transition-colors duration-[var(--transition-normal)]
-                  ${activeTab === 'past'
-                    ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
-                    : 'border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]'
-                  }
-                `}
-              >
-                Past Tours ({pastTours.length})
-              </button>
-            </div>
-
-            {/* Tab Content */}
-            {activeTab === 'active' && (
-              <div>
-                {activeTours.length > 0 ? (
-                  <div className="grid gap-[var(--space-lg)] sm:grid-cols-2 lg:grid-cols-3">
-                    {activeTours.map((tour) => (
-                      <TourCard
-                        key={tour.id}
-                        title={tour.title}
-                        operatorName={operator.name}
-                        status={tour.status as 'confirmed' | 'forming' | 'not-running'}
-                        currentParticipants={tour.current_participant_count ?? 0}
-                        quorum={tour.threshold ?? 0}
-                        capacity={tour.capacity ?? 0}
-                        date={tour.date_start ? new Date(tour.date_start).toLocaleDateString('en-AU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : ''}
-                        location={tour.location ?? ''}
-                        href={`/tours/${tour.slug ?? tour.id}`}
-                        speciesHighlight={tour.highlights?.[0]}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-[var(--color-ink-muted)] py-[var(--space-xl)]">
-                    No active tours at the moment. Check back soon.
-                  </p>
-                )}
+              {/* Tab Navigation */}
+              <div className="flex gap-[var(--space-md)] mb-[var(--space-lg)] border-b border-[var(--color-border)]">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('active')}
+                  className={`
+                    pb-[var(--space-sm)]
+                    py-3 px-2 min-h-[48px]
+                    text-sm font-medium
+                    border-b-2
+                    transition-colors duration-[var(--transition-normal)]
+                    ${activeTab === 'active'
+                      ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
+                      : 'border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]'
+                    }
+                  `}
+                >
+                  Active Tours ({activeTours.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('past')}
+                  className={`
+                    pb-[var(--space-sm)]
+                    py-3 px-2 min-h-[48px]
+                    text-sm font-medium
+                    border-b-2
+                    transition-colors duration-[var(--transition-normal)]
+                    ${activeTab === 'past'
+                      ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
+                      : 'border-transparent text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]'
+                    }
+                  `}
+                >
+                  Past Tours ({pastTours.length})
+                </button>
               </div>
-            )}
 
-            {activeTab === 'past' && (
-              <div className="
-                bg-[var(--color-surface-raised)]
-                border-2 border-[var(--color-border)]
-                rounded-[var(--radius-organic)]
-                shadow-[var(--shadow-card)]
-                p-[var(--space-lg)]
-              ">
-                {pastTours.length > 0 ? (
-                  <div>
-                    {pastTours.map((tour) => (
-                      <PastTourItem
-                        key={tour.id}
-                        id={tour.id}
-                        title={tour.title}
-                        date={tour.date_start ? new Date(tour.date_start).toLocaleDateString('en-AU', { year: 'numeric', month: 'long' }) : ''}
-                        outcome={tour.status === 'cancelled' ? 'cancelled' : 'completed'}
-                        participantCount={tour.current_participant_count ?? undefined}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-[var(--color-ink-muted)]">
-                    No past tours to display.
-                  </p>
-                )}
-              </div>
-            )}
-          </section>
-        )}
-        </div>{/* end card content */}
-        </div>{/* end profile card */}
+              {/* Tab Content */}
+              {activeTab === 'active' && (
+                <div>
+                  {activeTours.length > 0 ? (
+                    <div className="grid gap-[var(--space-lg)] sm:grid-cols-2 lg:grid-cols-3">
+                      {activeTours.map((tour) => (
+                        <TourCard
+                          key={tour.id}
+                          title={tour.title}
+                          operatorName={operator.name}
+                          status={tour.status as 'confirmed' | 'forming' | 'not-running'}
+                          currentParticipants={tour.current_participant_count ?? 0}
+                          quorum={tour.threshold ?? 0}
+                          capacity={tour.capacity ?? 0}
+                          date={tour.date_start ? new Date(tour.date_start).toLocaleDateString('en-AU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : ''}
+                          location={tour.location ?? ''}
+                          href={`/tours/${tour.slug ?? tour.id}`}
+                          speciesHighlight={tour.highlights?.[0]}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-[var(--color-ink-muted)] py-[var(--space-xl)]">
+                      No active tours at the moment. Check back soon.
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {activeTab === 'past' && (
+                <div className="
+                  bg-[var(--color-surface-raised)]
+                  border-2 border-[var(--color-border)]
+                  rounded-[var(--radius-organic)]
+                  shadow-[var(--shadow-card)]
+                  p-[var(--space-lg)]
+                ">
+                  {pastTours.length > 0 ? (
+                    <div>
+                      {pastTours.map((tour) => (
+                        <PastTourItem
+                          key={tour.id}
+                          id={tour.id}
+                          title={tour.title}
+                          date={tour.date_start ? new Date(tour.date_start).toLocaleDateString('en-AU', { year: 'numeric', month: 'long' }) : ''}
+                          outcome={tour.status === 'cancelled' ? 'cancelled' : 'completed'}
+                          participantCount={tour.current_participant_count ?? undefined}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-[var(--color-ink-muted)]">
+                      No past tours to display.
+                    </p>
+                  )}
+                </div>
+              )}
+            </section>
+          )}
+        </div>
+
+        </div>{/* end cards container */}
       </div>
     </main>
     </ErrorBoundary>
