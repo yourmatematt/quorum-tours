@@ -20,8 +20,8 @@ export function AuthoritySection({
   if (!hasContent) return null;
 
   return (
-    <section className="mb-[var(--space-3xl)]">
-      <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
+    <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)] lg:mb-[var(--space-3xl)]">
+      <h2 className="font-display text-[clamp(1.375rem,3.5vw,2.25rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-md)] sm:mb-[var(--space-lg)]">
         Expertise
       </h2>
 

@@ -18,13 +18,14 @@ export function OperatorHero({
   yearsExperience,
 }: OperatorHeroProps) {
   return (
-    <section className="mb-[var(--space-3xl)]">
-      <div className="flex flex-col sm:flex-row items-start gap-[var(--space-xl)]">
+    <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)]">
+      {/* Mobile: photo + name/badges side-by-side, bio below. Desktop: same but larger photo */}
+      <div className="flex items-start gap-[var(--space-md)] sm:gap-[var(--space-xl)]">
         {/* Operator Photo */}
         <div
           className="
             flex-shrink-0
-            w-32 h-32 sm:w-40 sm:h-40
+            w-20 h-20 sm:w-32 sm:h-32 lg:w-40 lg:h-40
             rounded-full
             bg-[var(--color-surface-sunken)]
             border-2 border-[var(--color-border)]
@@ -57,8 +58,8 @@ export function OperatorHero({
         {/* Identity Info */}
         <div className="flex-1 min-w-0">
           {/* Name + Verification */}
-          <div className="flex flex-wrap items-center gap-[var(--space-sm)] mb-[var(--space-sm)]">
-            <h1 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--color-ink)]">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-[var(--space-sm)] mb-1 sm:mb-[var(--space-sm)]">
+            <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-[var(--color-ink)]">
               {name}
             </h1>
             {verified && (
@@ -100,13 +101,8 @@ export function OperatorHero({
             )}
           </div>
 
-          {/* Expertise */}
-          <p className="text-[var(--text-lg)] text-[var(--color-ink-muted)] mb-[var(--space-md)]">
-            {expertise}
-          </p>
-
-          {/* Location and Experience */}
-          <div className="flex flex-wrap items-center gap-[var(--space-lg)] text-sm text-[var(--color-ink-subtle)]">
+          {/* Location and Experience — visible beside photo on all screens */}
+          <div className="flex flex-wrap items-center gap-x-[var(--space-md)] gap-y-0.5 text-sm text-[var(--color-ink-subtle)]">
             <div className="flex items-center gap-[var(--space-xs)]">
               <svg
                 width="16"
@@ -140,6 +136,13 @@ export function OperatorHero({
           </div>
         </div>
       </div>
+
+      {/* Expertise / tagline — full width below the photo+name row */}
+      {expertise && (
+        <p className="text-[var(--text-base)] sm:text-[var(--text-lg)] text-[var(--color-ink-muted)] mt-[var(--space-md)] sm:mt-[var(--space-lg)]">
+          {expertise}
+        </p>
+      )}
     </section>
   );
 }

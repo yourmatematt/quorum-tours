@@ -185,8 +185,8 @@ export default function OperatorProfilePage() {
 
         {/* Why I Joined Quorum — public quote block */}
         {whyQuorum && (
-          <section className="mb-[var(--space-3xl)]">
-            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
+          <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)] lg:mb-[var(--space-3xl)]">
+            <h2 className="font-display text-[clamp(1.375rem,3.5vw,2.25rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
               Why I Joined Quorum
             </h2>
             <blockquote className="
@@ -208,7 +208,7 @@ export default function OperatorProfilePage() {
 
         {/* Track Record Trust Strip */}
         {(operator.tours_completed ?? 0) > 0 && (
-          <div className="mb-[var(--space-3xl)]">
+          <div className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)] lg:mb-[var(--space-3xl)]">
             <TrackRecordSummary
               toursCompleted={operator.tours_completed ?? 0}
               confirmationRate={0}
@@ -226,14 +226,14 @@ export default function OperatorProfilePage() {
 
         {/* About */}
         {operator.description && (
-          <section className="mb-[var(--space-3xl)]">
-            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
+          <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)] lg:mb-[var(--space-3xl)]">
+            <h2 className="font-display text-[clamp(1.375rem,3.5vw,2.25rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
               About
             </h2>
             <div className="
               text-[var(--color-ink-muted)]
               leading-relaxed
-              space-y-[var(--space-md)]
+              space-y-[var(--space-sm)] sm:space-y-[var(--space-md)]
             ">
               {operator.description.split('\n\n').map((paragraph, index) => (
                 <p key={index}>{paragraph}</p>
@@ -261,8 +261,8 @@ export default function OperatorProfilePage() {
 
         {/* Tours */}
         {tours.length > 0 && (
-          <section className="mb-[var(--space-3xl)]">
-            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
+          <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)] lg:mb-[var(--space-3xl)]">
+            <h2 className="font-display text-[clamp(1.375rem,3.5vw,2.25rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-lg)]">
               Tours
             </h2>
 

@@ -45,13 +45,13 @@ export function OperatorNoToursCard({ operatorFirstName }: OperatorNoToursCardPr
   }
 
   return (
-    <section className="mb-[var(--space-3xl)]" aria-label="Upcoming tours">
+    <section className="mb-[var(--space-xl)] sm:mb-[var(--space-2xl)] lg:mb-[var(--space-3xl)]" aria-label="Upcoming tours">
       <div className="
         bg-[var(--color-primary-subtle)]
         border-2 border-[var(--color-border)]
         rounded-[var(--radius-organic)]
         shadow-[var(--shadow-card)]
-        px-[var(--space-xl)] py-[var(--space-xl)]
+        px-[var(--space-md)] py-[var(--space-lg)] sm:px-[var(--space-xl)] sm:py-[var(--space-xl)]
       ">
         <h2 className="font-display text-xl text-[var(--color-ink)] mb-[var(--space-sm)]">
           {operatorFirstName}&rsquo;s first tours are coming soon.
@@ -68,9 +68,9 @@ export function OperatorNoToursCard({ operatorFirstName }: OperatorNoToursCardPr
             <Link
               href={ctaHref}
               className="
-                inline-block
+                block w-full sm:inline-block sm:w-auto
                 px-5 py-2.5
-                text-sm font-medium
+                text-sm font-medium text-center
                 bg-[var(--color-primary)] text-white
                 rounded-[var(--radius-organic)]
                 hover:bg-[var(--color-primary-hover)]
