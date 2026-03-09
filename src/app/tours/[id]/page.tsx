@@ -93,6 +93,17 @@ function generateSpeciesGroups(species: string[]) {
   return groups;
 }
 
+// Itinerary day type
+interface ItineraryDay {
+  day: number;
+  date: string;
+  title: string;
+  vessel?: string;
+  departure?: string;
+  description?: string;
+  end_time?: string;
+}
+
 // Generate logistics from tour data
 function generateLogistics(tour: {
   capacity: number;
@@ -101,21 +112,11 @@ function generateLogistics(tour: {
   date_start: string;
   date_end: string;
   included: string[];
+  itinerary: ItineraryDay[] | null;
 }) {
-  const startTime = new Date(tour.date_start).toLocaleTimeString('en-AU', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  });
-  const endTime = new Date(tour.date_end).toLocaleTimeString('en-AU', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  });
-
-  return [
+  const items: { icon: 'group' | 'fitness' | 'included' | 'policy' | 'time' | 'location'; label: string; value: string; details: string[] }[] = [
     {
-      icon: 'group' as const,
+      icon: 'group',
       label: 'Group size',
       value: `Maximum ${tour.capacity} participants`,
       details: [
@@ -125,23 +126,38 @@ function generateLogistics(tour: {
           : `${tour.threshold - tour.current_participants} more needed to confirm`,
       ],
     },
-    {
-      icon: 'time' as const,
+  ];
+
+  // Only show generic schedule if no itinerary
+  if (!tour.itinerary || tour.itinerary.length === 0) {
+    const startTime = new Date(tour.date_start).toLocaleTimeString('en-AU', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+    const endTime = new Date(tour.date_end).toLocaleTimeString('en-AU', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+    items.push({
+      icon: 'time',
       label: 'Schedule',
       value: `${startTime} - ${endTime}`,
       details: ['Check tour details for meeting location'],
-    },
-    ...(tour.included && tour.included.length > 0
-      ? [
-          {
-            icon: 'included' as const,
-            label: 'Included',
-            value: tour.included.slice(0, 3).join(', '),
-            details: tour.included,
-          },
-        ]
-      : []),
-  ];
+    });
+  }
+
+  if (tour.included && tour.included.length > 0) {
+    items.push({
+      icon: 'included',
+      label: 'Included',
+      value: `${tour.included.length} items`,
+      details: tour.included,
+    });
+  }
+
+  return items;
 }
 
 // Default FAQs
@@ -222,6 +238,7 @@ export default function TourDetailPage() {
     deposit: (user && personalizedDepositCents !== null ? personalizedDepositCents : dbTour.deposit_cents) / 100,
     image: dbTour.image_url || undefined,
     species: generateSpeciesGroups(dbTour.target_species || []),
+    itinerary: (Array.isArray(dbTour.itinerary) ? dbTour.itinerary : null) as ItineraryDay[] | null,
     logistics: generateLogistics({
       capacity: dbTour.capacity,
       current_participants: dbTour.current_participants,
@@ -229,6 +246,7 @@ export default function TourDetailPage() {
       date_start: dbTour.date_start,
       date_end: dbTour.date_end,
       included: dbTour.included || [],
+      itinerary: Array.isArray(dbTour.itinerary) ? dbTour.itinerary as ItineraryDay[] : null,
     }),
     faqs: defaultFaqs,
   };
@@ -419,7 +437,45 @@ export default function TourDetailPage() {
                 </div>
               </section>
 
-              {/* Section 5: Logistics */}
+              {/* Section 5: Itinerary (per-day schedule) */}
+              {tour.itinerary && tour.itinerary.length > 0 && (
+                <section className="mb-[var(--space-3xl)]">
+                  <h3 className="font-display text-[clamp(1.25rem,3vw,1.5rem)] leading-tight text-[var(--color-ink)] mb-[var(--space-md)]">
+                    Schedule
+                  </h3>
+                  <div className="bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-[var(--radius-organic)] shadow-[var(--shadow-card)] px-[var(--space-lg)] py-[var(--space-md)]">
+                    {tour.itinerary.map((day, index) => (
+                      <div key={day.day}>
+                        {index > 0 && (
+                          <hr className="border-[var(--color-border)] my-[var(--space-md)]" />
+                        )}
+                        <div>
+                          <h4 className="font-medium text-[var(--color-ink)]">
+                            {day.title}
+                          </h4>
+                          {day.vessel && (
+                            <p className="text-sm text-[var(--color-ink-muted)] mt-1">
+                              Aboard the {day.vessel}
+                            </p>
+                          )}
+                          {day.departure && (
+                            <p className="text-sm text-[var(--color-ink-muted)] mt-0.5">
+                              Departs: {day.departure}
+                            </p>
+                          )}
+                          {day.description && (
+                            <p className="text-sm text-[var(--color-ink-muted)] mt-[var(--space-sm)] leading-relaxed">
+                              {day.description}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Section 6: Logistics */}
               <div className="mb-[var(--space-3xl)]">
                 <LogisticsSection items={tour.logistics} />
               </div>
