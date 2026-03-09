@@ -141,15 +141,6 @@ function generateLogistics(tour: {
           },
         ]
       : []),
-    {
-      icon: 'policy' as const,
-      label: 'Cancellation policy',
-      value: "Full refund if tour doesn't run",
-      details: [
-        'No payment until tour confirms',
-        'Cancel up to 7 days before for full refund',
-      ],
-    },
   ];
 }
 
@@ -157,7 +148,7 @@ function generateLogistics(tour: {
 const defaultFaqs = [
   {
     question: 'What if the tour doesn\'t reach quorum?',
-    answer: 'If the minimum number of participants isn\'t reached by the deadline, your commitment is automatically cancelled with no charge. We\'ll notify you as soon as we know.',
+    answer: 'If the minimum number of participants isn\'t reached by the deadline, your commitment is automatically cancelled and your deposit is fully refunded. We\'ll notify you as soon as we know.',
   },
   {
     question: 'What if I need to cancel after committing?',
@@ -217,6 +208,7 @@ export default function TourDetailPage() {
     operatorName: dbTour.operator?.name || 'Unknown Operator',
     operatorId: dbTour.operator?.slug || dbTour.operator?.id || '',
     operatorExpertise: (dbTour.operator as any)?.tagline || 'Birding specialist',
+    operatorPhoto: (dbTour.operator as any)?.logo_url || null,
     operatorYears: 5,
     status: mapStatus(dbTour.status),
     currentParticipants: dbTour.current_participants,
@@ -391,12 +383,24 @@ export default function TourDetailPage() {
 
                 <div className="bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-[var(--space-lg)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:border-[var(--color-primary)] transition-all duration-200">
                   <div className="flex items-start gap-[var(--space-lg)]">
-                    <div className="flex-shrink-0 w-16 h-16 bg-[var(--color-surface-sunken)] rounded-full flex items-center justify-center text-[var(--color-ink-subtle)]">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <circle cx="12" cy="8" r="4" />
-                        <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-                      </svg>
-                    </div>
+                    {tour.operatorPhoto ? (
+                      <div className="flex-shrink-0 w-16 h-16 rounded-full overflow-hidden">
+                        <Image
+                          src={tour.operatorPhoto}
+                          alt={tour.operatorName}
+                          width={64}
+                          height={64}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex-shrink-0 w-16 h-16 bg-[var(--color-surface-sunken)] rounded-full flex items-center justify-center text-[var(--color-ink-subtle)]">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <circle cx="12" cy="8" r="4" />
+                          <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+                        </svg>
+                      </div>
+                    )}
 
                     <div className="flex-1 min-w-0">
                       <h4 className="font-medium text-[var(--color-ink)]">{tour.operatorName}</h4>

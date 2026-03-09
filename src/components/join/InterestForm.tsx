@@ -12,7 +12,7 @@ interface InterestFormProps {
  *
  * Two states:
  * 1. Deposit required - User pays deposit now to commit
- * 2. No deposit (trusted user) - No payment until tour confirms
+ * 2. No deposit (trusted user) - Trusted members commit without deposit
  */
 export function InterestForm({ defaultEmail = '', requiresDeposit = false }: InterestFormProps) {
   const [email, setEmail] = useState(defaultEmail);

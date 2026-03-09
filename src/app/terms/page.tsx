@@ -41,9 +41,9 @@ export default function TermsPage() {
             Quorum Tours uses a threshold-based booking system. Tours listed on the Platform require a minimum number of participants before they are confirmed to run. This means:
           </p>
           <ul>
-            <li>When you express interest or commit to a tour, your payment is authorised but not charged until the tour reaches its minimum participant threshold.</li>
-            <li>If the threshold is met, the tour is confirmed and your payment is processed.</li>
-            <li>If the threshold is not met by the specified deadline, the tour does not proceed and no charge is made to your payment method.</li>
+            <li>When you commit to a tour, your deposit is charged immediately.</li>
+            <li>If the threshold is met, the tour is confirmed and the remaining balance is collected.</li>
+            <li>If the threshold is not met by the specified deadline, the tour does not proceed and your deposit is fully refunded.</li>
             <li>Once a tour is confirmed, standard cancellation policies (set by the Operator) apply.</li>
           </ul>
 

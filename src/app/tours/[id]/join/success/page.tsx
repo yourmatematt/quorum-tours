@@ -270,7 +270,7 @@ export default function JoinSuccessPage() {
                   <li className="flex items-start gap-[var(--space-sm)]">
                     <span className="text-[var(--color-forming)] mt-0.5 flex-shrink-0">•</span>
                     <span>
-                      Your <strong className="text-[var(--color-ink)]">${tour.deposit}</strong> deposit is held securely
+                      Your <strong className="text-[var(--color-ink)]">${tour.deposit}</strong> deposit has been charged
                     </span>
                   </li>
                   <li className="flex items-start gap-[var(--space-sm)]">

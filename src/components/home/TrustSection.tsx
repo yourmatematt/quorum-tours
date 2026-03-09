@@ -29,8 +29,8 @@ export function TrustSection() {
     },
     {
       icon: '○',
-      title: 'No charge until confirmed',
-      description: 'Your payment method is not charged until the tour reaches quorum and is guaranteed to run.',
+      title: 'Deposit refunded if tour doesn\u2019t run',
+      description: 'Your deposit is charged now. If the tour doesn\u2019t reach quorum, you get every cent back.',
     },
     {
       icon: '◊',

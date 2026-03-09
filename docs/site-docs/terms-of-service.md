@@ -8,9 +8,9 @@ Quorum Tours is an online marketplace that connects wildlife tour customers ("Cu
 1.2 Threshold-Based Booking Model
 Quorum Tours uses a threshold-based booking system. Tours listed on the Platform require a minimum number of participants before they are confirmed to run. This means:
 
-When you express interest or commit to a tour, your payment is authorised but not charged until the tour reaches its minimum participant threshold.
-If the threshold is met, the tour is confirmed and your payment is processed.
-If the threshold is not met by the specified deadline, the tour does not proceed and no charge is made to your payment method.
+When you commit to a tour, your deposit is charged immediately.
+If the threshold is met, the tour is confirmed and the remaining balance is collected.
+If the threshold is not met by the specified deadline, the tour does not proceed and your deposit is fully refunded.
 Once a tour is confirmed, standard cancellation policies (set by the Operator) apply.
 
 2. Accounts

@@ -217,11 +217,10 @@ export function PaymentSection({ price, priceNote }: PaymentSectionProps) {
           </svg>
           <div className="text-[var(--text-sm)] text-[var(--color-ink-muted)]">
             <p className="font-medium text-[var(--color-ink)] mb-1">
-              Your card will be held but NOT charged today.
+              Your deposit is charged now.
             </p>
             <p>
-              Your card is charged when the tour runs. If the tour doesn&apos;t reach
-              quorum, your hold is released automatically.
+              If the tour doesn&apos;t reach quorum, you get a full refund automatically.
             </p>
           </div>
         </div>

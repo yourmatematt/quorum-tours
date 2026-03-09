@@ -5,7 +5,7 @@ import { ScrollReveal } from '@/components/ui/ScrollReveal';
 const trustItems = [
   {
     icon: '🔒',
-    text: 'Deposits held, not charged, until confirmed',
+    text: 'Deposit charged now — full refund if tour doesn\u2019t run',
   },
   {
     icon: '✓',

@@ -17,7 +17,7 @@ const steps: Step[] = [
   {
     number: 2,
     title: 'Birders Commit',
-    description: "Your tour appears in search. Birders who want your target species get notified. When they book, their card is held—not charged.",
+    description: "Your tour appears in search. Birders who want your target species get notified. When they book, their deposit is charged — fully refunded if the tour doesn\u2019t run.",
   },
   {
     number: 3,
@@ -72,7 +72,7 @@ export function HowItWorks(): JSX.Element {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-[var(--space-md)]">
             <div className="p-3 sm:p-[var(--space-sm)] bg-[var(--color-surface-sunken)] rounded-[var(--radius-md)]">
-              <p className="text-xs text-[var(--color-ink-subtle)] mb-2 font-medium">Forming (cards held, not charged)</p>
+              <p className="text-xs text-[var(--color-ink-subtle)] mb-2 font-medium">Forming (deposits charged, refundable)</p>
               <QuorumIndicator current={4} quorum={6} max={8} size="md" showLabel showStatus />
             </div>
             <div className="p-3 sm:p-[var(--space-sm)] bg-[var(--color-confirmed-bg)] rounded-[var(--radius-md)]">
