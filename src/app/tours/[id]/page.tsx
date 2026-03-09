@@ -384,13 +384,13 @@ export default function TourDetailPage() {
                 <div className="bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] rounded-[var(--radius-organic)] p-[var(--space-lg)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:border-[var(--color-primary)] transition-all duration-200">
                   <div className="flex items-start gap-[var(--space-lg)]">
                     {tour.operatorPhoto ? (
-                      <div className="flex-shrink-0 w-16 h-16 rounded-full overflow-hidden">
+                      <div className="relative flex-shrink-0 w-16 h-16 rounded-full overflow-hidden">
                         <Image
                           src={tour.operatorPhoto}
                           alt={tour.operatorName}
-                          width={64}
-                          height={64}
-                          className="w-full h-full object-cover"
+                          fill
+                          sizes="64px"
+                          className="object-cover"
                         />
                       </div>
                     ) : (
