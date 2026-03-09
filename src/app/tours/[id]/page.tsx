@@ -303,7 +303,7 @@ export default function TourDetailPage() {
           </nav>
 
           {/* Two-column layout on desktop */}
-          <div className="flex flex-col lg:flex-row gap-[var(--space-2xl)]">
+          <div className="flex flex-col xl:flex-row gap-[var(--space-2xl)]">
             {/* Left column: Main content */}
             <div className="flex-1 min-w-0">
               {/* Section 2: Core Tour Overview */}
@@ -385,6 +385,33 @@ export default function TourDetailPage() {
                   optimal viewing opportunities.
                 </p>
               </section>
+
+              {/* Inline booking widget — visible below xl (1280px), after overview */}
+              <div className="xl:hidden mb-[var(--space-3xl)]">
+                <CommitmentCard
+                  tourId={tour.slug}
+                  status={tour.status}
+                  price={tour.price}
+                  deposit={tour.deposit}
+                  currentParticipants={tour.currentParticipants}
+                  quorum={tour.threshold}
+                  capacity={tour.capacity}
+                  isLoggedIn={!!user}
+                  trustMessage={
+                    user
+                      ? trustTier === 'trusted'
+                        ? 'No deposit — Trusted member'
+                        : trustTier === 'new'
+                        ? 'Deposit required for first-time birders'
+                        : trustTier === 'strike-1'
+                        ? 'Deposit required — 1 strike on account'
+                        : trustTier === 'strike-2'
+                        ? 'Higher deposit required — 2 strikes on account'
+                        : null
+                      : 'Deposit varies by trust tier'
+                  }
+                />
+              </div>
 
               {/* Section 3: Species Focus */}
               {tour.species.length > 0 && (
@@ -488,9 +515,9 @@ export default function TourDetailPage() {
               )}
             </div>
 
-            {/* Right column: Commitment Card (sticky on desktop) */}
-            <div className="lg:w-[320px] flex-shrink-0">
-              <div className="lg:sticky lg:top-[calc(57px+var(--space-lg))]">
+            {/* Right column: Commitment Card — hidden below xl (shown inline above), sticky sidebar on xl+ */}
+            <div className="hidden xl:block xl:w-[320px] flex-shrink-0">
+              <div className="xl:sticky xl:top-[calc(57px+var(--space-lg))]">
                 <CommitmentCard
                   tourId={tour.slug}
                   status={tour.status}
