@@ -13,6 +13,7 @@ import { useTour } from '@/lib/supabase/useTours';
 import { useAuth } from '@/lib/supabase/useAuth';
 import { usePersonalizedDeposit } from '@/hooks/usePersonalizedDeposit';
 import { useUserTrust } from '@/hooks/useUserTrust';
+import { TourEnquiryForm } from '@/components/tours/TourEnquiryForm';
 
 type ConfirmationStatus = 'confirmed' | 'forming' | 'not-running';
 
@@ -507,7 +508,14 @@ export default function TourDetailPage() {
                 <LogisticsSection items={tour.logistics} />
               </div>
 
-              {/* Section 7: FAQs */}
+              {/* Section 7: Enquiry Form */}
+              <TourEnquiryForm
+                tourTitle={tour.title}
+                tourSlug={tour.slug}
+                operatorName={tour.operatorName}
+              />
+
+              {/* Section 8: FAQs */}
               {tour.faqs.length > 0 && (
                 <div className="mb-[var(--space-3xl)]">
                   <FAQAccordion items={tour.faqs} />
