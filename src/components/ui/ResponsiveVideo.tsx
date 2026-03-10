@@ -144,20 +144,18 @@ export function ResponsiveVideo({
                 className="
                   absolute inset-0
                   flex items-center justify-center
-                  bg-black/20 hover:bg-black/30
-                  transition-colors duration-200
-                  group cursor-pointer
+                  bg-black/20
+                  cursor-pointer
                 "
                 aria-label={`Play video: ${title}`}
               >
                 <div className="
                   w-16 h-16
                   rounded-full
-                  bg-white/90 group-hover:bg-white
+                  bg-white/10
                   flex items-center justify-center
                   shadow-lg
-                  transition-all duration-200
-                  group-hover:scale-105
+                  transition-none
                 ">
                   <svg
                     className="w-7 h-7 text-[var(--color-primary)] ml-1"
@@ -225,20 +223,18 @@ export function ResponsiveVideo({
                 className="
                   absolute inset-0
                   flex items-center justify-center
-                  bg-black/20 hover:bg-black/30
-                  transition-colors duration-200
-                  group cursor-pointer
+                  bg-black/20
+                  cursor-pointer
                 "
                 aria-label={`Play video: ${title}`}
               >
                 <div className="
                   w-16 h-16 lg:w-20 lg:h-20
                   rounded-full
-                  bg-white/90 group-hover:bg-white
+                  bg-white/10
                   flex items-center justify-center
                   shadow-lg
-                  transition-all duration-200
-                  group-hover:scale-105
+                  transition-none
                 ">
                   <svg
                     className="w-6 h-6 lg:w-8 lg:h-8 text-[var(--color-primary)] ml-1"
@@ -289,20 +285,18 @@ export function ResponsiveVideo({
                 className="
                   absolute inset-0
                   flex items-center justify-center
-                  bg-black/20 hover:bg-black/30
-                  transition-colors duration-200
-                  group cursor-pointer
+                  bg-black/20
+                  cursor-pointer
                 "
                 aria-label={`Play video: ${title}`}
               >
                 <div className="
                   w-14 h-14
                   rounded-full
-                  bg-white/90 group-hover:bg-white
+                  bg-white/10
                   flex items-center justify-center
                   shadow-lg
-                  transition-all duration-200
-                  group-hover:scale-105
+                  transition-none
                 ">
                   <svg
                     className="w-6 h-6 text-[var(--color-primary)] ml-1"
