@@ -3,6 +3,18 @@
 import { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 
+function TextPoster({ title }: { title: string }) {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-surface-sunken)]">
+      <div className="px-8 text-center">
+        <p className="font-display text-[clamp(1.25rem,3vw,2rem)] leading-tight text-[var(--color-ink-muted)]">
+          {title}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 interface ResponsiveVideoProps {
   /** Video slug - maps to /videos/{slug}/{slug}-{aspect}.mp4 */
   slug: string;
@@ -47,6 +59,7 @@ export function ResponsiveVideo({
 }: ResponsiveVideoProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [posterError, setPosterError] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Construct paths
@@ -114,13 +127,18 @@ export function ResponsiveVideo({
         <div className={`relative ${aspectClass} bg-[var(--color-surface-sunken)]`}>
           {!isPlaying ? (
             <>
-              <Image
-                src={posterSrc}
-                alt={title}
-                fill
-                className="object-cover"
-                sizes="(min-width: 768px) 50vw, 100vw"
-              />
+              {posterError ? (
+                <TextPoster title={title} />
+              ) : (
+                <Image
+                  src={posterSrc}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  onError={() => setPosterError(true)}
+                />
+              )}
               <button
                 onClick={handlePlay}
                 className="
@@ -190,13 +208,18 @@ export function ResponsiveVideo({
         <div className="relative aspect-video bg-[var(--color-surface-sunken)]">
           {!isPlaying ? (
             <>
-              <Image
-                src={defaultPosterDesktop}
-                alt={title}
-                fill
-                className="object-cover"
-                sizes="(min-width: 768px) 50vw, 100vw"
-              />
+              {posterError ? (
+                <TextPoster title={title} />
+              ) : (
+                <Image
+                  src={defaultPosterDesktop}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  onError={() => setPosterError(true)}
+                />
+              )}
               <button
                 onClick={handlePlay}
                 className="
@@ -249,13 +272,18 @@ export function ResponsiveVideo({
         <div className="relative aspect-square bg-[var(--color-surface-sunken)]">
           {!isPlaying ? (
             <>
-              <Image
-                src={defaultPosterMobile}
-                alt={title}
-                fill
-                className="object-cover"
-                sizes="100vw"
-              />
+              {posterError ? (
+                <TextPoster title={title} />
+              ) : (
+                <Image
+                  src={defaultPosterMobile}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                  sizes="100vw"
+                  onError={() => setPosterError(true)}
+                />
+              )}
               <button
                 onClick={handlePlay}
                 className="
