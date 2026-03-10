@@ -5,9 +5,8 @@ import { Elements } from '@stripe/react-stripe-js';
 import { ReactNode } from 'react';
 
 // Load Stripe outside of component to avoid recreating on every render
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_TYooMQauvdEDq54NiTphI7jx'
-);
+const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+const stripePromise = publishableKey ? loadStripe(publishableKey) : null;
 
 interface StripeProviderProps {
   clientSecret: string;
@@ -15,6 +14,16 @@ interface StripeProviderProps {
 }
 
 export function StripeProvider({ clientSecret, children }: StripeProviderProps) {
+  if (!stripePromise) {
+    return (
+      <div className="p-[var(--space-lg)] bg-[var(--color-destructive-bg)] border border-[var(--color-destructive-border)] rounded-[var(--radius-organic)]">
+        <p className="text-sm font-medium text-[var(--color-destructive-text)]">
+          Payment system is not configured. Please contact support.
+        </p>
+      </div>
+    );
+  }
+
   const options = {
     clientSecret,
     appearance: {

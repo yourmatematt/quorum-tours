@@ -61,7 +61,16 @@ export default function PaymentPage() {
 
   // Create PaymentIntent on mount
   useEffect(() => {
-    if (!dbTour || !amountCents) return;
+    if (!dbTour) return;
+
+    if (!amountCents || amountCents < 100) {
+      setPaymentError(
+        isDeposit
+          ? 'No deposit amount is set for this tour. Please contact the operator.'
+          : 'No price is set for this tour. Please contact the operator.'
+      );
+      return;
+    }
 
     const tourData = dbTour; // Capture for closure
 

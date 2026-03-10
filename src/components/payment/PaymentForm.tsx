@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   PaymentElement,
   useStripe,
@@ -26,6 +26,21 @@ export function PaymentForm({
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [stripeReady, setStripeReady] = useState(false);
+
+  // Detect when Stripe Elements have loaded
+  useEffect(() => {
+    if (stripe && elements) {
+      setStripeReady(true);
+    }
+    // If stripe/elements haven't loaded after 10s, show error
+    const timeout = setTimeout(() => {
+      if (!stripe || !elements) {
+        setErrorMessage('Payment form failed to load. Please refresh the page or try a different browser.');
+      }
+    }, 10000);
+    return () => clearTimeout(timeout);
+  }, [stripe, elements]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
