@@ -67,15 +67,11 @@ export async function generateMetadata({ params }: OperatorPageProps): Promise<M
       siteName: 'Quorum Tours',
       title: `${operator.name} — Quorum Tours`,
       description,
-      images: operator.logo_url
-        ? [{ url: operator.logo_url, width: 400, height: 400, alt: operator.name }]
-        : [{ url: '/og-image.png', width: 1200, height: 630, alt: operator.name }],
     },
     twitter: {
-      card: operator.logo_url ? 'summary' : 'summary_large_image',
+      card: 'summary_large_image',
       title: `${operator.name} — Quorum Tours`,
       description,
-      images: operator.logo_url ? [operator.logo_url] : ['/og-image.png'],
     },
   };
 }

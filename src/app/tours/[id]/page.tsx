@@ -72,15 +72,11 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
       siteName: 'Quorum Tours',
       title: tour.title,
       description,
-      images: tour.image_url
-        ? [{ url: tour.image_url, width: 1200, height: 630, alt: tour.title }]
-        : [{ url: '/og-image.png', width: 1200, height: 630, alt: tour.title }],
     },
     twitter: {
       card: 'summary_large_image',
       title: tour.title,
       description,
-      images: tour.image_url ? [tour.image_url] : ['/og-image.png'],
     },
   };
 }
