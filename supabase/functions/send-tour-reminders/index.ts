@@ -139,7 +139,7 @@ serve(async (req) => {
         .select(`
           id,
           user_id,
-          profiles (email, display_name)
+          profiles (email, name)
         `)
         .eq('tour_id', tour.id)
         .eq('status', 'confirmed')
@@ -149,7 +149,7 @@ serve(async (req) => {
         if (!email) continue
 
         const sent = await sendEmail('tour_reminder', email, {
-          userName: reservation.profiles?.display_name || 'there',
+          userName: reservation.profiles?.name || 'there',
           tourTitle: tour.title,
           tourDate: tour.date_start,
           tourLocation: tour.location || 'See tour details',
@@ -202,7 +202,7 @@ serve(async (req) => {
         .select(`
           id,
           user_id,
-          profiles (email, display_name)
+          profiles (email, name)
         `)
         .eq('tour_id', tour.id)
         .eq('status', 'confirmed')
@@ -212,7 +212,7 @@ serve(async (req) => {
         if (!email) continue
 
         const sent = await sendEmail('tour_reminder', email, {
-          userName: reservation.profiles?.display_name || 'there',
+          userName: reservation.profiles?.name || 'there',
           tourTitle: tour.title,
           tourDate: tour.date_start,
           tourLocation: tour.location || 'See tour details',
@@ -274,7 +274,7 @@ serve(async (req) => {
         ),
         profiles (
           email,
-          display_name
+          name
         )
       `)
       .eq('status', 'payment_pending')
@@ -303,7 +303,7 @@ serve(async (req) => {
       )
 
       const sent = await sendEmail('payment_reminder', email, {
-        userName: reservation.profiles?.display_name || 'there',
+        userName: reservation.profiles?.name || 'there',
         tourTitle: reservation.tours?.title || 'your tour',
         hoursRemaining,
         deadlineTime: new Date(reservation.payment_due_at).toLocaleString('en-AU', {

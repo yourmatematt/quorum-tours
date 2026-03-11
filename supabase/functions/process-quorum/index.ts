@@ -71,7 +71,7 @@ serve(async (req) => {
           business_name,
           profiles (
             email,
-            display_name
+            name
           )
         )
       `)
@@ -136,7 +136,7 @@ serve(async (req) => {
         deposit_charged,
         profiles (
           email,
-          display_name
+          name
         )
       `)
       .eq('tour_id', tour_id)
@@ -203,7 +203,7 @@ serve(async (req) => {
               template: 'quorum_reached',
               to: profile.email,
               data: {
-                userName: profile.display_name || 'there',
+                userName: profile.name || 'there',
                 tourTitle: tour.title,
                 tourDate: tour.date_start,
                 operatorName: tour.operators?.business_name || 'your guide',
@@ -248,7 +248,7 @@ serve(async (req) => {
               template: 'quorum_reached_operator',
               to: operatorEmail,
               data: {
-                operatorName: tour.operators?.profiles?.display_name || tour.operators?.business_name || 'there',
+                operatorName: tour.operators?.profiles?.name || tour.operators?.business_name || 'there',
                 tourTitle: tour.title,
                 tourDate: tour.date_start,
                 participantCount: reservations.length,

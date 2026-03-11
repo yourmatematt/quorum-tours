@@ -91,7 +91,7 @@ serve(async (req) => {
           ),
           profiles (
             email,
-            display_name
+            name
           )
         `)
         .eq('id', reservation_id)
@@ -129,7 +129,7 @@ serve(async (req) => {
           ),
           profiles (
             email,
-            display_name
+            name
           )
         `)
         .eq('tour_id', tour_id)
@@ -164,7 +164,7 @@ serve(async (req) => {
           ),
           profiles (
             email,
-            display_name
+            name
           )
         `)
         .eq('status', 'payment_pending')
@@ -298,7 +298,7 @@ async function processExpiredReservation(supabase: any, reservation: any) {
 
     // Actually send the email
     const emailSent = await sendEmail('strike_applied', email, {
-      userName: reservation.profiles?.display_name || 'there',
+      userName: reservation.profiles?.name || 'there',
       tourTitle: reservation.tours?.title || 'the tour',
       strikeCount: newStrikeCount,
       maxStrikes: 3,
@@ -346,7 +346,7 @@ async function offerSpotToWaitlist(supabase: any, tourId: string) {
       position,
       profiles (
         email,
-        display_name
+        name
       )
     `)
     .eq('tour_id', tourId)
@@ -408,7 +408,7 @@ async function offerSpotToWaitlist(supabase: any, tourId: string) {
 
     // Actually send the email
     const emailSent = await sendEmail('waitlist_spot', email, {
-      userName: nextInLine.profiles?.display_name || 'there',
+      userName: nextInLine.profiles?.name || 'there',
       tourTitle: tour.title,
       priceDollars: (tour.price_cents / 100).toFixed(2),
       paymentDeadline: paymentDeadline.toISOString(),

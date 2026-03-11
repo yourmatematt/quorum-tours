@@ -152,7 +152,7 @@ serve(async (req) => {
     // Get user profile for Stripe customer
     const { data: profile } = await supabaseAdmin
       .from('profiles')
-      .select('email, display_name')
+      .select('email, name')
       .eq('id', user.id)
       .single()
 

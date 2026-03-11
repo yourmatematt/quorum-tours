@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { createClient } from '@supabase/supabase-js';
+import { loadFont } from '@/lib/og-utils';
 
 export const runtime = 'edge';
 export const alt = 'Operator profile';
@@ -48,10 +49,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
   const currentYear = new Date().getFullYear();
   const yearsExp = operator.established_year ? currentYear - operator.established_year : null;
 
-  // Fetch Crimson Pro font
-  const fontData = await fetch(
-    'https://fonts.gstatic.com/s/crimsonpro/v24/q5uUsoa5M_tv7IihmnkabC5XiXCAlXGks1WZ.woff2'
-  ).then(res => res.arrayBuffer());
+  const fontData = await loadFont();
 
   return new ImageResponse(
     (

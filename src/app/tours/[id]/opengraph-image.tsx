@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { createClient } from '@supabase/supabase-js';
+import { loadFont } from '@/lib/og-utils';
 
 export const runtime = 'edge';
 export const alt = 'Tour details';
@@ -60,10 +61,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
   const isConfirmed = tour.status === 'confirmed' || current >= threshold;
   const spotsNeeded = Math.max(0, threshold - current);
 
-  // Fetch Crimson Pro font
-  const fontData = await fetch(
-    'https://fonts.gstatic.com/s/crimsonpro/v24/q5uUsoa5M_tv7IihmnkabC5XiXCAlXGks1WZ.woff2'
-  ).then(res => res.arrayBuffer());
+  const fontData = await loadFont();
 
   return new ImageResponse(
     (

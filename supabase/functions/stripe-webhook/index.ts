@@ -185,10 +185,10 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         operators (
           id,
           business_name,
-          profiles (email, display_name)
+          profiles (email, name)
         )
       ),
-      profiles (email, display_name)
+      profiles (email, name)
     `)
     .eq('id', reservationId)
     .single()
@@ -216,7 +216,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     if (reservation?.profiles?.email) {
       const amountPaid = session.amount_total ? session.amount_total / 100 : 0
       await sendEmail('tour_committed', reservation.profiles.email, {
-        userName: reservation.profiles.display_name || 'there',
+        userName: reservation.profiles.name || 'there',
         tourTitle: reservation.tours?.title || 'the tour',
         tourDate: reservation.tours?.date_start,
         depositAmount: amountPaid.toFixed(2),
@@ -230,9 +230,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     if (operatorEmail) {
       const tour = reservation.tours
       await sendEmail('new_booking', operatorEmail, {
-        operatorName: tour.operators.profiles.display_name || tour.operators.business_name,
+        operatorName: tour.operators.profiles.name || tour.operators.business_name,
         tourTitle: tour.title || 'your tour',
-        userName: reservation.profiles?.display_name || 'A new user',
+        userName: reservation.profiles?.name || 'A new user',
         currentCount: (tour.current_participant_count || 0) + 1, // +1 because update may not be reflected yet
         threshold: tour.threshold,
         tourUrl: `${APP_URL}/operator/tours`,
@@ -256,7 +256,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     if (reservation?.profiles?.email) {
       const totalPaid = session.amount_total ? session.amount_total / 100 : 0
       await sendEmail('payment_confirmed', reservation.profiles.email, {
-        userName: reservation.profiles.display_name || 'there',
+        userName: reservation.profiles.name || 'there',
         tourTitle: reservation.tours?.title || 'the tour',
         tourDate: reservation.tours?.date_start,
         totalAmount: totalPaid.toFixed(2),
@@ -312,7 +312,7 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
     .select(`
       id,
       tour_id,
-      profiles (email, display_name),
+      profiles (email, name),
       tours (title, date_start)
     `)
     .eq('id', reservationId)
@@ -321,7 +321,7 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
   if (reservation?.profiles?.email) {
     // Send payment failed email
     await sendEmail('payment_reminder', reservation.profiles.email, {
-      userName: reservation.profiles.display_name || 'there',
+      userName: reservation.profiles.name || 'there',
       tourTitle: reservation.tours?.title || 'your tour',
       errorMessage: paymentIntent.last_payment_error?.message || 'Payment could not be processed',
       retryUrl: `${Deno.env.get('APP_URL') || 'https://quorumtours.com'}/tours/${reservation.tour_id}/pay`,
@@ -370,7 +370,7 @@ async function handleTransferCreated(transfer: Stripe.Transfer) {
         operators (
           id,
           business_name,
-          profiles (email, display_name)
+          profiles (email, name)
         )
       )
     `)
@@ -380,7 +380,7 @@ async function handleTransferCreated(transfer: Stripe.Transfer) {
   const operatorEmail = reservation?.tours?.operators?.profiles?.email
   if (operatorEmail) {
     await sendEmail('payout_sent', operatorEmail, {
-      operatorName: reservation.tours.operators.profiles.display_name || reservation.tours.operators.business_name,
+      operatorName: reservation.tours.operators.profiles.name || reservation.tours.operators.business_name,
       tourTitle: reservation.tours?.title || 'your tour',
       payoutAmount: (transfer.amount / 100).toFixed(2),
       transferId: transfer.id,
@@ -428,7 +428,7 @@ async function checkTourFullyPaid(tourId: string) {
       .select(`
         id,
         user_id,
-        profiles (email, display_name)
+        profiles (email, name)
       `)
       .eq('tour_id', tourId)
       .eq('status', 'confirmed')
@@ -438,7 +438,7 @@ async function checkTourFullyPaid(tourId: string) {
       for (const reservation of reservations) {
         if (reservation.profiles?.email) {
           await sendEmail('tour_confirmed', reservation.profiles.email, {
-            userName: reservation.profiles.display_name || 'there',
+            userName: reservation.profiles.name || 'there',
             tourTitle: tour.title,
             tourDate: tour.date_start,
             tourLocation: tour.location || 'See tour details',

@@ -95,7 +95,7 @@ serve(async (req) => {
         operators (
           id,
           business_name,
-          profiles (email, display_name)
+          profiles (email, name)
         )
       `)
       .eq('status', 'forming')
@@ -123,7 +123,7 @@ serve(async (req) => {
           deposit_cents,
           deposit_charged,
           stripe_deposit_charge_id,
-          profiles (email, display_name)
+          profiles (email, name)
         `)
         .eq('tour_id', tour.id)
         .in('status', ['reserved', 'interest'])
@@ -191,7 +191,7 @@ serve(async (req) => {
           const email = reservation.profiles?.email
           if (email) {
             const sent = await sendEmail('tour_cancelled', email, {
-              userName: reservation.profiles?.display_name || 'there',
+              userName: reservation.profiles?.name || 'there',
               tourTitle: tour.title,
               tourDate: tour.date_start,
               reason: 'The tour did not reach the minimum number of participants needed to proceed.',
@@ -241,7 +241,7 @@ serve(async (req) => {
       const operatorEmail = tour.operators?.profiles?.email
       if (operatorEmail) {
         await sendEmail('tour_cancelled', operatorEmail, {
-          userName: tour.operators?.profiles?.display_name || tour.operators?.business_name || 'there',
+          userName: tour.operators?.profiles?.name || tour.operators?.business_name || 'there',
           tourTitle: tour.title,
           tourDate: tour.date_start,
           reason: `The tour only reached ${tour.current_participant_count} of ${tour.threshold} required participants.`,
