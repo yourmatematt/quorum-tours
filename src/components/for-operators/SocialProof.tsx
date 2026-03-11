@@ -12,10 +12,17 @@ export function SocialProof(): JSX.Element {
 
     setStatus('submitting');
 
-    // TODO: Replace with actual API endpoint
     try {
-      // Simulate API call - replace with real endpoint
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const response = await fetch('/api/operator-interest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit');
+      }
+
       setStatus('success');
       setEmail('');
     } catch {
