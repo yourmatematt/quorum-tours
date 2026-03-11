@@ -193,7 +193,7 @@ export function TourDetailClient() {
   const tourId = params.id as string;
   const { tour: dbTour, isLoading, error } = useTour(tourId);
   const { user } = useAuth();
-  const { depositCents: personalizedDepositCents } = usePersonalizedDeposit(user?.id ?? null, tourId);
+  const { depositCents: personalizedDepositCents } = usePersonalizedDeposit(user?.id ?? null, dbTour?.id ?? null);
   const { trustTier } = useUserTrust(user?.id ?? null);
   const { hasCommitted } = useUserReservation(user?.id ?? null, dbTour?.id ?? null);
   const [imageError, setImageError] = useState(false);

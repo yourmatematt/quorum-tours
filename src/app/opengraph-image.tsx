@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { loadFont } from '@/lib/og-utils';
 
 export const runtime = 'edge';
 export const alt = 'Quorum Tours — Birding Tours That Run When Birders Commit';
@@ -6,9 +7,7 @@ export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 export default async function OGImage() {
-  const fontData = await fetch(
-    'https://fonts.gstatic.com/s/crimsonpro/v24/q5uUsoa5M_tv7IihmnkabC5XiXCAlXGks1WZ.woff2'
-  ).then(res => res.arrayBuffer());
+  const fontData = await loadFont();
 
   return new ImageResponse(
     (

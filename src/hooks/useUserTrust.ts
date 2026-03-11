@@ -67,7 +67,7 @@ export function useUserTrust(userId: string | null) {
       // Fetch profile for strikes and completed tours count
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
-        .select('strikes, completed_tours')
+        .select('strikes, tours_completed')
         .eq('id', userId)
         .single();
 
@@ -77,7 +77,7 @@ export function useUserTrust(userId: string | null) {
       }
 
       const strikes = profile?.strikes ?? 0;
-      const completedTours = profile?.completed_tours ?? 0;
+      const completedTours = profile?.tours_completed ?? 0;
 
       // Fetch strike history
       const { data: strikeHistory, error: strikeError } = await supabase
