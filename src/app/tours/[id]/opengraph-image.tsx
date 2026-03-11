@@ -22,7 +22,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
       date_start,
       date_end,
       price_cents,
-      target_species,
+      highlights,
       current_participant_count,
       threshold,
       capacity,
@@ -47,7 +47,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
   const location = operator?.base_location || 'Australia';
   const operatorName = operator?.name || 'Tour Operator';
   const price = tour.price_cents / 100;
-  const species = (tour.target_species || []).slice(0, 4);
+  const highlights = (tour.highlights || []).slice(0, 4);
   const current = tour.current_participant_count || 0;
   const threshold = tour.threshold || 1;
   const progressPct = Math.min(100, Math.round((current / threshold) * 100));
@@ -135,10 +135,10 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
           </div>
         </div>
 
-        {/* Species tags */}
-        {species.length > 0 && (
+        {/* Highlight tags */}
+        {highlights.length > 0 && (
           <div style={{ display: 'flex', gap: '10px', marginBottom: '28px', flexWrap: 'wrap' }}>
-            {species.map((s: string) => (
+            {highlights.map((s: string) => (
               <div key={s} style={{
                 padding: '6px 16px', borderRadius: '20px',
                 background: 'rgba(46, 139, 87, 0.12)',

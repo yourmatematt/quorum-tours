@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
       date_end,
       price_cents,
       image_url,
-      target_species,
+      highlights,
       current_participant_count,
       threshold,
       status,
@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
   const location = operator?.base_location || 'Australia';
   const operatorName = operator?.name || 'Tour Operator';
   const price = tour.price_cents / 100;
-  const species = (tour.target_species || []).slice(0, 3).join(', ');
+  const highlights = (tour.highlights || []).slice(0, 3).join(', ');
 
   const startDate = new Date(tour.date_start);
   const endDate = new Date(tour.date_end);
@@ -61,8 +61,8 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
     ? 'Confirmed and running'
     : `${spotsNeeded} more needed`;
 
-  const description = species
-    ? `${dateStr} · ${location} · Led by ${operatorName}. Target species: ${species}. $${price}/person. ${statusText}.`
+  const description = highlights
+    ? `${dateStr} · ${location} · Led by ${operatorName}. Highlights: ${highlights}. $${price}/person. ${statusText}.`
     : `${dateStr} · ${location} · Led by ${operatorName}. $${price}/person. ${statusText}.`;
 
   const tourUrl = `${siteUrl}/tours/${tour.slug}`;
