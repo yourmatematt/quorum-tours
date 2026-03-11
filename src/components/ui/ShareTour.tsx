@@ -30,8 +30,8 @@ function generateShareContent(props: ShareTourProps) {
   // X (Twitter) - Keep under 200 chars to leave room for URL
   const xText = `Heading out ${tourDate} to spot ${targetSpecies} at ${tourLocation} with ${operatorName}. Need ${spotsText}.`;
 
-  // Facebook - Conversational, longer
-  const facebookText = `I'm joining ${operatorName}'s ${tourName} tour on ${tourDate} at ${tourLocation}, and ${spotsText} are welcome to come along. We're looking for ${targetSpecies}. If you're interested, details here:`;
+  // Messenger - Direct message with link
+  const messengerText = `I'm joining ${operatorName}'s ${tourName} tour on ${tourDate} at ${tourLocation}, and ${spotsText} are welcome to come along. We're looking for ${targetSpecies}. If you're interested, details here:`;
 
   // WhatsApp - Personal, direct
   const whatsappText = `Hey, joining a birding tour ${tourDate} at ${tourLocation} with ${operatorName}. We're tracking ${targetSpecies}. Need ${spotsText} for it to run. You keen? ${tourUrl}`;
@@ -50,7 +50,7 @@ Cheers`;
 
   return {
     x: xText,
-    facebook: facebookText,
+    messenger: messengerText,
     whatsapp: whatsappText,
     emailSubject,
     emailBody,
@@ -63,7 +63,7 @@ function buildShareUrls(content: ReturnType<typeof generateShareContent>, tourUr
 
   return {
     x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(content.x)}&url=${encodedUrl}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodeURIComponent(content.facebook)}`,
+    messenger: `https://www.facebook.com/dialog/send?link=${encodedUrl}&app_id=966242223397117&redirect_uri=${encodedUrl}`,
     whatsapp: `https://wa.me/?text=${encodeURIComponent(content.whatsapp)}`,
     email: `mailto:?subject=${encodeURIComponent(content.emailSubject)}&body=${encodeURIComponent(content.emailBody)}`,
   };
@@ -186,9 +186,9 @@ export function ShareTour(props: ShareTourProps) {
           X
         </a>
 
-        {/* Facebook */}
+        {/* Messenger */}
         <a
-          href={urls.facebook}
+          href={urls.messenger}
           target="_blank"
           rel="noopener noreferrer"
           className="
@@ -206,9 +206,9 @@ export function ShareTour(props: ShareTourProps) {
           "
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            <path d="M12 0C5.373 0 0 4.975 0 11.111c0 3.497 1.745 6.616 4.472 8.652V24l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.974 12-11.111C24 4.975 18.627 0 12 0zm1.193 14.963l-3.056-3.259-5.963 3.259L10.733 8.2l3.13 3.259L19.76 8.2l-6.567 6.763z"/>
           </svg>
-          Facebook
+          Messenger
         </a>
 
         {/* WhatsApp */}

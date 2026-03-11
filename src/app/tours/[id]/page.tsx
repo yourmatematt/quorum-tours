@@ -394,6 +394,10 @@ export default function TourDetailPage() {
                 <CommitmentCard
                   tourId={tour.slug}
                   tourName={tour.title}
+                  tourDate={tour.date}
+                  tourLocation={tour.location}
+                  operatorName={tour.operatorName}
+                  targetSpecies={(dbTour.target_species || []).slice(0, 3).join(', ')}
                   status={tour.status}
                   price={tour.price}
                   deposit={tour.deposit}
@@ -533,6 +537,10 @@ export default function TourDetailPage() {
                 <CommitmentCard
                   tourId={tour.slug}
                   tourName={tour.title}
+                  tourDate={tour.date}
+                  tourLocation={tour.location}
+                  operatorName={tour.operatorName}
+                  targetSpecies={(dbTour.target_species || []).slice(0, 3).join(', ')}
                   status={tour.status}
                   price={tour.price}
                   deposit={tour.deposit}

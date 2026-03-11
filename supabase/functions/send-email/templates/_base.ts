@@ -226,8 +226,8 @@ export function shareButtons(tour: {
   const xText = `Heading out ${tour.date} to spot ${tour.targetSpecies} at ${tour.location} with ${tour.operatorName}. Need ${spotsText}.`
   const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(xText)}&url=${encodeURIComponent(tour.url)}`
 
-  // Facebook
-  const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(tour.url)}`
+  // Messenger
+  const messengerUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(tour.url)}&app_id=966242223397117&redirect_uri=${encodeURIComponent(tour.url)}`
 
   // WhatsApp
   const waText = `Hey, joining a birding tour ${tour.date} at ${tour.location} with ${tour.operatorName}. We're tracking ${tour.targetSpecies}. Need ${spotsText} for it to run. You keen? ${tour.url}`
@@ -245,7 +245,7 @@ export function shareButtons(tour: {
           <a href="${xUrl}" style="display: inline-block; padding: 10px 16px; background: #000; color: #fff; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 500;">X</a>
         </td>
         <td style="padding-right: 8px;">
-          <a href="${fbUrl}" style="display: inline-block; padding: 10px 16px; background: #1877F2; color: #fff; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 500;">Facebook</a>
+          <a href="${messengerUrl}" style="display: inline-block; padding: 10px 16px; background: #0099FF; color: #fff; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 500;">Messenger</a>
         </td>
         <td style="padding-right: 8px;">
           <a href="${waUrl}" style="display: inline-block; padding: 10px 16px; background: #25D366; color: #fff; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 500;">WhatsApp</a>
