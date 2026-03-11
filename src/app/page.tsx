@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { HeroSection } from '../components/home/HeroSection';
 import { HowItWorksSection } from '../components/home/HowItWorksSection';
 import { ComparisonSection } from '../components/home/ComparisonSection';
@@ -23,6 +24,17 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
  * 5. Trust Signals: Verified operators, eBird integration
  * 6. Dual CTA: Browse Tours (primary) + How It Works (secondary)
  */
+export const metadata: Metadata = {
+  title: 'Quorum Tours — Birding Tours That Run When Birders Commit',
+  description:
+    'Book birding tours with confidence. Tours only run when enough birders commit — no last-minute cancellations, full refund if quorum isn\'t reached.',
+  openGraph: {
+    title: 'Quorum Tours — Birding Tours That Run When Birders Commit',
+    description:
+      'Book birding tours with confidence. Tours only run when enough birders commit — no last-minute cancellations, full refund if quorum isn\'t reached.',
+  },
+};
+
 export default function HomePage() {
   return (
     <main>
