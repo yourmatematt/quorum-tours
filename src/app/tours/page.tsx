@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import Image from 'next/image';
 import { TourCard } from '@/components/TourCard';
 import { ConfirmationStatusBadge } from '@/components/ui/ConfirmationStatusBadge';
 import { QuorumProgressBar } from '@/components/ui/QuorumProgressBar';
@@ -21,14 +20,19 @@ interface DisplayTour {
   id: string;
   slug: string;
   title: string;
+  description: string;
   operatorName: string;
+  operatorSlug: string;
   status: ConfirmationStatus;
   currentParticipants: number;
   threshold: number;
   capacity: number;
   date: string;
+  dateEnd: string;
   location: string;
   speciesHighlight: string;
+  highlights: string[];
+  priceCents: number;
   image?: string;
 }
 
@@ -63,14 +67,19 @@ function mapTourForDisplay(tour: DbTour): DisplayTour {
     id: tour.id,
     slug: tour.slug,
     title: tour.title,
+    description: tour.description || '',
     operatorName: tour.operator?.name || 'Unknown Operator',
+    operatorSlug: tour.operator?.slug || '',
     status: mapStatus(tour.status),
     currentParticipants: tour.current_participants,
     threshold: tour.threshold,
     capacity: tour.capacity,
     date: formatDate(tour.date_start),
+    dateEnd: formatDate(tour.date_end),
     location: tour.operator?.base_location || 'Australia',
     speciesHighlight: tour.target_species?.join(', ') || '',
+    highlights: (tour as unknown as { highlights?: string[] }).highlights || [],
+    priceCents: tour.price_cents,
     image: tour.image_url || undefined,
   };
 }
@@ -482,21 +491,20 @@ export default function ToursPage() {
   );
 }
 
-/** Full-width featured card for when there are few tours listed */
+/** Full-width featured card matching the operator card style */
 function FeaturedTourCard({ tour }: { tour: DisplayTour }) {
-  const [imageError, setImageError] = useState(false);
-  const showImage = tour.image && !imageError;
+  const price = tour.priceCents > 0 ? `$${Math.round(tour.priceCents / 100)}` : null;
 
   return (
     <a
       href={`/tours/${tour.slug}`}
       className="
         block
+        p-[var(--space-lg)] sm:p-[var(--space-xl)]
         bg-[var(--color-surface-raised)]
         border-2 border-[var(--color-border)]
         rounded-[var(--radius-organic)]
         shadow-[var(--shadow-card)]
-        overflow-hidden
         transition-all duration-200
         hover:border-[var(--color-primary)]
         hover:shadow-[var(--shadow-card-hover)]
@@ -504,85 +512,99 @@ function FeaturedTourCard({ tour }: { tour: DisplayTour }) {
         group
       "
     >
-      <div className="flex flex-col sm:flex-row">
-        {/* Image — left side on desktop */}
-        {showImage && (
-          <div className="relative w-full sm:w-64 md:w-80 h-48 sm:h-auto flex-shrink-0 overflow-hidden">
-            <Image
-              src={tour.image!}
-              alt={`${tour.title} - ${tour.location}`}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 640px) 100vw, 320px"
-              onError={() => setImageError(true)}
-            />
-          </div>
-        )}
-
-        {/* Content */}
-        <div className="flex-1 p-6 sm:p-[var(--space-xl)]">
-          {/* Status badge */}
-          <div className="mb-[var(--space-md)]">
-            <ConfirmationStatusBadge status={tour.status} />
-          </div>
-
-          {/* Title */}
-          <h3 className="
-            font-display text-xl sm:text-2xl font-semibold
-            text-[var(--color-ink)]
-            mb-[var(--space-xs)]
-            group-hover:text-[var(--color-primary)]
-            transition-colors duration-200
-          ">
-            {tour.title}
-          </h3>
-
-          {/* Operator */}
-          <p className="text-sm text-[var(--color-ink-muted)] mb-[var(--space-md)]">
-            with {tour.operatorName}
-          </p>
-
-          {/* Details row */}
-          <div className="flex flex-wrap items-center gap-[var(--space-md)] text-sm text-[var(--color-ink-subtle)] mb-[var(--space-md)]">
-            <span className="flex items-center gap-[var(--space-xs)]">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                <line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/>
-                <line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-              {tour.date}
-            </span>
-            <span className="flex items-center gap-[var(--space-xs)]">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                <circle cx="12" cy="10" r="3"/>
-              </svg>
-              {tour.location}
-            </span>
-          </div>
-
-          {/* Species */}
-          {tour.speciesHighlight && (
-            <div className="flex items-center gap-2 text-sm text-[var(--color-ink-muted)] mb-[var(--space-md)]">
-              <span className="text-[var(--color-primary)]" aria-hidden="true">◇</span>
-              <span>{tour.speciesHighlight}</span>
-            </div>
-          )}
-
-          {/* Quorum progress */}
-          <div className="max-w-xs">
+      <div className="flex flex-col sm:flex-row gap-[var(--space-lg)] sm:gap-[var(--space-xl)]">
+        {/* Left: Status + quorum visual */}
+        <div className="flex flex-col items-center gap-[var(--space-sm)] flex-shrink-0 sm:min-w-[120px]">
+          <ConfirmationStatusBadge status={tour.status} />
+          <div className="w-full max-w-[140px]">
             <QuorumProgressBar
               current={tour.currentParticipants}
               quorum={tour.threshold}
               capacity={tour.capacity}
             />
           </div>
+          {price && (
+            <span className="font-display text-lg font-semibold text-[var(--color-ink)]">
+              {price}
+              <span className="text-xs font-normal text-[var(--color-ink-subtle)]">/person</span>
+            </span>
+          )}
+        </div>
+
+        {/* Right: Content */}
+        <div className="flex-1 min-w-0">
+          {/* Title + operator */}
+          <div className="flex flex-wrap items-center gap-[var(--space-sm)] mb-[var(--space-xs)]">
+            <h3 className="
+              font-display text-xl sm:text-2xl font-semibold
+              text-[var(--color-ink)]
+              group-hover:text-[var(--color-primary)]
+              transition-colors duration-200
+            ">
+              {tour.title}
+            </h3>
+          </div>
+
+          <p className="text-sm text-[var(--color-ink-muted)] mb-[var(--space-md)]">
+            with {tour.operatorName}
+          </p>
+
+          {/* Date + location row */}
+          <div className="flex flex-wrap items-center gap-[var(--space-md)] text-sm text-[var(--color-ink-subtle)] mb-[var(--space-md)]">
+            <span className="flex items-center gap-[var(--space-xs)]">
+              <svg
+                width="14" height="14" className="flex-shrink-0"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              {tour.date} – {tour.dateEnd}
+            </span>
+            <span className="flex items-center gap-[var(--space-xs)]">
+              <svg
+                width="14" height="14" className="flex-shrink-0"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              {tour.location}
+            </span>
+          </div>
+
+          {/* Highlights as pills */}
+          {tour.highlights.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-[var(--space-md)]">
+              {tour.highlights.slice(0, 5).map(highlight => (
+                <span
+                  key={highlight}
+                  className="
+                    px-2.5 py-1
+                    text-xs font-medium
+                    bg-[var(--color-primary-subtle)]
+                    text-[var(--color-primary)]
+                    rounded-[var(--radius-sm)]
+                  "
+                >
+                  {highlight}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Description excerpt */}
+          {tour.description && (
+            <p className="text-sm text-[var(--color-ink-muted)] leading-relaxed line-clamp-2 mb-[var(--space-md)]">
+              {tour.description}
+            </p>
+          )}
 
           {/* CTA */}
           <span className="
             inline-flex items-center gap-[var(--space-xs)]
-            mt-[var(--space-md)]
             text-sm font-medium
             text-[var(--color-ink-subtle)]
             group-hover:text-[var(--color-primary)]
