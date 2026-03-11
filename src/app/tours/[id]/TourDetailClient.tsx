@@ -99,6 +99,7 @@ function generateSpeciesGroups(species: string[]) {
 interface ItineraryDay {
   day: number;
   date: string;
+  label?: string;
   title: string;
   vessel?: string;
   departure?: string;
@@ -497,6 +498,11 @@ export function TourDetailClient() {
                           <hr className="border-[var(--color-border)] my-[var(--space-md)]" />
                         )}
                         <div>
+                          {day.label && (
+                            <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-ink-subtle)] mb-0.5">
+                              {day.label}
+                            </p>
+                          )}
                           <h4 className="font-medium text-[var(--color-ink)]">
                             {day.title}
                           </h4>
