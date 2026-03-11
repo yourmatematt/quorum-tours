@@ -58,29 +58,37 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
 
   const spotsNeeded = Math.max(0, tour.threshold - (tour.current_participant_count || 0));
   const statusText = tour.status === 'confirmed' || spotsNeeded === 0
-    ? 'Confirmed and running'
+    ? 'Confirmed'
     : `${spotsNeeded} more needed`;
 
-  const description = highlights
-    ? `${dateStr} · ${location} · Led by ${operatorName}. Highlights: ${highlights}. $${price}/person. ${statusText}.`
-    : `${dateStr} · ${location} · Led by ${operatorName}. $${price}/person. ${statusText}.`;
+  // Title: aim for 50-60 chars — "Tour Name · Date · Location — Quorum Tours"
+  const shortDate = startDate.toLocaleDateString('en-AU', { month: 'short', year: 'numeric' });
+  const ogTitle = `${tour.title} · ${shortDate} · ${location}`;
+
+  // Description: aim for 110-160 chars
+  const descParts = [`Led by ${operatorName}. $${price}/person. ${statusText}.`];
+  if (highlights) descParts.push(`Highlights: ${highlights}.`);
+  let description = descParts.join(' ');
+  if (description.length > 160) {
+    description = description.slice(0, 157) + '...';
+  }
 
   const tourUrl = `${siteUrl}/tours/${tour.slug}`;
 
   return {
-    title: tour.title,
+    title: ogTitle,
     description,
     openGraph: {
       type: 'website',
       locale: 'en_AU',
       url: tourUrl,
       siteName: 'Quorum Tours',
-      title: tour.title,
+      title: ogTitle,
       description,
     },
     twitter: {
       card: 'summary_large_image',
-      title: tour.title,
+      title: ogTitle,
       description,
     },
   };
