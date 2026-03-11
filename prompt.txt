@@ -1,79 +1,60 @@
-# Build Prompt — Quorum Tours — TOUR-ENQUIRY-FORM-01
+# Build Prompt — Quorum Tours — TOUR-NOT-INCLUDED-01
 
 ## Context
 
-Tour page (`/tours/[slug]`) has no way for potential birders to ask questions before committing. A contact form is needed that notifies the operator and confirms receipt to the enquirer via Resend.
+The tour page currently shows an "Included" section listing what's covered in the tour price. There is no corresponding "Not Included" section. This creates ambiguity — guests may assume accommodation and travel are bundled.
 
----
+## Task
 
-## Task: Tour Enquiry Form
+Wherever "What's Included" (or equivalent) is displayed on the tour page, add a "Not Included" section immediately below it.
 
-### Placement
-Add an "Ask a question" section on the tour page, below the Logistics section and above the FAQ accordions.
+## Not Included content
 
-### Form fields
-- **Name** (text, required)
-- **Email** (email, required)
-- **Message** (textarea, required, placeholder: "Ask Dale anything about this tour...")
-- **Submit button:** "Send enquiry"
+Render the following as a list:
 
-### On submit
+- Accommodation
+- Travel to Mallacoota
+- Travel insurance
+- Meals not specified in the itinerary
 
-**Validation:**
-- All three fields required
-- Valid email format
-- Show inline field errors if validation fails
+## Data source
 
-**Success state:**
-- Replace form with a confirmation message: "Your enquiry has been sent. Dale will be in touch shortly."
-- Do not reload the page
+Add a `not_included` JSONB column to the `tours` table (if it doesn't already exist) following the same pattern as the `included` column.
 
-**Error state:**
-- If Resend fails, show: "Something went wrong. Please try again or email us at hello@quorumtours.com"
+Seed the Wilderness Coast Weekender tour (`slug: wilderness-coast-weekender-apr-2026`) with:
 
-### Resend emails
+```json
+[
+  "Accommodation",
+  "Travel to Mallacoota",
+  "Travel insurance",
+  "Meals not specified in the itinerary"
+]
+```
 
-**Email 1 — To operator (hello@quorumtours.com):**
-- Subject: `New enquiry: [Tour Title] — [Enquirer Name]`
-- Body:
-  - Tour: [Tour Title] (`/tours/[slug]`)
-  - From: [Name] ([Email])
-  - Message: [Message]
-  - Sent at: [timestamp]
+If adding a database column is out of scope for this task, hardcode the four items above as a fallback and note it for follow-up.
 
-**Email 2 — To enquirer:**
-- Subject: `Your enquiry about [Tour Title]`
-- Body:
-  - "Thanks [Name], we've received your enquiry about [Tour Title]."
-  - "Dale will be in touch with you at [email] shortly."
-  - Link to tour page
-  - Quorum Tours branding footer (consistent with existing email templates)
+## Visual treatment
 
-### API route
-Create `/api/tours/enquiry` (POST) to handle form submission and Resend calls server-side. Do not expose Resend API key client-side.
+- Section heading: "Not Included"
+- Use a subtle visual distinction from the Included section — muted text or a neutral icon (e.g. X or dash) rather than the green checkmarks used for inclusions
+- Same card/container as the Included section, either directly below it or as a second column on wider screens
+- Do not make it alarming — this is standard tour transparency, not a warning
 
-### Visual treatment
-- Section heading: "Have a question?"
-- Contained in a card matching other sections on the page
-- Form styling consistent with existing input components on the platform
-- Submit button uses existing primary button style
+## Locations to update
 
----
+- Tour detail page (`/tours/[slug]`)
+- Booking confirmation email (if inclusions are listed there)
+- Any tour summary cards that list inclusions
 
-## Validation Criteria
+## Validation
 
-- [ ] Form renders on tour page below Logistics section
-- [ ] All three fields validate correctly
-- [ ] Operator receives email with tour title, enquirer name, email, and message
-- [ ] Enquirer receives confirmation email referencing the tour title
-- [ ] Success state replaces form on submission
-- [ ] Error state shows if Resend fails
-- [ ] Resend API key not exposed client-side
-- [ ] Form renders correctly at 375px and 1280px
-
----
+- [ ] Not Included section renders below Included on tour page
+- [ ] Four items display correctly
+- [ ] Visual style is clearly distinct from Included but not alarming
+- [ ] Renders correctly at 375px and 1280px
 
 ## Output
 
 Write build report to:
-`/docs/claude-output/TOUR-ENQUIRY-FORM-01.md`
+`/docs/claude-output/TOUR-NOT-INCLUDED-01.md`
