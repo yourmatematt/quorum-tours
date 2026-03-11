@@ -1,8 +1,13 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@supabase/supabase-js';
 import { OperatorProfileClient } from './OperatorProfileClient';
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://quorumtours.com';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 interface OperatorPageProps {
   params: Promise<{ id: string }>;
@@ -10,7 +15,6 @@ interface OperatorPageProps {
 
 export async function generateMetadata({ params }: OperatorPageProps): Promise<Metadata> {
   const { id } = await params;
-  const supabase = await createClient();
 
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
 
