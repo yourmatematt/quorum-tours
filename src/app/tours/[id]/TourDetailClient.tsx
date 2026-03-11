@@ -511,9 +511,11 @@ export function TourDetailClient() {
                             </p>
                           )}
                           {day.description && (
-                            <p className="text-sm text-[var(--color-ink-muted)] mt-[var(--space-sm)] leading-relaxed">
-                              {day.description}
-                            </p>
+                            <div className="text-sm text-[var(--color-ink-muted)] mt-[var(--space-sm)] leading-relaxed space-y-1">
+                              {day.description.split('\n').map((line, i) => (
+                                <p key={i}>{line}</p>
+                              ))}
+                            </div>
                           )}
                         </div>
                       </div>
