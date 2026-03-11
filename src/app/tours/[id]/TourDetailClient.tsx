@@ -114,9 +114,10 @@ function generateLogistics(tour: {
   date_start: string;
   date_end: string;
   included: string[];
+  not_included: string[];
   itinerary: ItineraryDay[] | null;
 }) {
-  const items: { icon: 'group' | 'fitness' | 'included' | 'policy' | 'time' | 'location'; label: string; value: string; details: string[] }[] = [
+  const items: { icon: 'group' | 'fitness' | 'included' | 'not_included' | 'policy' | 'time' | 'location'; label: string; value: string; details: string[] }[] = [
     {
       icon: 'group',
       label: 'Group size',
@@ -156,6 +157,15 @@ function generateLogistics(tour: {
       label: 'Included',
       value: `${tour.included.length} items`,
       details: tour.included,
+    });
+  }
+
+  if (tour.not_included && tour.not_included.length > 0) {
+    items.push({
+      icon: 'not_included',
+      label: 'Not Included',
+      value: `${tour.not_included.length} items`,
+      details: tour.not_included,
     });
   }
 
@@ -249,6 +259,7 @@ export function TourDetailClient() {
       date_start: dbTour.date_start,
       date_end: dbTour.date_end,
       included: dbTour.included || [],
+      not_included: (dbTour as any).not_included || [],
       itinerary: Array.isArray(dbTour.itinerary) ? dbTour.itinerary as ItineraryDay[] : null,
     }),
     faqs: defaultFaqs,

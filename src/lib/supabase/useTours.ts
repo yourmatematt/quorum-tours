@@ -22,6 +22,7 @@ export interface Tour {
   status: TourStatus;
   target_species: string[];
   included: string[];
+  not_included: string[];
   itinerary: unknown;
   image_url: string | null;
   is_featured: boolean;

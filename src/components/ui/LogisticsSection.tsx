@@ -1,5 +1,5 @@
 interface LogisticsItem {
-  icon: 'group' | 'fitness' | 'included' | 'policy' | 'time' | 'location';
+  icon: 'group' | 'fitness' | 'included' | 'not_included' | 'policy' | 'time' | 'location';
   label: string;
   value: string;
   details?: string[];
@@ -25,6 +25,11 @@ const icons: Record<LogisticsItem['icon'], JSX.Element> = {
   included: (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
       <path d="M4 10l4 4 8-8" />
+    </svg>
+  ),
+  not_included: (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M5 10h10" />
     </svg>
   ),
   policy: (
@@ -79,8 +84,8 @@ function LogisticsItem({ item }: { item: LogisticsItem }) {
         {item.details && item.details.length > 0 && (
           <ul className="mt-[var(--space-xs)] space-y-0.5">
             {item.details.map((detail, index) => (
-              <li key={index} className="text-sm text-[var(--color-ink-muted)]">
-                {detail}
+              <li key={index} className={`text-sm ${item.icon === 'not_included' ? 'text-[var(--color-ink-subtle)]' : 'text-[var(--color-ink-muted)]'}`}>
+                {item.icon === 'not_included' ? `— ${detail}` : detail}
               </li>
             ))}
           </ul>

@@ -38,15 +38,6 @@ const faqs: FAQ[] = [
   },
 ];
 
-function ExpandIcon({ expanded }: { expanded: boolean }): JSX.Element {
-  const path = expanded ? 'M4 8h8' : 'M8 4v8M4 8h8';
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d={path} />
-    </svg>
-  );
-}
-
 export function FAQSection(): JSX.Element {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -66,23 +57,23 @@ export function FAQSection(): JSX.Element {
           </p>
         </header>
 
-        <div className="max-w-3xl mx-auto space-y-3 sm:space-y-[var(--space-md)]">
+        <div className="max-w-3xl mx-auto bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-[var(--radius-organic)] shadow-[var(--shadow-card)] px-[var(--space-lg)]">
           {faqs.map((faq, index) => (
             <div
               key={faq.question}
-              className="border-2 border-[var(--color-border)] rounded-[var(--radius-lg)] bg-[var(--color-surface-raised)] overflow-hidden"
+              className="border-b border-[var(--color-border)] last:border-b-0"
             >
               <button
                 onClick={() => handleToggle(index)}
-                className="w-full px-4 sm:px-[var(--space-lg)] py-3 sm:py-[var(--space-md)] text-left flex items-center justify-between gap-3 sm:gap-[var(--space-md)] hover:bg-[var(--color-surface-sunken)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-primary)] transition-colors"
+                className="w-full px-4 sm:px-[var(--space-lg)] py-3 sm:py-[var(--space-md)] text-left flex items-center justify-between gap-3 sm:gap-[var(--space-md)] text-[var(--color-ink)] hover:text-[var(--color-primary)] focus:outline-none focus:text-[var(--color-primary)] transition-colors"
                 aria-expanded={openIndex === index}
                 aria-controls={`faq-answer-${index}`}
               >
-                <span className="flex-1 font-semibold text-sm sm:text-[var(--text-base)] text-[var(--color-ink)]">
+                <span className="flex-1 font-medium text-sm sm:text-[var(--text-base)]">
                   {faq.question}
                 </span>
-                <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center text-[var(--color-ink-subtle)]" aria-hidden="true">
-                  <ExpandIcon expanded={openIndex === index} />
+                <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center text-[var(--color-ink-subtle)] font-mono text-lg" aria-hidden="true">
+                  {openIndex === index ? '−' : '+'}
                 </span>
               </button>
 
