@@ -16,8 +16,8 @@ export const OG_COLORS = {
 
 export const OG_GRADIENT = 'linear-gradient(135deg, #F0FFF4 0%, #e6f9ea 40%, #d4f0dc 100%)';
 
-// Crimson Pro 700 Latin woff2 — direct Google Fonts CDN URL (v28)
-const FONT_URL = 'https://fonts.gstatic.com/s/crimsonpro/v28/q5uUsoa5M_tv7IihmnkabC5XiXCAlXGks1WZKWpMP5s-dtC4yJtE.woff2';
+// Crimson Pro 700 TTF — @vercel/og only supports ttf/woff, not woff2
+const FONT_URL = 'https://fonts.gstatic.com/l/font?kit=q5uUsoa5M_tv7IihmnkabC5XiXCAlXGks1WZKWp8OQ&skey=ec2e092f18395a78&v=v28';
 
 export async function loadFont() {
   return fetch(FONT_URL).then(r => r.arrayBuffer());
