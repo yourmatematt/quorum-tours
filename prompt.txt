@@ -1,0 +1,79 @@
+# Build Prompt — Quorum Tours — TOUR-ENQUIRY-FORM-01
+
+## Context
+
+Tour page (`/tours/[slug]`) has no way for potential birders to ask questions before committing. A contact form is needed that notifies the operator and confirms receipt to the enquirer via Resend.
+
+---
+
+## Task: Tour Enquiry Form
+
+### Placement
+Add an "Ask a question" section on the tour page, below the Logistics section and above the FAQ accordions.
+
+### Form fields
+- **Name** (text, required)
+- **Email** (email, required)
+- **Message** (textarea, required, placeholder: "Ask Dale anything about this tour...")
+- **Submit button:** "Send enquiry"
+
+### On submit
+
+**Validation:**
+- All three fields required
+- Valid email format
+- Show inline field errors if validation fails
+
+**Success state:**
+- Replace form with a confirmation message: "Your enquiry has been sent. Dale will be in touch shortly."
+- Do not reload the page
+
+**Error state:**
+- If Resend fails, show: "Something went wrong. Please try again or email us at hello@quorumtours.com"
+
+### Resend emails
+
+**Email 1 — To operator (hello@quorumtours.com):**
+- Subject: `New enquiry: [Tour Title] — [Enquirer Name]`
+- Body:
+  - Tour: [Tour Title] (`/tours/[slug]`)
+  - From: [Name] ([Email])
+  - Message: [Message]
+  - Sent at: [timestamp]
+
+**Email 2 — To enquirer:**
+- Subject: `Your enquiry about [Tour Title]`
+- Body:
+  - "Thanks [Name], we've received your enquiry about [Tour Title]."
+  - "Dale will be in touch with you at [email] shortly."
+  - Link to tour page
+  - Quorum Tours branding footer (consistent with existing email templates)
+
+### API route
+Create `/api/tours/enquiry` (POST) to handle form submission and Resend calls server-side. Do not expose Resend API key client-side.
+
+### Visual treatment
+- Section heading: "Have a question?"
+- Contained in a card matching other sections on the page
+- Form styling consistent with existing input components on the platform
+- Submit button uses existing primary button style
+
+---
+
+## Validation Criteria
+
+- [ ] Form renders on tour page below Logistics section
+- [ ] All three fields validate correctly
+- [ ] Operator receives email with tour title, enquirer name, email, and message
+- [ ] Enquirer receives confirmation email referencing the tour title
+- [ ] Success state replaces form on submission
+- [ ] Error state shows if Resend fails
+- [ ] Resend API key not exposed client-side
+- [ ] Form renders correctly at 375px and 1280px
+
+---
+
+## Output
+
+Write build report to:
+`/docs/claude-output/TOUR-ENQUIRY-FORM-01.md`

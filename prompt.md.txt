@@ -1,0 +1,24 @@
+As orchestrator, complete TASK_ID ADMIN-OP-PROFILE-EDIT following strict messaging and protocols.
+Task: Build an operator profile editor inside the existing admin dashboard (/admin/operators/[id]). An admin should be able to view and edit all operator profile fields directly — no need for the operator to do it themselves.
+Fields to be editable:
+
+Name
+Bio (full about section — rich text or textarea)
+Short bio (single paragraph)
+Specialties (tag array — add/remove)
+Profile photo (upload or URL)
+Location / base
+Years experience
+Vessel name (if applicable)
+"Why I joined Quorum" quote
+Operator credentials block (operating since, vessel, access areas, group size)
+
+Behaviour:
+
+Changes save to Supabase operators table (or equivalent profile table)
+Success/error toast on save
+No operator-facing notification required at this stage — admin edits silently
+Existing admin auth/role enforcement applies
+
+Reference: Existing operator profile page at /operators/[id] — the editor should map directly to what's displayed there.
+Write output to: /docs/claude-output/ADMIN-OP-PROFILE-EDIT.md
