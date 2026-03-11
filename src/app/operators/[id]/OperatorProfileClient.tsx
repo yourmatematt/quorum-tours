@@ -291,8 +291,10 @@ export function OperatorProfileClient() {
                   leading-relaxed
                   space-y-[var(--space-sm)] sm:space-y-[var(--space-md)]
                 ">
-                  {operator.description.split('\n\n').map((paragraph, index) => (
-                    <p key={index}>{paragraph}</p>
+                  {operator.description.split('\n').map((line, index) => (
+                    line.trim() === ''
+                      ? <br key={index} />
+                      : <p key={index}>{line}</p>
                   ))}
                 </div>
               </section>
