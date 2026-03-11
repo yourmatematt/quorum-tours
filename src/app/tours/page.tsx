@@ -512,23 +512,21 @@ function FeaturedTourCard({ tour }: { tour: DisplayTour }) {
         group
       "
     >
-      {/* Top row: Status badge left, quorum + price right */}
+      {/* Top row: Status badge left, price + quorum right */}
       <div className="flex items-start justify-between gap-[var(--space-md)] mb-[var(--space-md)]">
         <ConfirmationStatusBadge status={tour.status} />
-        <div className="flex items-center gap-[var(--space-md)]">
-          <div className="w-[120px] sm:w-[140px]">
-            <QuorumProgressBar
-              current={tour.currentParticipants}
-              quorum={tour.threshold}
-              capacity={tour.capacity}
-            />
-          </div>
+        <div className="flex flex-col items-end gap-[var(--space-xs)]">
           {price && (
             <span className="font-display text-lg font-semibold text-[var(--color-ink)] whitespace-nowrap">
               {price}
               <span className="text-xs font-normal text-[var(--color-ink-subtle)]">/person</span>
             </span>
           )}
+          <QuorumProgressBar
+            current={tour.currentParticipants}
+            quorum={tour.threshold}
+            capacity={tour.capacity}
+          />
         </div>
       </div>
 
