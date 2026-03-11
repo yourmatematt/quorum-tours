@@ -17,12 +17,18 @@ export default async function OGImage() {
           flexDirection: 'column',
           width: '100%',
           height: '100%',
-          background: 'linear-gradient(135deg, #F0FFF4 0%, #e6f9ea 40%, #d4f0dc 100%)',
+          background: '#ffffff',
           padding: '56px 64px',
           fontFamily: 'Crimson Pro, Georgia, serif',
           justifyContent: 'center',
         }}
       >
+        {/* Green accent bar at top */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: '6px',
+          background: '#2E8B57', display: 'flex',
+        }} />
+
         {/* Logo + brand */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '40px' }}>
           <div style={{
@@ -30,7 +36,7 @@ export default async function OGImage() {
             background: '#2E8B57', display: 'flex', alignItems: 'center', justifyContent: 'center',
             color: 'white', fontSize: '28px', fontWeight: 700,
           }}>Q</div>
-          <span style={{ fontSize: '28px', color: '#2E8B57', fontWeight: 600 }}>Quorum Tours</span>
+          <span style={{ fontSize: '28px', color: '#1A3320', fontWeight: 600 }}>Quorum Tours</span>
         </div>
 
         {/* Headline */}
@@ -44,7 +50,7 @@ export default async function OGImage() {
 
         {/* Subheading */}
         <div style={{
-          fontSize: '28px', color: '#2d5a3d',
+          fontSize: '28px', color: '#374151',
           lineHeight: 1.4, marginBottom: '40px',
           display: 'flex',
         }}>
@@ -61,12 +67,12 @@ export default async function OGImage() {
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{
                 width: '36px', height: '36px', borderRadius: '50%',
-                background: '#DAA520', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#1A3320', fontSize: '18px', fontWeight: 700,
+                background: '#2E8B57', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'white', fontSize: '18px', fontWeight: 700,
               }}>{i + 1}</div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span style={{ fontSize: '20px', fontWeight: 600, color: '#1A3320' }}>{step.label}</span>
-                <span style={{ fontSize: '16px', color: '#4a7a5a' }}>{step.desc}</span>
+                <span style={{ fontSize: '16px', color: '#4B5563' }}>{step.desc}</span>
               </div>
             </div>
           ))}

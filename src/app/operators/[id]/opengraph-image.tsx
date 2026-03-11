@@ -36,7 +36,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
   if (!operator) {
     return new ImageResponse(
       (
-        <div style={{ display: 'flex', width: '100%', height: '100%', background: '#F0FFF4', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', width: '100%', height: '100%', background: '#ffffff', alignItems: 'center', justifyContent: 'center' }}>
           <span style={{ fontSize: 48, color: '#1A3320' }}>Operator not found</span>
         </div>
       ),
@@ -59,11 +59,17 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
           flexDirection: 'column',
           width: '100%',
           height: '100%',
-          background: 'linear-gradient(135deg, #F0FFF4 0%, #e6f9ea 50%, #d4f0dc 100%)',
+          background: '#ffffff',
           padding: '48px 56px',
           fontFamily: 'Crimson Pro, Georgia, serif',
         }}
       >
+        {/* Green accent bar */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: '6px',
+          background: '#2E8B57', display: 'flex',
+        }} />
+
         {/* Top bar */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -72,7 +78,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
               background: '#2E8B57', display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: 'white', fontSize: '20px', fontWeight: 700,
             }}>Q</div>
-            <span style={{ fontSize: '20px', color: '#4a7a5a', fontWeight: 500 }}>quorumtours.com</span>
+            <span style={{ fontSize: '20px', color: '#4B5563', fontWeight: 500 }}>quorumtours.com</span>
           </div>
           {operator.is_verified && (
             <div style={{
@@ -133,7 +139,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
             {/* Tagline */}
             {operator.tagline && (
               <div style={{
-                fontSize: '26px', color: '#2d5a3d', fontStyle: 'italic',
+                fontSize: '26px', color: '#374151', fontStyle: 'italic',
                 marginBottom: '20px', display: 'flex',
               }}>
                 {operator.tagline}
@@ -147,7 +153,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                   <circle cx="12" cy="10" r="3"/>
                 </svg>
-                <span style={{ fontSize: '22px', color: '#2d5a3d' }}>{location}</span>
+                <span style={{ fontSize: '22px', color: '#374151' }}>{location}</span>
               </div>
               {yearsExp && yearsExp > 0 && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -155,7 +161,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
                     <circle cx="12" cy="12" r="10"/>
                     <polyline points="12 6 12 12 16 14"/>
                   </svg>
-                  <span style={{ fontSize: '22px', color: '#2d5a3d' }}>{yearsExp} years experience</span>
+                  <span style={{ fontSize: '22px', color: '#374151' }}>{yearsExp} years experience</span>
                 </div>
               )}
               {operator.tours_completed && operator.tours_completed > 0 ? (
@@ -163,7 +169,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2E8B57" strokeWidth="2">
                     <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                  <span style={{ fontSize: '22px', color: '#2d5a3d' }}>{operator.tours_completed} tours completed</span>
+                  <span style={{ fontSize: '22px', color: '#374151' }}>{operator.tours_completed} tours completed</span>
                 </div>
               ) : null}
             </div>

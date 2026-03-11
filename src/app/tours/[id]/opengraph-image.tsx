@@ -36,7 +36,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
   if (!tour) {
     return new ImageResponse(
       (
-        <div style={{ display: 'flex', width: '100%', height: '100%', background: '#F0FFF4', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', width: '100%', height: '100%', background: '#ffffff', alignItems: 'center', justifyContent: 'center' }}>
           <span style={{ fontSize: 48, color: '#1A3320' }}>Tour not found</span>
         </div>
       ),
@@ -71,11 +71,17 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
           flexDirection: 'column',
           width: '100%',
           height: '100%',
-          background: 'linear-gradient(135deg, #F0FFF4 0%, #e6f9ea 50%, #d4f0dc 100%)',
+          background: '#ffffff',
           padding: '48px 56px',
           fontFamily: 'Crimson Pro, Georgia, serif',
         }}
       >
+        {/* Green accent bar */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: '6px',
+          background: '#2E8B57', display: 'flex',
+        }} />
+
         {/* Top bar */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -84,7 +90,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
               background: '#2E8B57', display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: 'white', fontSize: '20px', fontWeight: 700,
             }}>Q</div>
-            <span style={{ fontSize: '20px', color: '#4a7a5a', fontWeight: 500 }}>quorumtours.com</span>
+            <span style={{ fontSize: '20px', color: '#4B5563', fontWeight: 500 }}>quorumtours.com</span>
           </div>
           <div style={{
             display: 'flex', alignItems: 'center', gap: '8px',
@@ -115,21 +121,21 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
               <line x1="8" y1="2" x2="8" y2="6"/>
               <line x1="3" y1="10" x2="21" y2="10"/>
             </svg>
-            <span style={{ fontSize: '22px', color: '#2d5a3d' }}>{dateStr}</span>
+            <span style={{ fontSize: '22px', color: '#374151' }}>{dateStr}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2E8B57" strokeWidth="2">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
               <circle cx="12" cy="10" r="3"/>
             </svg>
-            <span style={{ fontSize: '22px', color: '#2d5a3d' }}>{location}</span>
+            <span style={{ fontSize: '22px', color: '#374151' }}>{location}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2E8B57" strokeWidth="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
               <circle cx="12" cy="7" r="4"/>
             </svg>
-            <span style={{ fontSize: '22px', color: '#2d5a3d' }}>Led by {operatorName}</span>
+            <span style={{ fontSize: '22px', color: '#374151' }}>Led by {operatorName}</span>
           </div>
         </div>
 
@@ -157,12 +163,12 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
           {/* Price */}
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
             <span style={{ fontSize: '48px', fontWeight: 700, color: '#1A3320' }}>${price}</span>
-            <span style={{ fontSize: '22px', color: '#4a7a5a' }}>per person</span>
+            <span style={{ fontSize: '22px', color: '#4B5563' }}>per person</span>
           </div>
 
           {/* Quorum progress */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-            <span style={{ fontSize: '16px', color: '#4a7a5a' }}>
+            <span style={{ fontSize: '16px', color: '#4B5563' }}>
               {current}/{threshold} committed
             </span>
             <div style={{
