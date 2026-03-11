@@ -16,10 +16,11 @@ export const OG_COLORS = {
 
 export const OG_GRADIENT = 'linear-gradient(135deg, #F0FFF4 0%, #e6f9ea 40%, #d4f0dc 100%)';
 
+// Crimson Pro 700 Latin woff2 — direct Google Fonts CDN URL (v28)
+const FONT_URL = 'https://fonts.gstatic.com/s/crimsonpro/v28/q5uUsoa5M_tv7IihmnkabC5XiXCAlXGks1WZKWpMP5s-dtC4yJtE.woff2';
+
 export async function loadFont() {
-  return fetch(
-    new URL('../../public/fonts/CrimsonPro-Bold.woff2', import.meta.url)
-  ).then(r => r.arrayBuffer());
+  return fetch(FONT_URL).then(r => r.arrayBuffer());
 }
 
 export function BrandHeader() {
