@@ -4,11 +4,6 @@ import { TourDetailClient } from './TourDetailClient';
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://quorumtours.com';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 interface TourPageProps {
   params: Promise<{ id: string }>;
 }
@@ -16,10 +11,15 @@ interface TourPageProps {
 export async function generateMetadata({ params }: TourPageProps): Promise<Metadata> {
   const { id } = await params;
 
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+
   // Try UUID first, then slug
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
 
-  const { data: tour } = await supabase
+  const { data: tour, error } = await supabase
     .from('tours')
     .select(`
       title,
@@ -39,6 +39,7 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
     .single();
 
   if (!tour) {
+    console.error('generateMetadata: tour not found', { id, isUuid, error });
     return {
       title: 'Tour Not Found',
     };

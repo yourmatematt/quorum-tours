@@ -4,11 +4,6 @@ import { OperatorProfileClient } from './OperatorProfileClient';
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://quorumtours.com';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 interface OperatorPageProps {
   params: Promise<{ id: string }>;
 }
@@ -16,9 +11,14 @@ interface OperatorPageProps {
 export async function generateMetadata({ params }: OperatorPageProps): Promise<Metadata> {
   const { id } = await params;
 
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
 
-  const { data: operator } = await supabase
+  const { data: operator, error } = await supabase
     .from('operators')
     .select(`
       name,
@@ -37,6 +37,7 @@ export async function generateMetadata({ params }: OperatorPageProps): Promise<M
     .single();
 
   if (!operator) {
+    console.error('generateMetadata: operator not found', { id, isUuid, error });
     return {
       title: 'Operator Not Found',
     };
