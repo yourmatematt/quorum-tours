@@ -45,7 +45,7 @@ export function PathwaysSection() {
                 Browse available tours by species, location, or date.
                 See confirmation status and commit when you find the right one.
               </p>
-              <Button variant="primary">
+              <Button variant="primary" href="/tours">
                 Browse Available Tours
               </Button>
             </div>
@@ -78,6 +78,7 @@ export function PathwaysSection() {
               </p>
               <Button
                 variant="secondary"
+                href="/how-it-works"
                 style={{ border: '2px solid var(--color-ink)' }}
               >
                 See How It Works
