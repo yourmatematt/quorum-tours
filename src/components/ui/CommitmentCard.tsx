@@ -206,7 +206,7 @@ export function CommitmentCard({
             const xText = `Heading out ${tourDate || 'soon'} to spot ${species} at ${loc} with ${op}. Need ${spotsText}.`;
             const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(xText)}&url=${encodeURIComponent(tourUrl)}`;
 
-            const messengerUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(tourUrl)}&app_id=966242223397117&redirect_uri=${encodeURIComponent(tourUrl)}`;
+            const messengerUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(tourUrl)}&app_id=780896928006023&redirect_uri=${encodeURIComponent(tourUrl)}`;
 
             const waText = `Hey, joining a birding tour ${tourDate || 'soon'} at ${loc} with ${op}. We're tracking ${species}. Need ${spotsText} for it to run. You keen? ${tourUrl}`;
             const waUrl = `https://wa.me/?text=${encodeURIComponent(waText)}`;

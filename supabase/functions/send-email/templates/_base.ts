@@ -227,7 +227,7 @@ export function shareButtons(tour: {
   const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(xText)}&url=${encodeURIComponent(tour.url)}`
 
   // Messenger
-  const messengerUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(tour.url)}&app_id=966242223397117&redirect_uri=${encodeURIComponent(tour.url)}`
+  const messengerUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(tour.url)}&app_id=780896928006023&redirect_uri=${encodeURIComponent(tour.url)}`
 
   // WhatsApp
   const waText = `Hey, joining a birding tour ${tour.date} at ${tour.location} with ${tour.operatorName}. We're tracking ${tour.targetSpecies}. Need ${spotsText} for it to run. You keen? ${tour.url}`

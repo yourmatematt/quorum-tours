@@ -63,7 +63,7 @@ function buildShareUrls(content: ReturnType<typeof generateShareContent>, tourUr
 
   return {
     x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(content.x)}&url=${encodedUrl}`,
-    messenger: `https://www.facebook.com/dialog/send?link=${encodedUrl}&app_id=966242223397117&redirect_uri=${encodedUrl}`,
+    messenger: `https://www.facebook.com/dialog/send?link=${encodedUrl}&app_id=780896928006023&redirect_uri=${encodedUrl}`,
     whatsapp: `https://wa.me/?text=${encodeURIComponent(content.whatsapp)}`,
     email: `mailto:?subject=${encodeURIComponent(content.emailSubject)}&body=${encodeURIComponent(content.emailBody)}`,
   };
