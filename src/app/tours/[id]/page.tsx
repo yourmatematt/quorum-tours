@@ -13,6 +13,7 @@ import { useTour } from '@/lib/supabase/useTours';
 import { useAuth } from '@/lib/supabase/useAuth';
 import { usePersonalizedDeposit } from '@/hooks/usePersonalizedDeposit';
 import { useUserTrust } from '@/hooks/useUserTrust';
+import { useUserReservation } from '@/hooks/useUserReservation';
 import { TourEnquiryForm } from '@/components/tours/TourEnquiryForm';
 
 type ConfirmationStatus = 'confirmed' | 'forming' | 'not-running';
@@ -184,6 +185,7 @@ export default function TourDetailPage() {
   const { user } = useAuth();
   const { depositCents: personalizedDepositCents } = usePersonalizedDeposit(user?.id ?? null, tourId);
   const { trustTier } = useUserTrust(user?.id ?? null);
+  const { hasCommitted } = useUserReservation(user?.id ?? null, dbTour?.id ?? null);
   const [imageError, setImageError] = useState(false);
 
   // Loading state
@@ -391,6 +393,7 @@ export default function TourDetailPage() {
               <div className="xl:hidden mb-[var(--space-3xl)]">
                 <CommitmentCard
                   tourId={tour.slug}
+                  tourName={tour.title}
                   status={tour.status}
                   price={tour.price}
                   deposit={tour.deposit}
@@ -398,6 +401,7 @@ export default function TourDetailPage() {
                   quorum={tour.threshold}
                   capacity={tour.capacity}
                   isLoggedIn={!!user}
+                  hasCommitted={hasCommitted}
                   trustMessage={
                     user
                       ? trustTier === 'trusted'
@@ -528,6 +532,7 @@ export default function TourDetailPage() {
               <div className="xl:sticky xl:top-[calc(57px+var(--space-lg))]">
                 <CommitmentCard
                   tourId={tour.slug}
+                  tourName={tour.title}
                   status={tour.status}
                   price={tour.price}
                   deposit={tour.deposit}
@@ -535,6 +540,7 @@ export default function TourDetailPage() {
                   quorum={tour.threshold}
                   capacity={tour.capacity}
                   isLoggedIn={!!user}
+                  hasCommitted={hasCommitted}
                   trustMessage={
                     user
                       ? trustTier === 'trusted'
