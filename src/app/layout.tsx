@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import './globals.css';
 import { GlobalNav } from '@/components/GlobalNav';
 import { GlobalFooter } from '@/components/GlobalFooter';
+import { EmailVerifiedBanner } from '@/components/ui/EmailVerifiedBanner';
 
 const siteUrl = 'https://quorumtours.com';
 
@@ -95,6 +97,9 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <Suspense fallback={null}>
+          <EmailVerifiedBanner />
+        </Suspense>
         <GlobalNav />
         {children}
         <GlobalFooter />

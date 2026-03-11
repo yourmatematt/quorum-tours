@@ -123,7 +123,10 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      // Email verified successfully, redirect to next page
+      // Email verified successfully, redirect with verified flag
+      if (type === 'signup' || type === 'email') {
+        redirectTo.searchParams.set('verified', '1');
+      }
       return NextResponse.redirect(redirectTo);
     }
 
