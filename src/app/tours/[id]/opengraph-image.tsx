@@ -55,16 +55,16 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
   const isConfirmed = tour.status === 'confirmed' || current >= threshold;
   const progressColor = isConfirmed ? '#2e8b57' : '#daa520';
 
-  const startDate = new Date(tour.date_start);
-  const endDate = new Date(tour.date_end);
-  const dateStr = startDate.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
-  const durationDays = Math.max(1, Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
+  const startDate = new Date(tour.date_start + 'T00:00:00Z');
+  const endDate = new Date(tour.date_end + 'T00:00:00Z');
+  const dateStr = startDate.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+  const durationDays = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
   const durationStr = durationDays === 1 ? '1 day' : `${durationDays} days`;
 
   let commitByStr = '';
   if (tour.booking_deadline) {
-    const deadline = new Date(tour.booking_deadline);
-    commitByStr = `Commit by ${deadline.getDate()} ${deadline.toLocaleDateString('en-AU', { month: 'long' })}`;
+    const deadline = new Date(tour.booking_deadline + 'T00:00:00Z');
+    commitByStr = `Commit by ${deadline.getUTCDate()} ${deadline.toLocaleDateString('en-AU', { month: 'long', timeZone: 'UTC' })}`;
   }
 
   const { font400, font700 } = await loadFont();
@@ -109,9 +109,9 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
             <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '24px' }}>
               <span style={{
                 fontSize: '13px', color: '#a0c8a8',
-                letterSpacing: '0.06em', textTransform: 'uppercase',
+                letterSpacing: '0.08em', textTransform: 'uppercase',
                 marginBottom: '8px', fontWeight: 400,
-              }}>Tour</span>
+              }}>{tour.title.toUpperCase()}</span>
               <span style={{
                 fontSize: '72px', fontWeight: 400, color: '#f0fff4',
                 lineHeight: 1.1,
@@ -125,18 +125,18 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
               {operatorLogoUrl ? (
                 <img
                   src={operatorLogoUrl}
-                  width={60}
-                  height={60}
+                  width={52}
+                  height={52}
                   style={{
-                    width: '60px', height: '60px', borderRadius: '50%',
+                    width: '52px', height: '52px', borderRadius: '50%',
                     objectFit: 'cover',
                   }}
                 />
               ) : (
                 <div style={{
-                  width: '60px', height: '60px', borderRadius: '50%',
+                  width: '52px', height: '52px', borderRadius: '50%',
                   background: '#2e8b57', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: 'white', fontSize: '24px', fontWeight: 700,
+                  color: 'white', fontSize: '22px', fontWeight: 700,
                 }}>{operatorInitials}</div>
               )}
               <span style={{ fontSize: '24px', color: '#f0fff4' }}>
