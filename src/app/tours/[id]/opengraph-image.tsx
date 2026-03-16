@@ -20,15 +20,11 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
   const { data: tour } = await supabase
     .from('tours')
     .select(`
-      title,
-      date_start,
-      date_end,
+      og_image_url,
+      status,
       current_participant_count,
       threshold,
-      status,
-      og_image_url,
-      booking_deadline,
-      operator:operators(name, base_location, logo_url)
+      booking_deadline
     `)
     .eq(isUuid ? 'id' : 'slug', id)
     .single();
@@ -44,27 +40,32 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
     );
   }
 
-  const operator = tour.operator as unknown as { name: string; base_location: string | null; logo_url: string | null } | null;
-  const location = operator?.base_location || 'Australia';
-  const operatorName = operator?.name || 'Tour Operator';
-  const operatorInitials = operatorName.charAt(0).toUpperCase();
-  const operatorLogoUrl = operator?.logo_url || null;
   const current = tour.current_participant_count || 0;
   const threshold = tour.threshold || 1;
   const progressPct = Math.min(100, Math.round((current / threshold) * 100));
-  const isConfirmed = tour.status === 'confirmed' || current >= threshold;
-  const progressColor = isConfirmed ? '#2e8b57' : '#daa520';
 
-  const startDate = new Date(tour.date_start + 'T00:00:00Z');
-  const endDate = new Date(tour.date_end + 'T00:00:00Z');
-  const dateStr = startDate.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
-  const durationDays = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-  const durationStr = durationDays === 1 ? '1 day' : `${durationDays} days`;
+  let statusText = '';
+  let statusColor = '#daa520';
 
-  let commitByStr = '';
-  if (tour.booking_deadline) {
+  if (tour.status === 'confirmed') {
+    statusText = 'Tour confirmed';
+    statusColor = '#2e8b57';
+  } else if (current >= threshold) {
+    statusText = 'Guaranteed to run';
+    statusColor = '#2e8b57';
+  } else if (current > threshold) {
+    statusText = 'Waitlist only';
+    statusColor = '#daa520';
+  } else if (tour.booking_deadline) {
     const deadline = new Date(tour.booking_deadline + 'T00:00:00Z');
-    commitByStr = `Commit by ${deadline.getUTCDate()} ${deadline.toLocaleDateString('en-AU', { month: 'long', timeZone: 'UTC' })}`;
+    const now = new Date();
+    if (now > deadline) {
+      statusText = 'Applications closed';
+      statusColor = '#6b7280';
+    } else {
+      statusText = `Commit by ${deadline.getUTCDate()} ${deadline.toLocaleDateString('en-AU', { month: 'long', timeZone: 'UTC' })}`;
+      statusColor = '#daa520';
+    }
   }
 
   const { font400, font700 } = await loadFont();
@@ -77,170 +78,60 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
           flexDirection: 'column',
           width: '100%',
           height: '100%',
-          background: '#1a3320',
           fontFamily: 'Crimson Pro, Georgia, serif',
           position: 'relative',
+          background: '#1a3320',
         }}
       >
-        {/* Main content row */}
-        <div style={{ display: 'flex', flex: 1, padding: '40px 40px 0 48px' }}>
-          {/* LEFT COLUMN */}
-          <div
+        {/* Full-bleed background image */}
+        {tour.og_image_url ? (
+          <img
+            src={tour.og_image_url}
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '58%',
-              paddingRight: '32px',
-            }}
-          >
-            {/* Brand: large logo mark + quorumtours.com */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '32px' }}>
-              <div style={{
-                width: '52px', height: '52px', borderRadius: '10px',
-                background: '#2e8b57', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'white', fontSize: '28px', fontWeight: 700,
-              }}>Q</div>
-              <span style={{
-                fontSize: '22px', color: '#a0c8a8', fontWeight: 400,
-              }}>quorumtours.com</span>
-            </div>
-
-            {/* Tour name label + headline */}
-            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '24px' }}>
-              <span style={{
-                fontSize: '13px', color: '#a0c8a8',
-                letterSpacing: '0.08em', textTransform: 'uppercase',
-                marginBottom: '8px', fontWeight: 400,
-              }}>{tour.title.toUpperCase()}</span>
-              <span style={{
-                fontSize: '72px', fontWeight: 400, color: '#f0fff4',
-                lineHeight: 1.1,
-              }}>
-                {tour.title}
-              </span>
-            </div>
-
-            {/* Operator row */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '20px' }}>
-              {operatorLogoUrl ? (
-                <img
-                  src={operatorLogoUrl}
-                  width={52}
-                  height={52}
-                  style={{
-                    width: '52px', height: '52px', borderRadius: '50%',
-                    objectFit: 'cover',
-                  }}
-                />
-              ) : (
-                <div style={{
-                  width: '52px', height: '52px', borderRadius: '50%',
-                  background: '#2e8b57', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: 'white', fontSize: '22px', fontWeight: 700,
-                }}>{operatorInitials}</div>
-              )}
-              <span style={{ fontSize: '24px', color: '#f0fff4' }}>
-                {operatorName}
-              </span>
-            </div>
-
-            {/* Pills row */}
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {/* Date pill */}
-              <div style={{
-                padding: '4px 14px', borderRadius: '20px',
-                background: '#2e8b57',
-                fontSize: '12px', color: '#f0fff4', fontWeight: 500,
-              }}>
-                {dateStr}
-              </div>
-              {/* Duration pill */}
-              <div style={{
-                padding: '4px 14px', borderRadius: '20px',
-                background: 'transparent',
-                border: '1px solid #4a7a5a',
-                fontSize: '12px', color: '#a0c8a8', fontWeight: 500,
-              }}>
-                {durationStr}
-              </div>
-              {/* Location pill */}
-              <div style={{
-                padding: '4px 14px', borderRadius: '20px',
-                background: 'transparent',
-                border: '1px solid #4a7a5a',
-                fontSize: '12px', color: '#a0c8a8', fontWeight: 500,
-              }}>
-                {location}
-              </div>
-            </div>
-          </div>
-
-          {/* RIGHT COLUMN — tour image in rounded rectangle */}
-          <div style={{
-            display: 'flex',
-            width: '42%',
-            height: '100%',
-            paddingTop: '0px',
-            paddingBottom: '40px',
-            paddingRight: '0px',
-          }}>
-            <div style={{
-              display: 'flex',
+              position: 'absolute',
+              top: 0,
+              left: 0,
               width: '100%',
               height: '100%',
-              borderRadius: '16px',
-              overflow: 'hidden',
-            }}>
-              {tour.og_image_url ? (
-                <img
-                  src={tour.og_image_url}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                  }}
-                />
-              ) : (
-                <div style={{
-                  width: '100%', height: '100%',
-                  background: '#2d5a3d',
-                  display: 'flex',
-                }} />
-              )}
-            </div>
-          </div>
-        </div>
+              objectFit: 'cover',
+            }}
+          />
+        ) : null}
 
-        {/* Bottom bar: line | Commit by text | line — centred across full width */}
-        {commitByStr && (
+        {/* Bottom status bar: line | status text | line */}
+        {statusText && (
           <div style={{
             display: 'flex',
             alignItems: 'center',
             gap: '16px',
             padding: '0 48px 28px 48px',
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
           }}>
             {/* Left progress line */}
             <div style={{
               flex: 1, height: '4px', borderRadius: '2px',
-              background: '#2d5a3d',
+              background: 'rgba(255,255,255,0.2)',
               display: 'flex',
             }}>
               <div style={{
                 width: `${progressPct}%`, height: '100%', borderRadius: '2px',
-                background: progressColor,
+                background: statusColor,
               }} />
             </div>
-            {/* Commit by text */}
+            {/* Status text */}
             <span style={{
-              fontSize: '14px', color: '#daa520', fontWeight: 500,
+              fontSize: '18px', color: statusColor, fontWeight: 400,
               whiteSpace: 'nowrap',
             }}>
-              {commitByStr}
+              {statusText}
             </span>
             {/* Right line */}
             <div style={{
               flex: 1, height: '4px', borderRadius: '2px',
-              background: '#2d5a3d',
+              background: 'rgba(255,255,255,0.2)',
               display: 'flex',
             }} />
           </div>
