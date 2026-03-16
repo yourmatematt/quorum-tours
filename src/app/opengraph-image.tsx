@@ -7,7 +7,7 @@ export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 export default async function OGImage() {
-  const fontData = await loadFont();
+  const { font400, font700 } = await loadFont();
 
   return new ImageResponse(
     (
@@ -81,7 +81,10 @@ export default async function OGImage() {
     ),
     {
       ...size,
-      fonts: [{ name: 'Crimson Pro', data: fontData, style: 'normal', weight: 700 }],
+      fonts: [
+        { name: 'Crimson Pro', data: font400, style: 'normal' as const, weight: 400 as const },
+        { name: 'Crimson Pro', data: font700, style: 'normal' as const, weight: 700 as const },
+      ],
     }
   );
 }

@@ -49,7 +49,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
   const currentYear = new Date().getFullYear();
   const yearsExp = operator.established_year ? currentYear - operator.established_year : null;
 
-  const fontData = await loadFont();
+  const { font400, font700 } = await loadFont();
 
   return new ImageResponse(
     (
@@ -59,7 +59,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
           flexDirection: 'column',
           width: '100%',
           height: '100%',
-          background: '#ffffff',
+          background: '#f0fff4',
           padding: '48px 56px',
           fontFamily: 'Crimson Pro, Georgia, serif',
         }}
@@ -197,9 +197,11 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
           <div style={{
             display: 'flex', alignItems: 'center', gap: '8px',
             marginTop: '20px',
-            fontSize: '18px', color: '#DAA520', fontWeight: 600,
+            padding: '6px 16px', borderRadius: '20px',
+            background: '#fef3c7',
+            fontSize: '18px', color: '#92650a', fontWeight: 600,
           }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#DAA520" stroke="none">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#92650a" stroke="none">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
             </svg>
             Founding Operator
@@ -210,12 +212,8 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
     {
       ...size,
       fonts: [
-        {
-          name: 'Crimson Pro',
-          data: fontData,
-          style: 'normal',
-          weight: 700,
-        },
+        { name: 'Crimson Pro', data: font400, style: 'normal' as const, weight: 400 as const },
+        { name: 'Crimson Pro', data: font700, style: 'normal' as const, weight: 700 as const },
       ],
     }
   );

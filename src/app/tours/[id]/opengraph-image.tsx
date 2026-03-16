@@ -23,12 +23,11 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
       title,
       date_start,
       date_end,
-      price_cents,
-      highlights,
       current_participant_count,
       threshold,
-      capacity,
       status,
+      og_image_url,
+      booking_deadline,
       operator:operators(name, base_location)
     `)
     .eq(isUuid ? 'id' : 'slug', id)
@@ -37,8 +36,8 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
   if (!tour) {
     return new ImageResponse(
       (
-        <div style={{ display: 'flex', width: '100%', height: '100%', background: '#ffffff', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: 48, color: '#1A3320' }}>Tour not found</span>
+        <div style={{ display: 'flex', width: '100%', height: '100%', background: '#1a3320', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ fontSize: 48, color: '#f0fff4' }}>Tour not found</span>
         </div>
       ),
       { ...size }
@@ -48,153 +47,182 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
   const operator = tour.operator as unknown as { name: string; base_location: string | null } | null;
   const location = operator?.base_location || 'Australia';
   const operatorName = operator?.name || 'Tour Operator';
-  const price = tour.price_cents / 100;
-  const highlights = (tour.highlights || []).slice(0, 4);
+  const operatorInitials = operatorName.charAt(0).toUpperCase();
   const current = tour.current_participant_count || 0;
   const threshold = tour.threshold || 1;
   const progressPct = Math.min(100, Math.round((current / threshold) * 100));
+  const isConfirmed = tour.status === 'confirmed' || current >= threshold;
 
   const startDate = new Date(tour.date_start);
   const endDate = new Date(tour.date_end);
-  const dateStr = startDate.toLocaleDateString('en-AU', { month: 'short', day: 'numeric' })
-    + ' – ' + endDate.toLocaleDateString('en-AU', { month: 'short', day: 'numeric', year: 'numeric' });
+  const dateStr = startDate.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  const durationDays = Math.max(1, Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
+  const durationStr = durationDays === 1 ? '1 day' : `${durationDays} days`;
 
-  const isConfirmed = tour.status === 'confirmed' || current >= threshold;
-  const spotsNeeded = Math.max(0, threshold - current);
+  let commitByStr = '';
+  if (tour.booking_deadline) {
+    const deadline = new Date(tour.booking_deadline);
+    commitByStr = `Commit by ${deadline.getDate()} ${deadline.toLocaleDateString('en-AU', { month: 'long' })}`;
+  }
 
-  const fontData = await loadFont();
+  const { font400, font700 } = await loadFont();
 
   return new ImageResponse(
     (
       <div
         style={{
           display: 'flex',
-          flexDirection: 'column',
           width: '100%',
           height: '100%',
-          background: '#ffffff',
-          padding: '48px 56px',
+          background: '#1a3320',
           fontFamily: 'Crimson Pro, Georgia, serif',
         }}
       >
-        {/* Green accent bar */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: '6px',
-          background: '#2E8B57', display: 'flex',
-        }} />
-
-        {/* Top bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        {/* LEFT COLUMN */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '60%',
+            height: '100%',
+            padding: '38px 42px',
+          }}
+        >
+          {/* Brand */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '40px' }}>
             <div style={{
-              width: '40px', height: '40px', borderRadius: '50%',
-              background: '#2E8B57', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: 'white', fontSize: '20px', fontWeight: 700,
+              width: '22px', height: '22px', borderRadius: '4px',
+              background: '#2e8b57', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'white', fontSize: '13px', fontWeight: 700,
             }}>Q</div>
-            <span style={{ fontSize: '20px', color: '#4B5563', fontWeight: 500 }}>quorumtours.com</span>
-          </div>
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: '8px',
-            padding: '8px 20px', borderRadius: '24px',
-            background: isConfirmed ? '#2E8B57' : '#DAA520',
-            color: isConfirmed ? 'white' : '#1A3320',
-            fontSize: '18px', fontWeight: 600,
-          }}>
-            {isConfirmed ? 'Confirmed' : `${spotsNeeded} more needed`}
-          </div>
-        </div>
-
-        {/* Tour title */}
-        <div style={{
-          fontSize: '64px', fontWeight: 700, color: '#1A3320',
-          lineHeight: 1.1, marginBottom: '20px',
-          display: 'flex',
-        }}>
-          {tour.title}
-        </div>
-
-        {/* Details row */}
-        <div style={{ display: 'flex', gap: '32px', marginBottom: '28px', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2E8B57" strokeWidth="2">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-              <line x1="16" y1="2" x2="16" y2="6"/>
-              <line x1="8" y1="2" x2="8" y2="6"/>
-              <line x1="3" y1="10" x2="21" y2="10"/>
-            </svg>
-            <span style={{ fontSize: '22px', color: '#374151' }}>{dateStr}</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2E8B57" strokeWidth="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
-            <span style={{ fontSize: '22px', color: '#374151' }}>{location}</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2E8B57" strokeWidth="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-            <span style={{ fontSize: '22px', color: '#374151' }}>Led by {operatorName}</span>
-          </div>
-        </div>
-
-        {/* Highlight tags */}
-        {highlights.length > 0 && (
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '28px', flexWrap: 'wrap' }}>
-            {highlights.map((s: string) => (
-              <div key={s} style={{
-                padding: '6px 16px', borderRadius: '20px',
-                background: 'rgba(46, 139, 87, 0.12)',
-                border: '1.5px solid rgba(46, 139, 87, 0.25)',
-                fontSize: '18px', color: '#2E8B57', fontWeight: 500,
-              }}>
-                {s}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Bottom bar: price + quorum progress */}
-        <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
-          marginTop: 'auto',
-        }}>
-          {/* Price */}
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-            <span style={{ fontSize: '48px', fontWeight: 700, color: '#1A3320' }}>${price}</span>
-            <span style={{ fontSize: '22px', color: '#4B5563' }}>per person</span>
+            <span style={{
+              fontSize: '13px', color: '#a0c8a8', fontWeight: 400,
+              letterSpacing: '0.08em',
+            }}>QUORUM TOURS</span>
           </div>
 
-          {/* Quorum progress */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-            <span style={{ fontSize: '16px', color: '#4B5563' }}>
-              {current}/{threshold} committed
+          {/* Tour name label + headline */}
+          <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '24px' }}>
+            <span style={{
+              fontSize: '11px', color: '#a0c8a8',
+              letterSpacing: '0.06em', textTransform: 'uppercase',
+              marginBottom: '8px', fontWeight: 400,
+            }}>Tour</span>
+            <span style={{
+              fontSize: '36px', fontWeight: 400, color: '#f0fff4',
+              lineHeight: 1.15,
+            }}>
+              {tour.title}
             </span>
+          </div>
+
+          {/* Operator row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
             <div style={{
-              width: '200px', height: '10px', borderRadius: '5px',
-              background: 'rgba(46, 139, 87, 0.15)',
+              width: '26px', height: '26px', borderRadius: '50%',
+              background: '#2e8b57', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'white', fontSize: '12px', fontWeight: 700,
+            }}>{operatorInitials}</div>
+            <span style={{ fontSize: '13px', color: '#a0c8a8' }}>
+              {operatorName} · {location}
+            </span>
+          </div>
+
+          {/* Pills row */}
+          <div style={{ display: 'flex', gap: '8px', marginBottom: 'auto', flexWrap: 'wrap' }}>
+            {/* Date pill */}
+            <div style={{
+              padding: '4px 14px', borderRadius: '20px',
+              background: '#2e8b57',
+              fontSize: '12px', color: '#f0fff4', fontWeight: 500,
+            }}>
+              {dateStr}
+            </div>
+            {/* Duration pill */}
+            <div style={{
+              padding: '4px 14px', borderRadius: '20px',
+              background: 'transparent',
+              border: '1px solid #4a7a5a',
+              fontSize: '12px', color: '#a0c8a8', fontWeight: 500,
+            }}>
+              {durationStr}
+            </div>
+            {/* Location pill */}
+            <div style={{
+              padding: '4px 14px', borderRadius: '20px',
+              background: 'transparent',
+              border: '1px solid #4a7a5a',
+              fontSize: '12px', color: '#a0c8a8', fontWeight: 500,
+            }}>
+              {location}
+            </div>
+          </div>
+
+          {/* Bottom: progress bar + commit by */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {/* Progress bar track */}
+            <div style={{
+              flex: 1, height: '4px', borderRadius: '2px',
+              background: '#2d5a3d',
               display: 'flex',
             }}>
               <div style={{
-                width: `${progressPct}%`, height: '100%', borderRadius: '5px',
-                background: isConfirmed ? '#2E8B57' : '#DAA520',
+                width: `${progressPct}%`, height: '100%', borderRadius: '2px',
+                background: isConfirmed ? '#2e8b57' : '#daa520',
               }} />
             </div>
+            {/* Commit by text */}
+            {commitByStr && (
+              <span style={{
+                fontSize: '12px', color: '#daa520', fontWeight: 500,
+                whiteSpace: 'nowrap',
+              }}>
+                {commitByStr}
+              </span>
+            )}
           </div>
+        </div>
+
+        {/* RIGHT COLUMN — tour image */}
+        <div style={{
+          display: 'flex',
+          width: '40%',
+          height: '100%',
+          position: 'relative',
+          overflow: 'hidden',
+        }}>
+          {tour.og_image_url ? (
+            <img
+              src={tour.og_image_url}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />
+          ) : (
+            <div style={{
+              width: '100%', height: '100%',
+              background: '#2d5a3d',
+              display: 'flex',
+            }} />
+          )}
+          {/* Gradient overlay fading left */}
+          <div style={{
+            position: 'absolute',
+            top: 0, left: 0, bottom: 0,
+            width: '100%',
+            background: 'linear-gradient(to right, #1a3320 0%, transparent 100%)',
+            display: 'flex',
+          }} />
         </div>
       </div>
     ),
     {
       ...size,
       fonts: [
-        {
-          name: 'Crimson Pro',
-          data: fontData,
-          style: 'normal',
-          weight: 700,
-        },
+        { name: 'Crimson Pro', data: font400, style: 'normal' as const, weight: 400 as const },
+        { name: 'Crimson Pro', data: font700, style: 'normal' as const, weight: 700 as const },
       ],
     }
   );

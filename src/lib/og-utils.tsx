@@ -16,18 +16,26 @@ export const OG_COLORS = {
 
 export const OG_GRADIENT = '#ffffff';
 
-// Crimson Pro 700 TTF — @vercel/og only supports ttf/woff, not woff2
+// Crimson Pro TTF — @vercel/og only supports ttf/woff, not woff2
 // Use stable /s/ CDN path (permanent, unlike tokenized /l/font URLs that expire)
-const FONT_URL = 'https://fonts.gstatic.com/s/crimsonpro/v28/q5uUsoa5M_tv7IihmnkabC5XiXCAlXGks1WZKWp8OA.ttf';
+const FONT_URL_400 = 'https://fonts.gstatic.com/s/crimsonpro/v28/q5uUsoa5M_tv7IihmnkabC5XiXCAlXGks1WZzm18OA.ttf';
+const FONT_URL_700 = 'https://fonts.gstatic.com/s/crimsonpro/v28/q5uUsoa5M_tv7IihmnkabC5XiXCAlXGks1WZKWp8OA.ttf';
 
-export async function loadFont() {
-  const res = await fetch(FONT_URL);
-  if (!res.ok) {
-    // Fallback to self-hosted TTF if Google CDN fails
-    const fallback = await fetch(new URL('/fonts/CrimsonPro-Bold.ttf', process.env.NEXT_PUBLIC_SITE_URL || 'https://www.quorumtours.com'));
+async function fetchFont(url: string, fallbackPath?: string): Promise<ArrayBuffer> {
+  const res = await fetch(url);
+  if (!res.ok && fallbackPath) {
+    const fallback = await fetch(new URL(fallbackPath, process.env.NEXT_PUBLIC_SITE_URL || 'https://www.quorumtours.com'));
     return fallback.arrayBuffer();
   }
   return res.arrayBuffer();
+}
+
+export async function loadFont(): Promise<{ font400: ArrayBuffer; font700: ArrayBuffer }> {
+  const [font400, font700] = await Promise.all([
+    fetchFont(FONT_URL_400),
+    fetchFont(FONT_URL_700, '/fonts/CrimsonPro-Bold.ttf'),
+  ]);
+  return { font400, font700 };
 }
 
 export function BrandHeader() {
