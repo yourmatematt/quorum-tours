@@ -44,6 +44,13 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
   const threshold = tour.threshold || 1;
   const progressPct = Math.min(100, Math.round((current / threshold) * 100));
 
+  const deadline = tour.booking_deadline
+    ? new Date(tour.booking_deadline + 'T00:00:00Z')
+    : null;
+  const deadlineStr = deadline
+    ? deadline.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', timeZone: 'UTC' })
+    : null;
+
   let statusText = '';
   let statusColor = '#daa520';
 
@@ -56,16 +63,12 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
   } else if (current > threshold) {
     statusText = 'Waitlist only';
     statusColor = '#daa520';
-  } else if (tour.booking_deadline) {
-    const deadline = new Date(tour.booking_deadline + 'T00:00:00Z');
-    const now = new Date();
-    if (now > deadline) {
-      statusText = 'Applications closed';
-      statusColor = '#6b7280';
-    } else {
-      statusText = `Commit by ${deadline.getUTCDate()} ${deadline.toLocaleDateString('en-AU', { month: 'long', timeZone: 'UTC' })}`;
-      statusColor = '#daa520';
-    }
+  } else if (deadline && new Date() > deadline) {
+    statusText = 'Applications closed';
+    statusColor = '#6b7280';
+  } else {
+    statusText = deadlineStr ? `Commit by ${deadlineStr}` : 'Commit by 31 March';
+    statusColor = '#daa520';
   }
 
   const { font400, font700 } = await loadFont();
