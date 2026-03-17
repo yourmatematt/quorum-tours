@@ -186,7 +186,8 @@ export function OperatorProfileClient() {
         ">
           <OperatorHero
             name={operator.name}
-            photo={operator.logo_url ?? undefined}
+            // TEMP: logo_url hidden pending photo permission — remove when approved
+            photo={operator.slug === 'compass-tours' ? undefined : (operator.logo_url ?? undefined)}
             coverImage={operator.hero_image_url ?? undefined}
             verified={operator.is_verified}
             isFoundingOperator={operator.is_founding_operator}
