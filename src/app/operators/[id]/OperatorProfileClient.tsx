@@ -178,7 +178,7 @@ export function OperatorProfileClient() {
 
         {/* Card 1: Hero — identity card */}
         <div className="
-          bg-white
+          bg-[var(--color-surface-raised)]
           rounded-[var(--radius-organic)]
           border border-[var(--color-border)]
           shadow-sm
@@ -205,7 +205,7 @@ export function OperatorProfileClient() {
         {operator.tagline && (
           <div className="
             lg:hidden
-            bg-white
+            bg-[var(--color-surface-raised)]
             rounded-[var(--radius-organic)]
             border border-[var(--color-border)]
             shadow-sm
@@ -220,7 +220,7 @@ export function OperatorProfileClient() {
         {/* Card 2: Why I Joined Quorum */}
         {whyQuorum && (
           <div className="
-            bg-white
+            bg-[var(--color-surface-raised)]
             rounded-[var(--radius-organic)]
             border border-[var(--color-border)]
             shadow-sm
@@ -250,7 +250,7 @@ export function OperatorProfileClient() {
 
         {/* Card 3: Expertise (+ Track Record if available) */}
         <div className="
-          bg-white
+          bg-[var(--color-surface-raised)]
           rounded-[var(--radius-organic)]
           border border-[var(--color-border)]
           shadow-sm
@@ -275,7 +275,7 @@ export function OperatorProfileClient() {
         {/* Card 4: About (+ Capabilities if available) */}
         {(operator.description || equipmentItems.length > 0 || (operator.languages ?? []).length > 0) && (
           <div className="
-            bg-white
+            bg-[var(--color-surface-raised)]
             rounded-[var(--radius-organic)]
             border border-[var(--color-border)]
             shadow-sm
@@ -314,7 +314,7 @@ export function OperatorProfileClient() {
 
         {/* Card 5: Tours (or empty state) */}
         <div className="
-          bg-white
+          bg-[var(--color-surface-raised)]
           rounded-[var(--radius-organic)]
           border border-[var(--color-border)]
           shadow-sm
