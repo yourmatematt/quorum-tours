@@ -27,6 +27,7 @@ import { operatorApplicationInfoRequestedEmail } from './templates/operator-appl
 import { operatorApplicationResponseEmail } from './templates/operator-application-response.ts'
 import { tourEnquiryOperatorEmail } from './templates/tour-enquiry-operator.ts'
 import { tourEnquiryConfirmationEmail } from './templates/tour-enquiry-confirmation.ts'
+import { quorumCloseEmail } from './templates/quorum-close.ts'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 const EMAIL_FROM = Deno.env.get('EMAIL_FROM') || 'Quorum Tours <tours@quorumtours.com>'
@@ -55,6 +56,7 @@ const templates: Record<string, (data: Record<string, unknown>) => { subject: st
   operator_application_response: operatorApplicationResponseEmail,
   tour_enquiry_operator: tourEnquiryOperatorEmail,
   tour_enquiry_confirmation: tourEnquiryConfirmationEmail,
+  quorum_close: quorumCloseEmail,
 }
 
 interface EmailRequest {

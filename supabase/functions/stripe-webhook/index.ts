@@ -177,11 +177,16 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       tour_id,
       deposit_cents,
       tours (
+        id,
         title,
+        slug,
         date_start,
         price_cents,
         current_participant_count,
         threshold,
+        quorum_closes_at,
+        target_species,
+        location,
         operators (
           id,
           business_name,
@@ -212,32 +217,89 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       .update({ reservation_id: reservationId })
       .eq('stripe_event_id', session.id)
 
+    // Fetch updated participant count after DB write
+    const { data: freshTour } = await supabaseAdmin
+      .from('tours')
+      .select('current_participant_count, threshold, slug, target_species, location, quorum_closes_at')
+      .eq('id', reservation?.tour_id)
+      .single()
+
+    const tour = reservation?.tours
+    const currentCount = freshTour?.current_participant_count ?? (tour?.current_participant_count ?? 0)
+    const threshold = freshTour?.threshold ?? tour?.threshold ?? 0
+    const spotsRemaining = Math.max(0, threshold - currentCount)
+    const tourSlug = freshTour?.slug ?? tour?.slug ?? reservation?.tour_id
+    const targetSpecies = freshTour?.target_species?.[0] ?? tour?.target_species?.[0] ?? ''
+    const tourLocation = freshTour?.location ?? tour?.location ?? ''
+    const deadlineDate = freshTour?.quorum_closes_at ?? tour?.quorum_closes_at ?? ''
+
     // Send tour committed email to user
     if (reservation?.profiles?.email) {
       const amountPaid = session.amount_total ? session.amount_total / 100 : 0
+      const remainingAmount = tour?.price_cents
+        ? (tour.price_cents / 100) - amountPaid
+        : 0
       await sendEmail('tour_committed', reservation.profiles.email, {
-        userName: reservation.profiles.name || 'there',
-        tourTitle: reservation.tours?.title || 'the tour',
-        tourDate: reservation.tours?.date_start,
-        depositAmount: amountPaid.toFixed(2),
-        tourUrl: `${APP_URL}/tours/${reservation.tour_id}`,
-        profileUrl: `${APP_URL}/profile`,
+        firstName: reservation.profiles.name?.split(' ')[0] || 'there',
+        tourName: tour?.title || 'the tour',
+        tourDate: tour?.date_start,
+        operatorName: tour?.operators?.business_name || 'your guide',
+        operatorEmail: tour?.operators?.profiles?.email || '',
+        deadlineDate,
+        depositAmount: amountPaid,
+        remainingAmount,
+        threshold,
+        currentCommits: currentCount,
+        spotsRemaining,
+        targetSpecies,
+        tourLocation,
+        tourUrl: `${APP_URL}/tours/${tourSlug}`,
+        siteUrl: APP_URL,
       })
     }
 
     // Send new booking email to operator
     const operatorEmail = reservation?.tours?.operators?.profiles?.email
     if (operatorEmail) {
-      const tour = reservation.tours
       await sendEmail('new_booking', operatorEmail, {
-        operatorName: tour.operators.profiles.name || tour.operators.business_name,
-        tourTitle: tour.title || 'your tour',
+        operatorName: tour?.operators?.profiles?.name || tour?.operators?.business_name,
+        tourTitle: tour?.title || 'your tour',
         userName: reservation.profiles?.name || 'A new user',
-        currentCount: (tour.current_participant_count || 0) + 1, // +1 because update may not be reflected yet
-        threshold: tour.threshold,
+        currentCount,
+        threshold,
         tourUrl: `${APP_URL}/operator/tours`,
         dashboardUrl: `${APP_URL}/operator`,
       })
+    }
+
+    // If tour is now 1 or 2 spots from quorum, notify all committed participants
+    if (spotsRemaining > 0 && spotsRemaining <= 2 && reservation?.tour_id) {
+      const { data: allReservations } = await supabaseAdmin
+        .from('reservations')
+        .select('user_id, profiles (email, name)')
+        .eq('tour_id', reservation.tour_id)
+        .eq('status', 'reserved')
+        .neq('user_id', reservation.user_id) // they just got the committed email
+
+      if (allReservations) {
+        for (const r of allReservations) {
+          if (r.profiles?.email) {
+            await sendEmail('quorum_close', r.profiles.email, {
+              firstName: r.profiles.name?.split(' ')[0] || 'there',
+              tourName: tour?.title || 'the tour',
+              tourDate: tour?.date_start,
+              operatorName: tour?.operators?.business_name || 'your guide',
+              spotsRemaining,
+              threshold,
+              currentCommits: currentCount,
+              targetSpecies,
+              tourLocation,
+              tourUrl: `${APP_URL}/tours/${tourSlug}`,
+              siteUrl: APP_URL,
+            })
+          }
+        }
+      }
     }
 
   } else if (paymentType === 'balance') {
