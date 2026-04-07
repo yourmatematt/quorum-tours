@@ -37,7 +37,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
     return new ImageResponse(
       (
         <div style={{ display: 'flex', width: '100%', height: '100%', background: '#ffffff', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: 48, color: '#1A3320' }}>Operator not found</span>
+          <span style={{ fontSize: 48, color: '#1B3D2F' }}>Operator not found</span>
         </div>
       ),
       { ...size }
@@ -59,7 +59,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
           flexDirection: 'column',
           width: '100%',
           height: '100%',
-          background: '#f0fff4',
+          background: '#E8DFD0',
           padding: '48px 56px',
           fontFamily: 'Crimson Pro, Georgia, serif',
         }}
@@ -67,7 +67,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
         {/* Green accent bar */}
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: '6px',
-          background: '#2E8B57', display: 'flex',
+          background: '#1B3D2F', display: 'flex',
         }} />
 
         {/* Top bar */}
@@ -75,7 +75,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{
               width: '40px', height: '40px', borderRadius: '50%',
-              background: '#2E8B57', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: '#1B3D2F', display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: 'white', fontSize: '20px', fontWeight: 700,
             }}>Q</div>
             <span style={{ fontSize: '20px', color: '#4B5563', fontWeight: 500 }}>quorumtours.com</span>
@@ -84,7 +84,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
             <div style={{
               display: 'flex', alignItems: 'center', gap: '8px',
               padding: '8px 20px', borderRadius: '24px',
-              background: '#2E8B57', color: 'white',
+              background: '#1B3D2F', color: 'white',
               fontSize: '18px', fontWeight: 600,
             }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
@@ -102,7 +102,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
             <div style={{
               width: '160px', height: '160px', borderRadius: '20px',
               overflow: 'hidden', flexShrink: 0,
-              border: '3px solid rgba(46, 139, 87, 0.2)',
+              border: '3px solid rgba(27, 61, 47, 0.2)',
               display: 'flex',
             }}>
               <img
@@ -115,10 +115,10 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
           ) : (
             <div style={{
               width: '160px', height: '160px', borderRadius: '20px',
-              background: 'rgba(46, 139, 87, 0.1)',
-              border: '3px solid rgba(46, 139, 87, 0.2)',
+              background: 'rgba(27, 61, 47, 0.08)',
+              border: '3px solid rgba(27, 61, 47, 0.2)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '64px', color: '#2E8B57', fontWeight: 700,
+              fontSize: '64px', color: '#1B3D2F', fontWeight: 700,
               flexShrink: 0,
             }}>
               {operator.name.charAt(0)}
@@ -129,7 +129,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
             {/* Name */}
             <div style={{
-              fontSize: '56px', fontWeight: 700, color: '#1A3320',
+              fontSize: '56px', fontWeight: 700, color: '#1B3D2F',
               lineHeight: 1.1, marginBottom: '12px',
               display: 'flex',
             }}>
@@ -139,7 +139,7 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
             {/* Tagline */}
             {operator.tagline && (
               <div style={{
-                fontSize: '26px', color: '#374151', fontStyle: 'italic',
+                fontSize: '26px', color: '#3a5f4d', fontStyle: 'italic',
                 marginBottom: '20px', display: 'flex',
               }}>
                 {operator.tagline}
@@ -149,27 +149,27 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
             {/* Location + experience */}
             <div style={{ display: 'flex', gap: '28px', marginBottom: '24px', flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2E8B57" strokeWidth="2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B3D2F" strokeWidth="2">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                   <circle cx="12" cy="10" r="3"/>
                 </svg>
-                <span style={{ fontSize: '22px', color: '#374151' }}>{location}</span>
+                <span style={{ fontSize: '22px', color: '#3a5f4d' }}>{location}</span>
               </div>
               {yearsExp && yearsExp > 0 && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2E8B57" strokeWidth="2">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B3D2F" strokeWidth="2">
                     <circle cx="12" cy="12" r="10"/>
                     <polyline points="12 6 12 12 16 14"/>
                   </svg>
-                  <span style={{ fontSize: '22px', color: '#374151' }}>{yearsExp} years experience</span>
+                  <span style={{ fontSize: '22px', color: '#3a5f4d' }}>{yearsExp} years experience</span>
                 </div>
               )}
               {operator.tours_completed && operator.tours_completed > 0 ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2E8B57" strokeWidth="2">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B3D2F" strokeWidth="2">
                     <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                  <span style={{ fontSize: '22px', color: '#374151' }}>{operator.tours_completed} tours completed</span>
+                  <span style={{ fontSize: '22px', color: '#3a5f4d' }}>{operator.tours_completed} tours completed</span>
                 </div>
               ) : null}
             </div>
@@ -180,9 +180,9 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
                 {specialties.map((s: string) => (
                   <div key={s} style={{
                     padding: '6px 16px', borderRadius: '20px',
-                    background: 'rgba(46, 139, 87, 0.12)',
-                    border: '1.5px solid rgba(46, 139, 87, 0.25)',
-                    fontSize: '18px', color: '#2E8B57', fontWeight: 500,
+                    background: 'rgba(27, 61, 47, 0.08)',
+                    border: '1.5px solid rgba(27, 61, 47, 0.2)',
+                    fontSize: '18px', color: '#1B3D2F', fontWeight: 500,
                   }}>
                     {s}
                   </div>
@@ -198,10 +198,10 @@ export default async function OGImage({ params }: { params: Promise<{ id: string
             display: 'flex', alignItems: 'center', gap: '8px',
             marginTop: '20px',
             padding: '6px 16px', borderRadius: '20px',
-            background: '#fef3c7',
-            fontSize: '18px', color: '#92650a', fontWeight: 600,
+            background: '#f5e8d6',
+            fontSize: '18px', color: '#7a4f1a', fontWeight: 600,
           }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#92650a" stroke="none">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#7a4f1a" stroke="none">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
             </svg>
             Founding Operator

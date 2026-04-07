@@ -53,8 +53,6 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
 
   const startDate = new Date(tour.date_start);
   const endDate = new Date(tour.date_end);
-  const dateStr = startDate.toLocaleDateString('en-AU', { month: 'short', day: 'numeric' })
-    + '–' + endDate.toLocaleDateString('en-AU', { month: 'short', day: 'numeric', year: 'numeric' });
 
   const spotsNeeded = Math.max(0, tour.threshold - (tour.current_participant_count || 0));
   const statusText = tour.status === 'confirmed' || spotsNeeded === 0
@@ -85,6 +83,7 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
       siteName: 'Quorum Tours',
       title: ogTitle,
       description,
+      images: tour.image_url ? [{ url: tour.image_url, width: 1200, height: 630 }] : [],
     },
     twitter: {
       card: 'summary_large_image',
@@ -94,6 +93,79 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
   };
 }
 
-export default function TourPage() {
-  return <TourDetailClient />;
+async function getTourForSchema(id: string) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  const { data } = await supabase
+    .from('tours')
+    .select(`
+      title, slug, description, date_start, date_end,
+      price_cents, image_url, threshold, current_participant_count, status,
+      operator:operators(name, slug, base_location)
+    `)
+    .eq(isUuid ? 'id' : 'slug', id)
+    .single();
+  return data;
+}
+
+export default async function TourPage({ params }: TourPageProps) {
+  const { id } = await params;
+  const tour = await getTourForSchema(id);
+
+  const operator = tour?.operator as unknown as { name: string; slug: string; base_location: string | null } | null;
+
+  const jsonLd = tour ? {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: tour.title,
+    description: tour.description || undefined,
+    startDate: tour.date_start,
+    endDate: tour.date_end,
+    eventStatus: tour.status === 'confirmed'
+      ? 'https://schema.org/EventScheduled'
+      : tour.status === 'cancelled'
+      ? 'https://schema.org/EventCancelled'
+      : 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: {
+      '@type': 'Place',
+      name: operator?.base_location || 'Australia',
+      address: {
+        '@type': 'PostalAddress',
+        addressCountry: 'AU',
+        addressRegion: operator?.base_location || undefined,
+      },
+    },
+    organizer: operator ? {
+      '@type': 'Organization',
+      name: operator.name,
+      url: `${siteUrl}/operators/${operator.slug}`,
+    } : undefined,
+    offers: {
+      '@type': 'Offer',
+      price: (tour.price_cents / 100).toFixed(2),
+      priceCurrency: 'AUD',
+      availability: tour.status === 'cancelled'
+        ? 'https://schema.org/SoldOut'
+        : 'https://schema.org/InStock',
+      url: `${siteUrl}/tours/${tour.slug}`,
+    },
+    image: tour.image_url || undefined,
+    url: `${siteUrl}/tours/${tour.slug}`,
+  } : null;
+
+  return (
+    <>
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+      <TourDetailClient />
+    </>
+  );
 }

@@ -25,15 +25,19 @@ interface HealthCheckResponse {
   testDataIds?: string[] // IDs of test records created (for cleanup)
 }
 
-// Initialize clients
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Lazy client accessors — avoids module-level init so builds without env vars succeed
+function getSupabaseAdmin() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-12-15.clover',
-})
+function getStripeClient() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2025-12-15.clover',
+  })
+}
 
 export async function POST(request: NextRequest) {
   // Verify admin authorization (simplified - enhance with actual auth check)
@@ -55,7 +59,7 @@ export async function POST(request: NextRequest) {
   if (runAll || testsToRun.includes('supabase')) {
     const start = Date.now()
     try {
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await getSupabaseAdmin()
         .from('profiles')
         .select('id')
         .limit(1)
@@ -93,7 +97,7 @@ export async function POST(request: NextRequest) {
     const start = Date.now()
     try {
       // Insert a test record into email_log (will be cleaned up)
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await getSupabaseAdmin()
         .from('email_log')
         .insert({
           user_id: null,
@@ -142,7 +146,7 @@ export async function POST(request: NextRequest) {
   if (runAll || testsToRun.includes('stripe')) {
     const start = Date.now()
     try {
-      const balance = await stripe.balance.retrieve()
+      const balance = await getStripeClient().balance.retrieve()
       const latency = Date.now() - start
 
       results.push({
@@ -170,7 +174,7 @@ export async function POST(request: NextRequest) {
     const start = Date.now()
     try {
       // List recent webhook endpoints to verify configuration
-      const webhooks = await stripe.webhookEndpoints.list({ limit: 5 })
+      const webhooks = await getStripeClient().webhookEndpoints.list({ limit: 5 })
       const latency = Date.now() - start
 
       const activeWebhooks = webhooks.data.filter(w => w.status === 'enabled')
@@ -299,7 +303,7 @@ export async function POST(request: NextRequest) {
   if (runAll || testsToRun.includes('cron')) {
     try {
       // Check last cron job runs from email_log
-      const { data: recentJobs } = await supabaseAdmin
+      const { data: recentJobs } = await getSupabaseAdmin()
         .from('email_log')
         .select('email_type, created_at, status')
         .in('email_type', ['tour_reminder_7day', 'tour_reminder_1day', 'strike_applied', 'tour_cancelled'])
@@ -374,7 +378,7 @@ export async function DELETE(request: NextRequest) {
 
   try {
     // Clean up test email_log entries
-    const { error } = await supabaseAdmin
+    const { error } = await getSupabaseAdmin()
       .from('email_log')
       .delete()
       .eq('email_type', 'health_check_test')

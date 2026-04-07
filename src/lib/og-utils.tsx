@@ -6,12 +6,14 @@
 export const OG_SIZE = { width: 1200, height: 630 };
 
 export const OG_COLORS = {
-  ink: '#1A3320',
-  inkMuted: '#374151',
-  inkSubtle: '#4B5563',
-  primary: '#2E8B57',
-  accent: '#DAA520',
-  surface: '#ffffff',
+  ink: '#1B3D2F',
+  inkMuted: '#3a5f4d',
+  inkSubtle: '#607d70',
+  primary: '#1B3D2F',
+  secondary: '#4A7C89',
+  accent: '#D4915D',
+  surface: '#F5F0E8',
+  surfaceWarm: '#E8DFD0',
 };
 
 export const OG_GRADIENT = '#ffffff';

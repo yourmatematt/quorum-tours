@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next';
+import { createClient } from '@supabase/supabase-js';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://quorumtours.com';
+const baseUrl = 'https://quorumtours.com';
 
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -61,14 +62,42 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // TODO: Add dynamic tour pages when tours are live
-  // const tours = await fetchPublishedTours();
-  // const tourPages = tours.map((tour) => ({
-  //   url: `${baseUrl}/tours/${tour.id}`,
-  //   lastModified: tour.updated_at,
-  //   changeFrequency: 'weekly' as const,
-  //   priority: 0.7,
-  // }));
+  // Dynamic pages from Supabase — skip if not configured (e.g. CI builds)
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return staticPages;
+  }
 
-  return [...staticPages];
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+
+  const [{ data: tours }, { data: operators }] = await Promise.all([
+    supabase
+      .from('tours')
+      .select('slug, updated_at, status')
+      .not('status', 'eq', 'cancelled')
+      .order('updated_at', { ascending: false }),
+    supabase
+      .from('operators')
+      .select('slug, updated_at')
+      .eq('is_active', true)
+      .order('updated_at', { ascending: false }),
+  ]);
+
+  const tourPages: MetadataRoute.Sitemap = (tours || []).map((tour) => ({
+    url: `${baseUrl}/tours/${tour.slug}`,
+    lastModified: tour.updated_at ? new Date(tour.updated_at) : new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }));
+
+  const operatorPages: MetadataRoute.Sitemap = (operators || []).map((op) => ({
+    url: `${baseUrl}/operators/${op.slug}`,
+    lastModified: op.updated_at ? new Date(op.updated_at) : new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...tourPages, ...operatorPages];
 }

@@ -16,14 +16,16 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import stripe from '@/lib/stripe';
+import getStripe from '@/lib/stripe';
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase admin client (bypasses RLS)
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Lazy Supabase admin client — avoids module-level init so builds without env vars succeed
+function getSupabaseAdmin() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
 
 // Webhook secret
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || 'whsec_test_secret';
@@ -49,7 +51,7 @@ export async function POST(request: NextRequest) {
     // Verify the webhook signature
     let event;
     try {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+      event = getStripe().webhooks.constructEvent(body, signature, webhookSecret);
     } catch (err) {
       console.error('Webhook signature verification failed:', err);
       return NextResponse.json({ error: 'Invalid webhook signature' }, { status: 401 });
@@ -58,7 +60,7 @@ export async function POST(request: NextRequest) {
     console.log(`Webhook event received: ${event.type} (ID: ${event.id})`);
 
     // Check idempotency - have we already processed this event?
-    const { data: existingEvent } = await supabaseAdmin
+    const { data: existingEvent } = await getSupabaseAdmin()
       .from('payment_events')
       .select('id')
       .eq('stripe_event_id', event.id)
@@ -121,7 +123,7 @@ async function handlePaymentIntentSucceeded(event: any) {
   console.log(`Tour: ${tourId}, User: ${userId}, Type: ${paymentType}`);
 
   // Log the event for idempotency
-  await supabaseAdmin.from('payment_events').insert({
+  await getSupabaseAdmin().from('payment_events').insert({
     stripe_event_id: event.id,
     event_type: event.type,
     amount_cents: amount,
@@ -132,7 +134,7 @@ async function handlePaymentIntentSucceeded(event: any) {
 
   try {
     // Get tour details
-    const { data: tour, error: tourError } = await supabaseAdmin
+    const { data: tour, error: tourError } = await getSupabaseAdmin()
       .from('tours')
       .select(`
         *,
@@ -147,7 +149,7 @@ async function handlePaymentIntentSucceeded(event: any) {
     }
 
     // Get user profile
-    const { data: profile } = await supabaseAdmin
+    const { data: profile } = await getSupabaseAdmin()
       .from('profiles')
       .select('id, email, name')
       .eq('id', userId)
@@ -169,7 +171,7 @@ async function handlePaymentIntentSucceeded(event: any) {
       guest_count: 1,
     };
 
-    const { data: reservation, error: reservationError } = await supabaseAdmin
+    const { data: reservation, error: reservationError } = await getSupabaseAdmin()
       .from('reservations')
       .insert(reservationData)
       .select()
@@ -183,13 +185,13 @@ async function handlePaymentIntentSucceeded(event: any) {
     console.log(`Reservation created: ${reservation.id}`);
 
     // Update payment_events with reservation_id
-    await supabaseAdmin
+    await getSupabaseAdmin()
       .from('payment_events')
       .update({ reservation_id: reservation.id, processed: true, processed_at: new Date().toISOString() })
       .eq('stripe_event_id', event.id);
 
     // Re-fetch tour to check if quorum was just reached (DB trigger updates count and status)
-    const { data: updatedTour } = await supabaseAdmin
+    const { data: updatedTour } = await getSupabaseAdmin()
       .from('tours')
       .select('status, current_participant_count, threshold, payment_window_end')
       .eq('id', tourId)
@@ -282,7 +284,7 @@ async function handlePaymentIntentSucceeded(event: any) {
     await sendEmail(emailTemplate, userEmail, emailData);
 
     // Log user email sent
-    await supabaseAdmin.from('email_log').insert({
+    await getSupabaseAdmin().from('email_log').insert({
       user_id: userId !== 'anonymous' && userId !== 'guest' ? userId : null,
       reservation_id: reservation.id,
       tour_id: tourId,
@@ -297,7 +299,7 @@ async function handlePaymentIntentSucceeded(event: any) {
     console.log(`Confirmation email sent to ${userEmail}`);
 
     // Send new_booking notification to operator
-    const { data: operatorProfile } = await supabaseAdmin
+    const { data: operatorProfile } = await getSupabaseAdmin()
       .from('profiles')
       .select('id, email, name')
       .eq('id', tour.operator?.id)
@@ -322,7 +324,7 @@ async function handlePaymentIntentSucceeded(event: any) {
 
       await sendEmail('new_booking', operatorProfile.email, operatorEmailData);
 
-      await supabaseAdmin.from('email_log').insert({
+      await getSupabaseAdmin().from('email_log').insert({
         user_id: operatorProfile.id,
         reservation_id: reservation.id,
         tour_id: tourId,
@@ -339,7 +341,7 @@ async function handlePaymentIntentSucceeded(event: any) {
     console.error('Error processing payment:', error);
 
     // Mark event as failed
-    await supabaseAdmin
+    await getSupabaseAdmin()
       .from('payment_events')
       .update({
         processing_error: error instanceof Error ? error.message : 'Unknown error',
@@ -364,7 +366,7 @@ async function handleCheckoutSessionCompleted(event: any) {
   console.log(`Checkout completed: ${sessionId}`);
 
   // Log event
-  await supabaseAdmin.from('payment_events').insert({
+  await getSupabaseAdmin().from('payment_events').insert({
     stripe_event_id: event.id,
     event_type: event.type,
     amount_cents: amountTotal,
@@ -386,7 +388,7 @@ async function handleCheckoutSessionExpired(event: any) {
   const session = event.data.object;
   console.log(`Checkout session expired: ${session.id}`);
 
-  await supabaseAdmin.from('payment_events').insert({
+  await getSupabaseAdmin().from('payment_events').insert({
     stripe_event_id: event.id,
     event_type: event.type,
     status: 'expired',
@@ -403,7 +405,7 @@ async function handleChargeFailed(event: any) {
   const charge = event.data.object;
   console.error(`Charge failed: ${charge.id}, reason: ${charge.failure_message}`);
 
-  await supabaseAdmin.from('payment_events').insert({
+  await getSupabaseAdmin().from('payment_events').insert({
     stripe_event_id: event.id,
     event_type: event.type,
     amount_cents: charge.amount,
@@ -430,7 +432,7 @@ async function handlePayoutPaid(event: any) {
   console.log(`Payout paid: ${payoutId}, amount: ${amount}`);
 
   // Log event
-  await supabaseAdmin.from('payment_events').insert({
+  await getSupabaseAdmin().from('payment_events').insert({
     stripe_event_id: event.id,
     event_type: event.type,
     amount_cents: amount,
@@ -442,12 +444,12 @@ async function handlePayoutPaid(event: any) {
 
   // Get connected account info from Stripe
   try {
-    const account = await stripe.accounts.retrieve(destination);
+    const account = await getStripe().accounts.retrieve(destination);
     const accountEmail = account.email;
 
     if (accountEmail) {
       // Find operator by Stripe account ID
-      const { data: operator } = await supabaseAdmin
+      const { data: operator } = await getSupabaseAdmin()
         .from('operators')
         .select('id, name, user_id')
         .eq('stripe_account_id', destination)
@@ -473,7 +475,7 @@ async function handlePayoutPaid(event: any) {
 
       await sendEmail('payout_sent', accountEmail, emailData);
 
-      await supabaseAdmin.from('email_log').insert({
+      await getSupabaseAdmin().from('email_log').insert({
         user_id: operator?.user_id || null,
         email_type: 'payout_sent',
         recipient_email: accountEmail,

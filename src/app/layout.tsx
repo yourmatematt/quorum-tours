@@ -36,21 +36,12 @@ export const metadata: Metadata = {
     title: 'Quorum Tours — Birding Tours That Run When Birders Commit',
     description:
       'Book birding tours with confidence. Tours only run when enough birders commit. No last-minute cancellations, full refund if quorum isn\'t reached.',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Quorum Tours - Birding tours built on trust',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Quorum Tours — Birding Tours That Run When Birders Commit',
     description:
       'Book birding tours with confidence. Tours only run when enough birders commit.',
-    images: ['/og-image.png'],
   },
   robots: {
     index: true,

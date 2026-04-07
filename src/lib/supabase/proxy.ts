@@ -17,6 +17,11 @@ import { NextResponse, type NextRequest } from 'next/server';
  * - Subdomain access is restricted by role
  */
 export async function updateSession(request: NextRequest) {
+  // Guard: if Supabase isn't configured (e.g. CI build without env vars), skip auth
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return NextResponse.next({ request });
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });

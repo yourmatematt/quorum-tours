@@ -8,17 +8,17 @@ interface OperatorPageProps {
   params: Promise<{ id: string }>;
 }
 
-export async function generateMetadata({ params }: OperatorPageProps): Promise<Metadata> {
-  const { id } = await params;
-
-  const supabase = createClient(
+function getSupabase() {
+  return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
+}
 
+async function fetchOperator(id: string) {
+  const supabase = getSupabase();
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
-
-  const { data: operator, error } = await supabase
+  const { data, error } = await supabase
     .from('operators')
     .select(`
       name,
@@ -35,12 +35,16 @@ export async function generateMetadata({ params }: OperatorPageProps): Promise<M
     `)
     .eq(isUuid ? 'id' : 'slug', id)
     .single();
+  return { data, error };
+}
+
+export async function generateMetadata({ params }: OperatorPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const { data: operator, error } = await fetchOperator(id);
 
   if (!operator) {
-    console.error('generateMetadata: operator not found', { id, isUuid, error });
-    return {
-      title: 'Operator Not Found',
-    };
+    console.error('generateMetadata: operator not found', { id, error });
+    return { title: 'Operator Not Found' };
   }
 
   const location = operator.base_location || 'Australia';
@@ -72,6 +76,7 @@ export async function generateMetadata({ params }: OperatorPageProps): Promise<M
       siteName: 'Quorum Tours',
       title: `${operator.name} — Quorum Tours`,
       description,
+      images: operator.logo_url ? [{ url: operator.logo_url }] : [],
     },
     twitter: {
       card: 'summary_large_image',
@@ -81,6 +86,46 @@ export async function generateMetadata({ params }: OperatorPageProps): Promise<M
   };
 }
 
-export default function OperatorPage() {
-  return <OperatorProfileClient />;
+export default async function OperatorPage({ params }: OperatorPageProps) {
+  const { id } = await params;
+  const { data: operator } = await fetchOperator(id);
+
+  const currentYear = new Date().getFullYear();
+
+  const jsonLd = operator ? {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    '@id': `${siteUrl}/operators/${operator.slug}`,
+    name: operator.name,
+    description: operator.description || operator.tagline || undefined,
+    url: `${siteUrl}/operators/${operator.slug}`,
+    logo: operator.logo_url || undefined,
+    image: operator.logo_url || undefined,
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'AU',
+      addressRegion: operator.base_location || undefined,
+    },
+    foundingYear: operator.established_year || undefined,
+    knowsAbout: operator.specialties || undefined,
+    aggregateRating: operator.tours_completed && operator.tours_completed > 0 ? {
+      '@type': 'AggregateRating',
+      ratingValue: '5',
+      reviewCount: operator.tours_completed,
+      bestRating: '5',
+      worstRating: '1',
+    } : undefined,
+  } : null;
+
+  return (
+    <>
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+      <OperatorProfileClient />
+    </>
+  );
 }
