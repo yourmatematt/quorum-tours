@@ -270,7 +270,7 @@ export function TourDetailClient() {
 
   return (
     <ErrorBoundary>
-      <main className="min-h-screen bg-[var(--color-surface)]">
+      <main className={`min-h-screen bg-[var(--color-surface)]${!hasCommitted && tour.status !== 'not-running' ? ' pb-20 xl:pb-0' : ''}`}>
         {/* Hero Image Banner */}
         {showHeroImage && (
           <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden">
@@ -311,7 +311,7 @@ export function TourDetailClient() {
               <li className="text-[var(--color-ink-subtle)]" aria-hidden="true">
                 /
               </li>
-              <li className="text-[var(--color-ink)]" aria-current="page">
+              <li className="text-[var(--color-ink)] truncate max-w-[180px] sm:max-w-xs" aria-current="page">
                 {tour.title}
               </li>
             </ol>
@@ -586,6 +586,40 @@ export function TourDetailClient() {
             </div>
           </div>
         </div>
+        {/* Sticky mobile booking bar — shown below xl when not yet committed */}
+        {!hasCommitted && tour.status !== 'not-running' && (
+          <div className="xl:hidden fixed bottom-0 inset-x-0 z-40 bg-[var(--color-surface-raised)] border-t-2 border-[var(--color-border)] px-[var(--space-md)] py-3 flex items-center gap-[var(--space-md)] shadow-[0_-4px_16px_rgba(27,61,47,0.12)]">
+            <div className="flex-1 min-w-0">
+              <p className="font-mono text-xl font-semibold text-[var(--color-ink)] leading-tight">
+                ${tour.price}
+                <span className="text-xs font-normal text-[var(--color-ink-subtle)] ml-1">/ person</span>
+              </p>
+              {tour.deposit > 0 && (
+                <p className="text-xs text-[var(--color-ink-subtle)] truncate">
+                  ${tour.deposit} deposit to commit
+                </p>
+              )}
+            </div>
+            <a
+              href={user
+                ? `/tours/${tour.slug}/join`
+                : `/login?redirect=${encodeURIComponent(`/tours/${tour.slug}/join`)}`}
+              className="
+                inline-flex items-center justify-center
+                px-5 py-3
+                bg-[var(--color-accent)]
+                text-[var(--color-ink)]
+                font-semibold text-sm
+                rounded-[var(--radius-organic)]
+                hover:bg-[var(--color-accent-hover)]
+                transition-colors duration-200
+                flex-shrink-0
+              "
+            >
+              {tour.status === 'confirmed' ? 'Join tour' : 'Commit'}
+            </a>
+          </div>
+        )}
       </main>
     </ErrorBoundary>
   );

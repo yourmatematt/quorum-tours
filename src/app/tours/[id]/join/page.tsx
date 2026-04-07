@@ -273,13 +273,13 @@ export default function JoinTourPage() {
                 </Link>
               </li>
               <li aria-hidden="true">›</li>
-              <li>
+              <li className="truncate max-w-[140px] sm:max-w-xs">
                 <Link href={`/tours/${tour.slug}`} className="hover:text-[var(--color-primary)]">
                   {tour.name}
                 </Link>
               </li>
               <li aria-hidden="true">›</li>
-              <li className="text-[var(--color-ink)]">
+              <li className="text-[var(--color-ink)] flex-shrink-0">
                 {isConfirmed ? 'Join' : 'Commit'}
               </li>
             </ol>
@@ -360,6 +360,34 @@ export default function JoinTourPage() {
                     deposit={tour.deposit}
                     cancellationDeadline={tour.cancellationDeadline}
                   />
+
+                  {/* Mobile submit — only visible below lg, so users don't have to scroll to the sidebar */}
+                  <div className="lg:hidden">
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      disabled={isSubmitting}
+                      className="
+                        w-full
+                        !bg-[var(--color-accent)]
+                        !text-[var(--color-ink)]
+                        hover:!bg-[var(--color-accent-hover)]
+                        !rounded-[var(--radius-organic)]
+                        !font-semibold
+                        !h-12
+                        transition-all duration-200
+                      "
+                    >
+                      {isSubmitting
+                        ? (isConfirmed ? 'Processing...' : 'Registering...')
+                        : (isConfirmed ? 'Reserve My Spot' : 'Commit')}
+                    </Button>
+                    <p className="text-sm text-[var(--color-ink-muted)] text-center mt-[var(--space-md)]">
+                      {isConfirmed
+                        ? `Confirmation will be sent to ${userEmail}`
+                        : "We'll notify you when this tour confirms"}
+                    </p>
+                  </div>
                 </div>
               </div>
 
