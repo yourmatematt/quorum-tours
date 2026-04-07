@@ -52,7 +52,7 @@ export function HeroSection({
           <div className="absolute inset-0 bg-gradient-to-br from-[#1B4D3E] via-[#2E5A4A] to-[#1B4D3E]">
             {/* Decorative organic shapes - responsive sizing to prevent mobile overflow */}
             <div className="absolute top-10 right-4 w-48 h-48 sm:top-20 sm:right-10 sm:w-64 sm:h-64 md:right-20 md:w-96 md:h-96 bg-[#D4A84B]/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-10 left-4 w-48 h-48 sm:bottom-20 sm:left-10 sm:w-72 sm:h-72 md:left-20 md:w-[500px] md:h-[500px] bg-[#87CEEB]/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-10 left-4 w-48 h-48 sm:bottom-20 sm:left-10 sm:w-72 sm:h-72 md:left-20 md:w-[500px] md:h-[500px] bg-[#4A7C89]/10 rounded-full blur-3xl" />
           </div>
         )}
         {/* Gradient overlay for text readability */}
@@ -96,8 +96,25 @@ export function HeroSection({
             leading-relaxed
             drop-shadow-md
           ">
-            Quorum aggregates demand before operators schedule. You commit conditionally—if quorum is reached, the tour runs. If not, you owe nothing.
+            Browse expert-led birding tours across Australia. Commit to the ones you want — if enough people join, the tour runs. If not, you pay nothing.
           </p>
+
+          {/* Refund guarantee trust signal */}
+          <div className="flex justify-center mb-6 sm:mb-8">
+            <div className="
+              inline-flex items-center gap-2
+              px-4 py-2
+              bg-white/15 backdrop-blur-sm
+              border border-white/25
+              rounded-full
+              text-white/90 text-sm
+            ">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>Full refund if quorum isn't reached — no questions asked</span>
+            </div>
+          </div>
 
           {/* Primary CTA - Gold accent for maximum visibility */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-12">
@@ -117,7 +134,7 @@ export function HeroSection({
                   w-full sm:w-auto
                 "
               >
-                Browse Available Tours
+                See tours forming now
               </Button>
             </Link>
             <Link href="/how-it-works">

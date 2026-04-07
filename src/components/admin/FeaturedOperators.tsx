@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { Star, MapPin, ExternalLink } from 'lucide-react';
 import { AdminSection, AdminCard } from './AdminSection';
 import Link from 'next/link';
@@ -161,7 +162,9 @@ function OperatorRow({
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <div className="w-10 h-10 rounded-full bg-[var(--color-surface-sunken)] flex items-center justify-center overflow-hidden flex-shrink-0">
             {operator.logo_url ? (
-              <img src={operator.logo_url} alt="" className="w-full h-full object-cover" />
+              <div className="relative w-full h-full">
+                <Image src={operator.logo_url} alt="" fill sizes="40px" className="object-cover" />
+              </div>
             ) : (
               <span className="text-sm text-[var(--color-ink-subtle)]">
                 {operator.name.charAt(0)}

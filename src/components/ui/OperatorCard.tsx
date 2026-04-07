@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 interface OperatorCardProps {
   id: string;
   name: string;
@@ -56,7 +58,9 @@ export function OperatorCard({
           aria-hidden="true"
         >
           {photo ? (
-            <img src={photo} alt="" className="w-full h-full object-cover" />
+            <div className="relative w-full h-full">
+              <Image src={photo} alt="" fill sizes="56px" className="object-cover" />
+            </div>
           ) : (
             name.charAt(0).toUpperCase()
           )}

@@ -91,14 +91,14 @@ export function TourStatesSection() {
               text-[var(--color-ink)]
               mb-3 sm:mb-[var(--space-md)]
             ">
-              Featured tours.
+              Tours forming now.
             </h2>
             <p className="
               text-[var(--color-ink-muted)]
               text-base sm:text-lg
               leading-relaxed
             ">
-              Every tour shows its confirmation state. No hidden status. No guessing.
+              Each tour shows exactly how many people have committed. Commit to help it confirm — pay nothing if quorum isn't reached.
             </p>
           </div>
         </ScrollReveal>
@@ -135,6 +135,8 @@ export function TourStatesSection() {
                   capacity={tour.capacity}
                   date={format(new Date(tour.date_start), 'MMM d, yyyy')}
                   location={tour.operator?.base_location || tour.location || 'TBD'}
+                  href={`/tours/${tour.slug || tour.id}`}
+                  speciesHighlight={tour.target_species?.[0]}
                 />
               </ScrollReveal>
             ))}

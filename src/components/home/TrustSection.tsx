@@ -184,38 +184,68 @@ export function TrustSection() {
                   </a>
                 </>
               ) : (
-                <div className="
-                  p-6 sm:p-8
-                  bg-[var(--color-surface-raised)]
-                  border border-dashed border-[var(--color-border)]
-                  rounded-[var(--radius-lg)]
-                  text-center
-                ">
-                  <p className="
-                    text-[var(--color-ink-muted)]
-                    text-sm sm:text-base
-                    mb-3
-                  ">
-                    Verified operators coming soon.
-                  </p>
-                  <p className="
-                    text-[var(--color-ink-subtle)]
-                    text-xs sm:text-sm
-                    mb-4
-                  ">
-                    We're onboarding experienced birding guides who meet our standards.
-                  </p>
+                <div className="space-y-3 sm:space-y-[var(--space-md)]">
+                  {/* Verification criteria — credibility content, not a placeholder */}
+                  {[
+                    {
+                      label: 'Credentials verified',
+                      detail: 'Guide qualifications, insurance, and operating permits checked before listing.',
+                    },
+                    {
+                      label: 'Safety records reviewed',
+                      detail: 'Field experience, incident history, and equipment standards assessed.',
+                    },
+                    {
+                      label: 'Local expertise confirmed',
+                      detail: 'Operators are assessed on species knowledge specific to their region.',
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className="
+                        flex gap-3
+                        p-3 sm:p-[var(--space-md)]
+                        bg-[var(--color-surface-raised)]
+                        border border-[var(--color-border)]
+                        rounded-[var(--radius-md)]
+                      "
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="var(--color-confirmed)"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="flex-shrink-0 mt-0.5"
+                        aria-hidden="true"
+                      >
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        <path d="m9 12 2 2 4-4" />
+                      </svg>
+                      <div>
+                        <p className="text-xs sm:text-sm font-medium text-[var(--color-ink)]">
+                          {item.label}
+                        </p>
+                        <p className="text-xs text-[var(--color-ink-muted)] mt-0.5 leading-relaxed">
+                          {item.detail}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                   <a
                     href="/for-operators"
                     className="
-                      flex flex-col gap-0.5
+                      inline-flex items-center gap-2
                       text-[var(--color-accent)]
-                      text-xs sm:text-sm
+                      text-xs sm:text-sm font-medium
                       hover:underline
+                      py-2 min-h-[44px]
                     "
                   >
-                    <span>Know a great guide?</span>
-                    <span>Tell them about Quorum &rarr;</span>
+                    Are you a guide? Apply to list your tours &rarr;
                   </a>
                 </div>
               )}

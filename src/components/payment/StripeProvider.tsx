@@ -29,34 +29,34 @@ export function StripeProvider({ clientSecret, children }: StripeProviderProps) 
     appearance: {
       theme: 'stripe' as const,
       variables: {
-        colorPrimary: '#2E8B57',
+        colorPrimary: '#1B3D2F',
         colorBackground: '#ffffff',
-        colorText: '#1A3320',
-        colorDanger: '#dc2626',
+        colorText: '#1B3D2F',
+        colorDanger: '#c0392b',
         fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
         spacingUnit: '4px',
         borderRadius: '8px',
       },
       rules: {
         '.Input': {
-          border: '2px solid #C6E6C6',
+          border: '2px solid #C8BAA8',
           boxShadow: 'none',
           padding: '12px',
         },
         '.Input:focus': {
-          border: '2px solid #2E8B57',
-          boxShadow: '0 0 0 3px rgba(46, 139, 87, 0.15)',
+          border: '2px solid #1B3D2F',
+          boxShadow: '0 0 0 3px rgba(27, 61, 47, 0.12)',
         },
         '.Input--invalid': {
-          border: '2px solid #dc2626',
+          border: '2px solid #c0392b',
         },
         '.Label': {
           fontWeight: '500',
-          color: '#1A3320',
+          color: '#1B3D2F',
           marginBottom: '6px',
         },
         '.Error': {
-          color: '#dc2626',
+          color: '#c0392b',
           fontSize: '14px',
         },
       },

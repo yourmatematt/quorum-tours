@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 interface OperatorHeroProps {
   name: string;
   photo?: string;
@@ -31,11 +33,16 @@ export function OperatorHero({
           "
         >
           {coverImage ? (
-            <img
-              src={coverImage}
-              alt=""
-              className="w-full h-full object-cover"
-            />
+            <div className="relative w-full h-full">
+              <Image
+                src={coverImage}
+                alt=""
+                fill
+                sizes="100vw"
+                className="object-cover"
+                priority
+              />
+            </div>
           ) : (
             <div
               className="w-full h-full"
@@ -68,11 +75,15 @@ export function OperatorHero({
             "
           >
             {photo ? (
-              <img
-                src={photo}
-                alt={`Photo of ${name}`}
-                className="w-full h-full object-cover"
-              />
+              <div className="relative w-full h-full">
+                <Image
+                  src={photo}
+                  alt={`Photo of ${name}`}
+                  fill
+                  sizes="144px"
+                  className="object-cover"
+                />
+              </div>
             ) : (
               <svg
                 width="40"

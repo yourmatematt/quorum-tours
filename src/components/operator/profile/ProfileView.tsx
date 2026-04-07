@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { Eye, Upload, X, Loader2, Trash2 } from 'lucide-react';
 import { DashboardViewContainer, DashboardViewHeader } from '@/components/operator';
@@ -496,7 +497,7 @@ function PublicProfileTab({ data, initials, photoUrl, coverUrl, onChange, onFeed
         <label className="block text-sm font-medium text-[var(--color-ink)] mb-1.5">Cover Image</label>
         <div className="relative w-full h-24 rounded-[var(--radius-organic)] overflow-hidden bg-[var(--color-surface-sunken)] border-2 border-[var(--color-border)] mb-2">
           {currentCover ? (
-            <img src={currentCover} alt="Cover image" className="w-full h-full object-cover" />
+            <Image src={currentCover} alt="Cover image" fill sizes="100vw" className="object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-[var(--color-ink-subtle)] text-sm">
               No cover image
@@ -545,11 +546,9 @@ function PublicProfileTab({ data, initials, photoUrl, coverUrl, onChange, onFeed
       {/* Photo Upload */}
       <div className="flex items-center gap-4">
         {currentPhoto ? (
-          <img
-            src={currentPhoto}
-            alt="Profile photo"
-            className="w-16 h-16 rounded-full object-cover flex-shrink-0 border-2 border-[var(--color-border)]"
-          />
+          <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-[var(--color-border)]">
+            <Image src={currentPhoto} alt="Profile photo" fill sizes="64px" className="object-cover" />
+          </div>
         ) : (
           <div className="w-16 h-16 bg-[var(--color-surface-sunken)] rounded-full flex items-center justify-center text-xl font-display font-semibold text-[var(--color-primary)] flex-shrink-0">
             {initials}
