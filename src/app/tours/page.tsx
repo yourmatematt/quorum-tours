@@ -128,7 +128,7 @@ export default function ToursPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [regionFilter, setRegionFilter] = useState('all');
   const [speciesFilter, setSpeciesFilter] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState('date');
+  const [sortBy, setSortBy] = useState('progress');
 
   // Extract all unique species from tour data for the autocomplete
   const availableSpecies = useMemo(() => {

@@ -171,9 +171,12 @@ export function CommitmentCard({
               Why deposits?
             </button>
           </p>
-          <p className="text-xs text-[var(--color-confirmed)] font-medium mt-[var(--space-xs)]">
-            ✓ Full refund if quorum is not reached
-          </p>
+          <div className="flex items-center gap-[var(--space-xs)] mt-[var(--space-sm)] px-[var(--space-sm)] py-[var(--space-xs)] bg-[var(--color-success-bg)] border border-[var(--color-success-border)] rounded-[var(--radius-sm)]">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+            <span className="text-sm text-[var(--color-success-text)] font-medium">Full refund if quorum is not reached</span>
+          </div>
         </div>
       )}
 

@@ -210,10 +210,10 @@ export default function JoinTourPage() {
                     mb-[var(--space-sm)]
                   "
                 >
-                  Sign in to continue
+                  Sign in to commit to {tour.name}
                 </h1>
                 <p className="text-sm text-[var(--color-ink-muted)] mb-[var(--space-lg)]">
-                  To commit to this tour, you'll need an account. This lets us
+                  You'll need an account to commit. This lets us
                   notify you when the tour confirms.
                 </p>
 
@@ -380,7 +380,7 @@ export default function JoinTourPage() {
                     >
                       {isSubmitting
                         ? (isConfirmed ? 'Processing...' : 'Registering...')
-                        : (isConfirmed ? 'Reserve My Spot' : 'Commit')}
+                        : (isConfirmed ? 'Reserve My Spot' : 'Commit to this tour')}
                     </Button>
                     <p className="text-sm text-[var(--color-ink-muted)] text-center mt-[var(--space-md)]">
                       {isConfirmed

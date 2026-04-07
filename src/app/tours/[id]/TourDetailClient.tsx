@@ -403,7 +403,14 @@ export function TourDetailClient() {
                 </p>
               </section>
 
-              {/* Inline booking widget — visible below xl (1280px), after overview */}
+              {/* Section 3: Species Focus */}
+              {tour.species.length > 0 && (
+                <div className="mb-[var(--space-3xl)]">
+                  <SpeciesSection groups={tour.species} />
+                </div>
+              )}
+
+              {/* Inline booking widget — visible below xl (1280px), after species so users see target species before committing */}
               <div className="xl:hidden mb-[var(--space-3xl)]">
                 <CommitmentCard
                   tourId={tour.slug}
@@ -436,13 +443,6 @@ export function TourDetailClient() {
                   }
                 />
               </div>
-
-              {/* Section 3: Species Focus */}
-              {tour.species.length > 0 && (
-                <div className="mb-[var(--space-3xl)]">
-                  <SpeciesSection groups={tour.species} />
-                </div>
-              )}
 
               {/* Section 4: Operator Preview */}
               <section className="mb-[var(--space-3xl)]">
