@@ -103,22 +103,29 @@ export function TourCard({
           <span>{location}</span>
         </div>
 
-        {/* Species highlight - optional */}
-        {speciesHighlight && (
-          <div className="
-            flex items-center gap-2
-            text-sm text-[var(--color-ink-muted)]
-            mb-4
-          ">
-            <span
-              className="text-[var(--color-primary)]"
-              aria-hidden="true"
-            >
-              ◇
-            </span>
-            <span>{speciesHighlight}</span>
-          </div>
-        )}
+        {/* Species pills - optional */}
+        {speciesHighlight && (() => {
+          const allSpecies = speciesHighlight.split(',').map(s => s.trim()).filter(Boolean);
+          const visible = allSpecies.slice(0, 3);
+          const overflow = allSpecies.length - visible.length;
+          return (
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {visible.map(species => (
+                <span
+                  key={species}
+                  className="px-2 py-0.5 text-xs bg-[var(--color-primary-subtle)] text-[var(--color-primary)] rounded-[var(--radius-sm)]"
+                >
+                  {species}
+                </span>
+              ))}
+              {overflow > 0 && (
+                <span className="px-2 py-0.5 text-xs bg-[var(--color-surface-sunken)] text-[var(--color-ink-muted)] rounded-[var(--radius-sm)]">
+                  +{overflow} more
+                </span>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Progress - Non-urgent display */}
         <QuorumProgressBar

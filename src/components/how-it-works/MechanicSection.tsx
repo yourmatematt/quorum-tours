@@ -160,7 +160,7 @@ export function MechanicSection() {
             {/* Mobile/Tablet: vertical layout */}
             <div className="lg:hidden space-y-8">
               {steps.map((step, index) => (
-                <div key={step.number} className="flex gap-6">
+                <div key={step.number} className="relative flex gap-6">
                   {/* Icon circle */}
                   <div className="flex-shrink-0">
                     <div className="

@@ -127,7 +127,7 @@ export function TrustSystemSection() {
 
           <div className="
             grid gap-[var(--space-md)]
-            md:grid-cols-5
+            grid-cols-2 md:grid-cols-5
           ">
             {trustTiers.map((tier, index) => (
               <div

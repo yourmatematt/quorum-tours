@@ -116,6 +116,7 @@ export function ToursListClient({ initialTours }: ToursListClientProps) {
   const [regionFilter, setRegionFilter] = useState('all');
   const [speciesFilter, setSpeciesFilter] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('progress');
+  const [speciesExpanded, setSpeciesExpanded] = useState(false);
 
   const availableSpecies = useMemo(() => {
     const speciesSet = new Set<string>();
@@ -250,12 +251,28 @@ export function ToursListClient({ initialTours }: ToursListClientProps) {
               value={regionFilter}
               onChange={setRegionFilter}
             />
-            <SpeciesFilter
-              selected={speciesFilter}
-              onChange={setSpeciesFilter}
-              availableSpecies={availableSpecies}
-              maxSelections={5}
-            />
+            {speciesExpanded || speciesFilter.length > 0 ? (
+              <SpeciesFilter
+                selected={speciesFilter}
+                onChange={val => {
+                  setSpeciesFilter(val);
+                  if (val.length === 0) setSpeciesExpanded(false);
+                }}
+                availableSpecies={availableSpecies}
+                maxSelections={5}
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => setSpeciesExpanded(true)}
+                className="inline-flex items-center gap-1.5 text-sm text-[var(--color-ink-muted)] hover:text-[var(--color-primary)] transition-colors py-2 px-3 min-h-[40px] border-2 border-dashed border-[var(--color-border)] rounded-[var(--radius-sm)] hover:border-[var(--color-primary)]"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+                Filter by species
+              </button>
+            )}
             <div className="hidden sm:block w-px h-8 bg-[var(--color-border)]" aria-hidden="true" />
             <FilterDropdown
               label="Sort"

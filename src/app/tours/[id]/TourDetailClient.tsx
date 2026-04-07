@@ -242,6 +242,15 @@ export function TourDetailClient() {
     operatorYears: (dbTour.operator as any)?.established_year
       ? new Date().getFullYear() - (dbTour.operator as any).established_year
       : null,
+    operatorCredential: (() => {
+      const years = (dbTour.operator as any)?.established_year
+        ? new Date().getFullYear() - (dbTour.operator as any).established_year
+        : null;
+      const toursCompleted = (dbTour.operator as any)?.tours_completed;
+      if (years && years > 0) return `${years}+ years guiding`;
+      if (toursCompleted && toursCompleted > 0) return `${toursCompleted} tours completed`;
+      return (dbTour.operator as any)?.tagline || null;
+    })(),
     status: mapStatus(dbTour.status),
     currentParticipants: dbTour.current_participants,
     threshold: dbTour.threshold,
@@ -429,6 +438,7 @@ export function TourDetailClient() {
                   hasCommitted={hasCommitted}
                   quorumClosesAt={(dbTour as any).quorum_closes_at ?? null}
                   isVerifiedOperator={(dbTour.operator as any)?.is_verified ?? false}
+                  operatorCredential={tour.operatorCredential ?? undefined}
                   trustMessage={
                     user
                       ? trustTier === 'trusted'
@@ -574,6 +584,7 @@ export function TourDetailClient() {
                   hasCommitted={hasCommitted}
                   quorumClosesAt={(dbTour as any).quorum_closes_at ?? null}
                   isVerifiedOperator={(dbTour.operator as any)?.is_verified ?? false}
+                  operatorCredential={tour.operatorCredential ?? undefined}
                   trustMessage={
                     user
                       ? trustTier === 'trusted'

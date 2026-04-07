@@ -25,6 +25,8 @@ interface CommitmentCardProps {
   trustMessage?: string | null;
   quorumClosesAt?: string | null;
   isVerifiedOperator?: boolean;
+  /** Short operator credential shown in zero-state early-bird banner (e.g. "20+ years guiding in Gippsland") */
+  operatorCredential?: string;
 }
 
 const ctaConfig: Record<ConfirmationStatus, {
@@ -67,6 +69,7 @@ export function CommitmentCard({
   trustMessage,
   quorumClosesAt,
   isVerifiedOperator = false,
+  operatorCredential,
 }: CommitmentCardProps) {
   const [isWhyDepositsOpen, setIsWhyDepositsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -107,6 +110,11 @@ export function CommitmentCard({
           <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">
             First to commit — your spot is guaranteed when quorum is reached.
           </p>
+          {operatorCredential && (
+            <p className="text-xs text-[var(--color-ink-subtle)] mt-1 pt-1 border-t border-[var(--color-border)]">
+              {operatorCredential}
+            </p>
+          )}
         </div>
       )}
 
@@ -198,6 +206,7 @@ export function CommitmentCard({
             current={currentParticipants}
             quorum={quorum}
             capacity={capacity}
+            showTooltip
           />
         </div>
       )}

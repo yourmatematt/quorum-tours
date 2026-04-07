@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 /**
  * QuorumProgressBar - Two-phase progress visualization
  *
@@ -22,6 +24,8 @@ interface QuorumProgressBarProps {
   size?: 'sm' | 'md';
   /** Show detailed breakdown text */
   showDetails?: boolean;
+  /** Show "What is quorum?" info tooltip trigger */
+  showTooltip?: boolean;
 }
 
 export function QuorumProgressBar({
@@ -32,7 +36,9 @@ export function QuorumProgressBar({
   maxDots = 10,
   size = 'md',
   showDetails = false,
+  showTooltip = false,
 }: QuorumProgressBarProps) {
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   const isConfirmed = current >= quorum;
   const isFull = current >= capacity;
   const spotsRemaining = Math.max(0, capacity - current);
@@ -84,6 +90,8 @@ export function QuorumProgressBar({
     ? isFull
       ? 'Tour full'
       : `${spotsRemaining} ${spotsRemaining === 1 ? 'spot' : 'spots'} left`
+    : current === 0
+    ? 'Be first to commit'
     : `${current}/${quorum} to run`;
 
   return (
@@ -97,6 +105,8 @@ export function QuorumProgressBar({
         aria-label={
           isConfirmed
             ? `Tour confirmed. ${current} of ${capacity} spots filled.`
+            : current === 0
+            ? `Be the first to commit. ${quorum} participants needed for this tour to run.`
             : `${current} of ${quorum} participants needed for tour to run.`
         }
       >
@@ -105,7 +115,7 @@ export function QuorumProgressBar({
 
         {/* Label */}
         {showLabel && (
-          <span className={`${config.text} text-[var(--color-ink-muted)] whitespace-nowrap ml-2`}>
+          <span className={`${config.text} text-[var(--color-ink-muted)] whitespace-nowrap ml-2 flex items-center gap-1`}>
             <span
               className={`font-medium ${
                 isFull
@@ -117,9 +127,29 @@ export function QuorumProgressBar({
             >
               {labelText}
             </span>
+            {showTooltip && (
+              <button
+                type="button"
+                aria-label="What is quorum?"
+                aria-expanded={tooltipOpen}
+                onClick={() => setTooltipOpen(v => !v)}
+                className="inline-flex items-center justify-center w-4 h-4 rounded-full text-[var(--color-ink-subtle)] hover:text-[var(--color-primary)] transition-colors focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+              >
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                  <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 3a1 1 0 110 2 1 1 0 010-2zm-.75 3.5h1.5v4.5h-1.5V7.5z"/>
+                </svg>
+              </button>
+            )}
           </span>
         )}
       </div>
+
+      {/* Quorum explanation tooltip */}
+      {showTooltip && tooltipOpen && (
+        <div className="mt-2 px-3 py-2 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-[var(--radius-sm)] text-xs text-[var(--color-ink-muted)] leading-relaxed">
+          A tour confirms once enough people commit. If the minimum isn&apos;t reached, everyone is fully refunded.
+        </div>
+      )}
 
       {/* Detailed breakdown (optional) */}
       {showDetails && (
