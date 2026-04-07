@@ -24,6 +24,7 @@ interface CommitmentCardProps {
   hasCommitted?: boolean;
   trustMessage?: string | null;
   quorumClosesAt?: string | null;
+  isVerifiedOperator?: boolean;
 }
 
 const ctaConfig: Record<ConfirmationStatus, {
@@ -65,6 +66,7 @@ export function CommitmentCard({
   hasCommitted = false,
   trustMessage,
   quorumClosesAt,
+  isVerifiedOperator = false,
 }: CommitmentCardProps) {
   const [isWhyDepositsOpen, setIsWhyDepositsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -125,6 +127,15 @@ export function CommitmentCard({
           <p className="text-sm text-[var(--color-accent)] font-medium mt-1">
             Quorum closes {new Date(quorumClosesAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
+        )}
+        {isVerifiedOperator && (
+          <div className="flex items-center gap-[var(--space-xs)] mt-1">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--color-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path d="M9 12l2 2 4-4" />
+            </svg>
+            <span className="text-xs text-[var(--color-secondary)] font-medium">Verified operator</span>
+          </div>
         )}
         {status === 'forming' && trustMessage && (
           <p className="text-xs text-[var(--color-ink-subtle)] mt-1">

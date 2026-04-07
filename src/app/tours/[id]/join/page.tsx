@@ -307,6 +307,18 @@ export default function JoinTourPage() {
                     </h1>
                   </div>
 
+                  {/* Mobile price context strip — visible below lg only */}
+                  <div className="lg:hidden bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-[var(--radius-md)] px-[var(--space-md)] py-[var(--space-sm)] flex items-center justify-between gap-[var(--space-md)]">
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-[var(--color-ink)] truncate">{tour.name}</p>
+                      <p className="text-xs text-[var(--color-ink-muted)] truncate">{tour.dates}</p>
+                    </div>
+                    <div className="flex items-center gap-[var(--space-sm)] flex-shrink-0">
+                      <ConfirmationStatusBadge status={tour.status} />
+                      <span className="font-mono font-semibold text-[var(--color-ink)]">${tour.price}</span>
+                    </div>
+                  </div>
+
                   {/* Desktop title */}
                   <div className="hidden lg:block">
                     <h2

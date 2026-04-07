@@ -428,6 +428,7 @@ export function TourDetailClient() {
                   isLoggedIn={!!user}
                   hasCommitted={hasCommitted}
                   quorumClosesAt={(dbTour as any).quorum_closes_at ?? null}
+                  isVerifiedOperator={(dbTour.operator as any)?.is_verified ?? false}
                   trustMessage={
                     user
                       ? trustTier === 'trusted'
@@ -572,6 +573,7 @@ export function TourDetailClient() {
                   isLoggedIn={!!user}
                   hasCommitted={hasCommitted}
                   quorumClosesAt={(dbTour as any).quorum_closes_at ?? null}
+                  isVerifiedOperator={(dbTour.operator as any)?.is_verified ?? false}
                   trustMessage={
                     user
                       ? trustTier === 'trusted'
