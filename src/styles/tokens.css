@@ -9,69 +9,80 @@
 
   --text-xs: clamp(0.875rem, 0.8rem + 0.25vw, 1rem);
   --text-sm: clamp(1rem, 0.95rem + 0.35vw, 1.125rem);
-  --text-base: clamp(1.125rem, 1.05rem + 0.5vw, 1.25rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   --text-lg: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
   --text-xl: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
   --text-2xl: clamp(2rem, 1.5rem + 2.5vw, 3rem);
   --text-3xl: clamp(2.5rem, 2rem + 3vw, 4rem);
   --text-hero: clamp(3rem, 2rem + 5vw, 5.5rem);
 
-  /* Colors - Climate Tech / Organic Biophilic Palette */
-  /* Text colors (Deep Forest - WCAG AAA 12.7:1 contrast) */
-  --color-ink: #1A3320;
-  --color-ink-muted: #2d5a3d;
-  --color-ink-subtle: #4a7a5a;
+  /* Colors - Premium Wildlife / Nature Palette */
+  /* Palette primitives:
+     Deep Forest   #1B3D2F  — brand anchor, primary text, primary actions
+     Warm Sand     #E8DFD0  — base surface, off-white warmth
+     Coastal Blue  #4A7C89  — secondary actions, links, trust signals
+     Sunrise Ochre #D4915D  — CTA accent, urgency, quorum progress
+  */
 
-  /* Surface colors (Mint White backgrounds) */
-  --color-surface: #F0FFF4;
-  --color-surface-raised: #ffffff;
-  --color-surface-sunken: #e6f9ea;
+  /* Text colors (Deep Forest — WCAG AAA on Warm Sand) */
+  --color-ink: #1B3D2F;
+  --color-ink-muted: #3a5f4d;
+  --color-ink-subtle: #607d70;
 
-  /* Primary/Secondary colors (Nature Green + Sky Blue) */
-  --color-primary: #2E8B57;
-  --color-primary-hover: #267247;
-  --color-primary-subtle: #e6f4ec;
-  --color-secondary: #87CEEB;
-  --color-secondary-hover: #6bb8da;
+  /* Surface colors (Warm Sand — natural, warm, premium) */
+  --color-surface: #E8DFD0;
+  --color-surface-raised: #F5F0E8;
+  --color-surface-sunken: #DDD4C2;
 
-  /* Accent/CTA (Goldenrod - subtle but noticeable) */
-  --color-accent: #DAA520;
-  --color-accent-hover: #B8860B;
+  /* Primary (Deep Forest — authority, nature, trust) */
+  --color-primary: #1B3D2F;
+  --color-primary-hover: #142e23;
+  --color-primary-subtle: #EAE5DC;
 
-  /* Status colors (nature-themed) */
-  --color-confirmed: #2E8B57;
-  --color-confirmed-bg: #d1f4e0;
-  --color-founding: #92650A;
-  --color-founding-bg: #fef3c7;
-  --color-forming: #d97706;
-  --color-forming-bg: #fef3c7;
+  /* Secondary (Coastal Blue — calm, clarity, water) */
+  --color-secondary: #4A7C89;
+  --color-secondary-hover: #3a6270;
+  --color-secondary-subtle: #E0EAEC;
+
+  /* Accent/CTA (Sunrise Ochre — warmth, urgency, action) */
+  --color-accent: #D4915D;
+  --color-accent-hover: #bf7a45;
+  --color-accent-subtle: #F7EAE0;
+
+  /* Status colors */
+  --color-confirmed: #2a6048;
+  --color-confirmed-bg: #d6ebe3;
+  --color-founding: #7a4f1a;
+  --color-founding-bg: #f5e8d6;
+  --color-forming: #D4915D;
+  --color-forming-bg: #f7e8d8;
   --color-not-running: #6b7280;
-  --color-not-running-bg: #f3f4f6;
+  --color-not-running-bg: #f0ece6;
 
   /* Semantic feedback colors */
-  --color-warning: #d97706;
-  --color-warning-text: #92400e;
-  --color-warning-bg: #fef3c7;
-  --color-warning-border: #fcd34d;
+  --color-warning: #c07a2a;
+  --color-warning-text: #7a4f1a;
+  --color-warning-bg: #f5e8d6;
+  --color-warning-border: #d4a96a;
 
-  --color-success: #2E8B57;
-  --color-success-text: #166534;
-  --color-success-bg: #dcfce7;
-  --color-success-border: #86efac;
+  --color-success: #2a6048;
+  --color-success-text: #1b3d2f;
+  --color-success-bg: #d6ebe3;
+  --color-success-border: #8bbdab;
 
-  --color-destructive: #dc2626;
-  --color-destructive-text: #991b1b;
-  --color-destructive-bg: #fef2f2;
-  --color-destructive-border: #fca5a5;
+  --color-destructive: #c0392b;
+  --color-destructive-text: #922b21;
+  --color-destructive-bg: #fdf0ee;
+  --color-destructive-border: #e8a09a;
 
-  --color-info: #0369a1;
-  --color-info-text: #075985;
-  --color-info-bg: #e0f2fe;
-  --color-info-border: #7dd3fc;
+  --color-info: #4A7C89;
+  --color-info-text: #2f5a64;
+  --color-info-bg: #e0eaec;
+  --color-info-border: #8ab5bd;
 
-  /* Borders (Light Sage) */
-  --color-border: #C6E6C6;
-  --color-border-strong: #a8d4a8;
+  /* Borders (Warm — derived from Warm Sand) */
+  --color-border: #C8BAA8;
+  --color-border-strong: #A89880;
 
   /* Spacing (Varied for rhythm) */
   --space-xs: 0.25rem;
@@ -86,16 +97,16 @@
   --space-section-normal: 5rem;
   --space-section-loose: 8rem;
 
-  /* Border Radius - Organic Biophilic (16-24px rounded corners) */
+  /* Border Radius — Organic (16-24px rounded corners) */
   --radius-sm: 0.5rem;     /* 8px */
   --radius-md: 1rem;       /* 16px */
   --radius-lg: 1.5rem;     /* 24px */
   --radius-pill: 9999px;
-  --radius-organic: 1.25rem; /* 20px - sweet spot for organic feel */
+  --radius-organic: 1.25rem; /* 20px */
 
-  /* Shadows - Natural, Soft (earth-toned shadows) */
-  --shadow-card: 0 2px 8px rgba(26, 51, 32, 0.08), 0 1px 3px rgba(26, 51, 32, 0.06);
-  --shadow-card-hover: 0 4px 16px rgba(46, 139, 87, 0.12), 0 2px 8px rgba(46, 139, 87, 0.08);
+  /* Shadows — Warm earth tones */
+  --shadow-card: 0 2px 8px rgba(27, 61, 47, 0.08), 0 1px 3px rgba(27, 61, 47, 0.05);
+  --shadow-card-hover: 0 4px 16px rgba(27, 61, 47, 0.12), 0 2px 8px rgba(212, 145, 93, 0.10);
 
   /* Transitions */
   --transition-fast: 150ms ease;

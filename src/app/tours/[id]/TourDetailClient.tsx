@@ -239,7 +239,9 @@ export function TourDetailClient() {
     operatorId: dbTour.operator?.slug || dbTour.operator?.id || '',
     operatorExpertise: (dbTour.operator as any)?.tagline || 'Birding specialist',
     operatorPhoto: (dbTour.operator as any)?.logo_url || null,
-    operatorYears: 5,
+    operatorYears: (dbTour.operator as any)?.established_year
+      ? new Date().getFullYear() - (dbTour.operator as any).established_year
+      : null,
     status: mapStatus(dbTour.status),
     currentParticipants: dbTour.current_participants,
     threshold: dbTour.threshold,
@@ -418,6 +420,7 @@ export function TourDetailClient() {
                   capacity={tour.capacity}
                   isLoggedIn={!!user}
                   hasCommitted={hasCommitted}
+                  quorumClosesAt={(dbTour as any).quorum_closes_at ?? null}
                   trustMessage={
                     user
                       ? trustTier === 'trusted'
@@ -568,6 +571,7 @@ export function TourDetailClient() {
                   capacity={tour.capacity}
                   isLoggedIn={!!user}
                   hasCommitted={hasCommitted}
+                  quorumClosesAt={(dbTour as any).quorum_closes_at ?? null}
                   trustMessage={
                     user
                       ? trustTier === 'trusted'

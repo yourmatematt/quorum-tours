@@ -127,7 +127,7 @@ export function useTour(idOrSlug: string) {
           .from('tours')
           .select(`
             *,
-            operator:operators(id, name, slug, tagline, base_location, logo_url)
+            operator:operators(id, name, slug, tagline, base_location, logo_url, established_year)
           `);
 
         if (isUuid) {

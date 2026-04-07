@@ -23,6 +23,7 @@ interface CommitmentCardProps {
   isLoggedIn?: boolean;
   hasCommitted?: boolean;
   trustMessage?: string | null;
+  quorumClosesAt?: string | null;
 }
 
 const ctaConfig: Record<ConfirmationStatus, {
@@ -63,6 +64,7 @@ export function CommitmentCard({
   isLoggedIn = false,
   hasCommitted = false,
   trustMessage,
+  quorumClosesAt,
 }: CommitmentCardProps) {
   const [isWhyDepositsOpen, setIsWhyDepositsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -77,6 +79,8 @@ export function CommitmentCard({
     ? joinPath
     : `/login?redirect=${encodeURIComponent(joinPath)}`;
 
+  const isEarlyBird = status === 'forming' && currentParticipants === 0;
+
   return (
     <div className="
       bg-[var(--color-surface-raised)]
@@ -85,6 +89,25 @@ export function CommitmentCard({
       p-[var(--space-lg)]
       shadow-[var(--shadow-card)]
     ">
+      {/* Early-bird banner — shown when no one has committed yet */}
+      {isEarlyBird && !hasCommitted && (
+        <div className="
+          mb-[var(--space-md)]
+          px-[var(--space-md)] py-[var(--space-sm)]
+          bg-[var(--color-founding-bg)]
+          border border-[var(--color-founding)]
+          rounded-[var(--radius-sm)]
+          text-center
+        ">
+          <p className="text-xs font-medium text-[var(--color-founding)]">
+            Be a founding participant
+          </p>
+          <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">
+            First to commit — your spot is guaranteed when quorum is reached.
+          </p>
+        </div>
+      )}
+
       {/* Price Display */}
       <div className="mb-[var(--space-md)]">
         <div className="flex items-baseline gap-[var(--space-xs)]">
@@ -98,6 +121,11 @@ export function CommitmentCard({
         <p className="text-sm text-[var(--color-ink-subtle)] mt-1">
           {deposit > 0 ? `$${deposit} deposit to commit` : 'No deposit required'}
         </p>
+        {quorumClosesAt && status === 'forming' && (
+          <p className="text-sm text-[var(--color-accent)] font-medium mt-1">
+            Quorum closes {new Date(quorumClosesAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </p>
+        )}
         {status === 'forming' && trustMessage && (
           <p className="text-xs text-[var(--color-ink-subtle)] mt-1">
             {trustMessage} ·{' '}
@@ -142,6 +170,9 @@ export function CommitmentCard({
             >
               Why deposits?
             </button>
+          </p>
+          <p className="text-xs text-[var(--color-confirmed)] font-medium mt-[var(--space-xs)]">
+            ✓ Full refund if quorum is not reached
           </p>
         </div>
       )}
