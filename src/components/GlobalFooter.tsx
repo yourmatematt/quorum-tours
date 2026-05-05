@@ -19,6 +19,8 @@ const primaryLinks = [
   { href: '/tours', label: 'Tours' },
   { href: '/operators', label: 'Operators' },
   { href: '/how-it-works', label: 'How It Works' },
+  { href: '/species', label: 'Species Guide' },
+  { href: '/destinations', label: 'Destinations' },
 ];
 
 const legalLinks = [

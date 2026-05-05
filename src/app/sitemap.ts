@@ -1,5 +1,7 @@
 import { MetadataRoute } from 'next';
 import { createClient } from '@supabase/supabase-js';
+import { speciesData } from '@/data/species';
+import { destinationsData } from '@/data/destinations';
 
 const baseUrl = 'https://quorumtours.com';
 
@@ -60,6 +62,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'yearly',
       priority: 0.2,
     },
+    // Content hub pages
+    {
+      url: `${baseUrl}/species`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/destinations`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    // Operator story
+    {
+      url: `${baseUrl}/stories/dale-winward`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.7,
+    },
+    // Species detail pages
+    ...speciesData.map((s) => ({
+      url: `${baseUrl}/species/${s.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
+    // Destination detail pages
+    ...destinationsData.map((d) => ({
+      url: `${baseUrl}/destinations/${d.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
   ];
 
   // Dynamic pages from Supabase — skip if not configured (e.g. CI builds)

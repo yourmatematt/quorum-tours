@@ -11,6 +11,8 @@ const navItems = [
   { href: '/tours', label: 'Tours' },
   { href: '/how-it-works', label: 'How It Works' },
   { href: '/operators', label: 'Operators' },
+  { href: '/species', label: 'Species' },
+  { href: '/destinations', label: 'Destinations' },
 ];
 
 interface AccountDropdownProps {
