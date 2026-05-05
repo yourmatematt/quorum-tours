@@ -67,14 +67,11 @@ export function OperatorProfileClient() {
       const supabase = createClient();
 
       // Try slug first, then UUID
-      let query = supabase
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+      const query = supabase
         .from('operators')
         .select('*')
-        .eq('is_active', true);
-
-      // If it looks like a UUID, query by id; otherwise by slug
-      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
-      query = isUuid ? query.eq('id', slug) : query.eq('slug', slug);
+        .eq(isUuid ? 'id' : 'slug', slug);
 
       const { data: op, error } = await query.single();
 
