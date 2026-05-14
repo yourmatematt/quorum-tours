@@ -159,6 +159,20 @@ export function HeroSection({
               </Button>
             </Link>
           </div>
+          {/* Press mention */}
+          <div className="flex justify-center">
+            <p className="text-white/50 text-xs tracking-wide uppercase">
+              As featured in{' '}
+              <a
+                href="https://snowyrivermail.com.au/15952/hero-turns-to-tourism-innovation/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/70 hover:text-white/90 underline underline-offset-2 transition-colors duration-150"
+              >
+                Snowy River Mail
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </section>

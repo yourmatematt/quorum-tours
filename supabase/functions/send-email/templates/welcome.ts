@@ -48,8 +48,8 @@ export function welcomeEmail(data: Record<string, unknown>): { subject: string; 
       <tr>
         <td style="padding: 12px 0; border-bottom: 1px solid ${colors.border};">
           <strong style="color: ${colors.primary};">3.</strong>
-          <span style="color: ${colors.ink}; margin-left: 8px;">Wait for quorum</span>
-          <p style="margin: 4px 0 0 20px; font-size: 14px; color: ${colors.inkMuted};">Other people commit too. If enough commit, the tour reaches quorum.</p>
+          <span style="color: ${colors.ink}; margin-left: 8px;">Help reach quorum</span>
+          <p style="margin: 4px 0 0 20px; font-size: 14px; color: ${colors.inkMuted};">Other people commit too. You can speed this up — sharing the tour with a birding friend is the most direct way to help it confirm.</p>
         </td>
       </tr>
       <tr>
