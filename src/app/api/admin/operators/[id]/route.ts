@@ -164,6 +164,7 @@ const METADATA_FIELDS = new Set([
   'years_experience',
   'vessel_name',
   'why_quorum',
+  'press',
   'access_areas',
   'max_group_size',
 ]);
