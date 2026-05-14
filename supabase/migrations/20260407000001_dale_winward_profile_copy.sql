@@ -36,4 +36,4 @@ SET
     '{vessel_name}',
     '"M.V. Loch-Ard"'::jsonb
   )
-WHERE slug = 'mallacoota-cruises';
+WHERE slug = 'compass-tours'; -- actual slug in DB (was 'mallacoota-cruises' in original draft)

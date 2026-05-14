@@ -212,6 +212,180 @@ Bairnsdale serves as the natural gateway for tours heading further east to Malla
     ],
     relatedDestinationSlugs: ['mallacoota-east-gippsland'],
   },
+  {
+    slug: 'atherton-tablelands',
+    name: 'Atherton Tablelands',
+    region: 'Wet Tropics, Far North Queensland',
+    state: 'QLD',
+    tagline: "Australia's premier birding destination — a World Heritage highland where rainforest endemics live alongside the most bird-rich landscape on the continent.",
+    heroDescription:
+      'Rising from the tropical coast behind Cairns, the Atherton Tablelands is a cool, green highland blanketed in World Heritage rainforest and mosaic farmland. It holds more bird species than anywhere else in Australia of comparable size — and includes a suite of endemic species found nowhere else on Earth.',
+    fullDescription: `The Atherton Tablelands is, without qualification, one of the finest birding destinations in the world. Sitting at 700–1100 metres above sea level and stretching roughly 80 km south from the Kuranda Range, it is the highland heart of Queensland's Wet Tropics — a UNESCO World Heritage Area protecting some of the most ancient and biodiverse rainforest in Australia.
+
+What makes the Tablelands extraordinary is its concentration of range-restricted and endemic species. The Wet Tropics is one of the global hotspots of bird endemism. Species found here and nowhere else on Earth include the Chowchilla, Fernwren, Mountain Thornbill, Tooth-billed Bowerbird, Golden Bowerbird, Bower's Shrike-thrush, and the spectacular Victoria's Riflebird. These are not shy birds that require specialist techniques to locate — most are accessible to any patient birder willing to sit quietly at forest edges in the morning.
+
+**The crater lakes**
+
+Lake Eacham and Lake Barrine — two ancient volcanic crater lakes set in pristine rainforest — are among the most accessible birding hotspots in the Tablelands. Pied Monarchs, Spectacled Monarchs, Spotted Catbirds, Olive-backed Sunbirds, and Buff-breasted Paradise Kingfishers (in season) can be found within 50 metres of the carparks. The lake edges provide open water for waterfowl and the chance of Papuan Frogmouth on the dawn circuit.
+
+**Platypus and grassland edges**
+
+The Tablelands is one of the most reliable places in Australia to see a Platypus. The Tully River at Malanda and Yungaburra's Peterson Creek are famous sites. The farm paddocks and forest edges around Malanda, Millaa Millaa, and Ravenshoe support open-country specialists: Black-throated Finch occurs here at the southern edge of its Queensland range, and Brolgas are regular in the wetter paddocks.
+
+**Accessibility**
+
+Cairns is the gateway. The Tablelands begin 25 km west of the city, and most key birding sites are within 60–90 minutes' drive. Yungaburra is the most popular base for birding visitors — a small town with good accommodation, cafes, and a compact layout that puts rainforest edge habitat literally next to the main street. Day trips from Cairns are entirely feasible.`,
+    keyBirds: [
+      'Chowchilla',
+      'Fernwren',
+      'Mountain Thornbill',
+      'Golden Bowerbird',
+      'Tooth-billed Bowerbird',
+      "Victoria's Riflebird",
+      'Buff-breasted Paradise Kingfisher',
+      'Spotted Catbird',
+      'Pied Monarch',
+      'Platypus',
+      'Lumholtz\'s Tree-kangaroo',
+      'Boyd\'s Forest Dragon',
+    ],
+    highlights: [
+      {
+        icon: '🦜',
+        title: 'Endemic species cluster',
+        description:
+          'More range-restricted and endemic birds than anywhere else in Australia. Chowchilla, Fernwren, and Golden Bowerbird are Tablelands specialties found nowhere else on Earth.',
+      },
+      {
+        icon: '🏞️',
+        title: 'Crater lakes circuit',
+        description:
+          'Lake Eacham and Lake Barrine offer paved walking tracks through undisturbed rainforest with exceptional access to montane forest species. Car-accessible and beginner-friendly.',
+      },
+      {
+        icon: '🦫',
+        title: 'Platypus at dawn',
+        description:
+          "Peterson Creek at Yungaburra and the Malanda area are among Australia's most reliable sites for dawn Platypus viewing.",
+      },
+      {
+        icon: '🌿',
+        title: 'World Heritage rainforest',
+        description:
+          'The Wet Tropics rainforest is among the oldest in the world — fragments of Gondwanan vegetation that have survived in this highland for 180 million years.',
+      },
+    ],
+    bestSeason: 'May to October (dry season) is the most comfortable for birding. November–April is the wet season — hot, humid, and prone to cyclone activity, but Buff-breasted Paradise Kingfishers arrive from New Guinea in late October and are present through summer. Year-round birding is productive; the Tablelands is not highly seasonal for resident species.',
+    gettingThere:
+      'Fly into Cairns Airport. The Tablelands begin 25 km west via the Kennedy Highway (Kuranda Range). Yungaburra is the birding base of choice — 80 km from Cairns. Car hire is essential; there is no public transport serving the birding sites.',
+    wherToStay:
+      'Yungaburra has the best range of birder-friendly accommodation: B&Bs, guesthouses, and a caravan park all within walking distance of the main birding sites. Malanda and Ravenshoe offer motel accommodation for those exploring the southern Tablelands. Atherton has the most services and is centrally located.',
+    relatedOperators: [],
+    metaDescription:
+      "Atherton Tablelands birding guide — Australia's finest endemic birding destination. Chowchilla, Fernwren, Golden Bowerbird, Buff-breasted Paradise Kingfisher, and 400+ species in Queensland's World Heritage rainforest.",
+    keywords: [
+      'Atherton Tablelands birding',
+      'Atherton Tablelands birds',
+      'Far North Queensland birding',
+      'Queensland endemic birds',
+      'Wet Tropics birding',
+      'Cairns birding tours',
+      'Yungaburra birds',
+      'Golden Bowerbird Australia',
+      'Australian rainforest birds',
+      'Chowchilla Australia',
+    ],
+    relatedDestinationSlugs: ['mallacoota-east-gippsland'],
+  },
+  {
+    slug: 'southwest-tasmania',
+    name: 'Southwest Tasmania',
+    region: 'Southwest, Tasmania',
+    state: 'TAS',
+    tagline: 'One of the world\'s great wilderness areas — and the only place to find some of Australia\'s most critically endangered birds.',
+    heroDescription:
+      "Southwest Tasmania is remote, wet, and wild. It holds the last refuges of the Swift Parrot, the core habitat of the 40-spotted Pardalote, and the only known mainland breeding site of the Orange-bellied Parrot in Australia's south — along with subantarctic seabirds that push inshore on pelagic trips from Hobart.",
+    fullDescription: `Southwest Tasmania is one of the last truly wild places in Australia. The Southwest National Park — 600,000 hectares of buttongrass moorland, quartzite ranges, ancient Huon pine forests, and glacial lakes — is part of the Tasmanian Wilderness World Heritage Area, one of the largest temperate wilderness reserves in the Southern Hemisphere.
+
+For birders, Tasmania holds a status unique in Australia: several species exist here and only here, and others use Tasmania as their last critical refuge. Three Critically Endangered and Endangered parrots make the island their stronghold.
+
+**40-spotted Pardalote — Bruny Island**
+
+The most accessible target for visiting birders. The 40-spotted Pardalote is endemic to Tasmania and now largely restricted to Bruny Island and Maria Island. Bruny is a 20-minute ferry ride from Kettering (40 minutes south of Hobart). The white gum forest at Dennes Point and the Adventure Bay area hold the most reliable colonies. Morning visits in any season give good odds of finding these tiny, constantly moving birds in the canopy.
+
+**Swift Parrot — Derwent Valley and Hobart area**
+
+The Swift Parrot breeds in Tasmanian blue gum and black gum forests and migrates to the Australian mainland in autumn. Population: around 300 birds remaining. Nesting is concentrated in the Derwent Valley, Central Highlands, and along the east coast. Sugar gliders predate nest hollows — one of the major threats to breeding success. When in Tasmania from August to January, Blue gum flowering sites around Hobart and the Coal River Valley can attract large feeding flocks.
+
+**Orange-bellied Parrot — Melaleuca**
+
+One of the most sought-after birds in Australia. The Orange-bellied Parrot breeds only at Melaleuca, a remote southwest wilderness accessible by light aircraft or boat, or on foot via multi-day walks. Fewer than 50 wild birds remain. The species' existence is precarious, and visits to the breeding area are managed carefully. For most birders, seeing an OBP means wintering birds on mainland coastal saltmarshes in Victoria and South Australia (Werribee, western Port Phillip, Mount Compass).
+
+**Pelagic birding from Hobart**
+
+Bass Strait and the Southern Ocean produce excellent pelagic diversity. Blue Petrels, prions, Shy Albatross, Black-browed Albatross, and occasionally rare species from the Southern Ocean push north into Tasmanian waters. Organised pelagic trips from Hobart, particularly in autumn and winter, can produce 15–20 seabird species in a day.`,
+    keyBirds: [
+      '40-spotted Pardalote',
+      'Swift Parrot',
+      'Orange-bellied Parrot',
+      'Shy Albatross',
+      'Blue Petrel',
+      'White-bellied Sea-Eagle',
+      'Wedge-tailed Eagle',
+      'Green Rosella',
+      'Dusky Robin',
+      'Strong-billed Honeyeater',
+      'Black Currawong',
+      'Yellow-throated Honeyeater',
+    ],
+    highlights: [
+      {
+        icon: '🦜',
+        title: '40-spotted Pardalote on Bruny Island',
+        description:
+          'Reliable access to one of the world\'s rarest birds. The Dennes Point white gum forest on Bruny Island is the most accessible 40-spotted Pardalote site in Australia.',
+      },
+      {
+        icon: '🦅',
+        title: 'Swift Parrot nesting',
+        description:
+          'Tasmania is the sole breeding ground of the critically endangered Swift Parrot. Blue gum flowering events around Hobart in Aug–Oct can attract feeding flocks.',
+      },
+      {
+        icon: '🌊',
+        title: 'Southern Ocean pelagics',
+        description:
+          'Bass Strait and the Southern Ocean push albatross, petrels, and prions close to Tasmania. Organised pelagic trips from Hobart are productive year-round.',
+      },
+      {
+        icon: '🏔️',
+        title: 'Tasmanian wilderness endemics',
+        description:
+          'Green Rosella, Strong-billed Honeyeater, Yellow-throated Honeyeater, Dusky Robin, and Black Currawong are found only in Tasmania — all accessible from Hobart.',
+      },
+    ],
+    bestSeason: 'Year-round. For 40-spotted Pardalote: any time, best in morning. For Swift Parrot: August–January (breeding season in Tasmania). For Orange-bellied Parrot at Melaleuca: December–February (breeding). For pelagics: autumn and winter (March–August) for the most diverse seabird communities.',
+    gettingThere:
+      'Fly into Hobart Airport. Bruny Island ferry departs Kettering, 40 min south of Hobart (Bruny Island Ferry — approximately 20 minutes crossing, runs frequently). Southwest National Park accessible by scenic flights from Hobart (Par Avion operates regular flights to Melaleuca). Walking access via multi-day tracks.',
+    wherToStay:
+      'Hobart is the base for all southwest Tasmania birding. Accommodation ranges from boutique city hotels to waterfront apartments. Bruny Island has small lodges, holiday cottages, and a campground. Advance booking essential in summer (December–February). Melaleuca hut accommodation is available (booking via Parks Tasmania).',
+    relatedOperators: [],
+    metaDescription:
+      "Southwest Tasmania birding guide — 40-spotted Pardalote on Bruny Island, Swift Parrot, Orange-bellied Parrot, and Southern Ocean pelagics. Australia's most important island for rare and endemic birds.",
+    keywords: [
+      'Tasmania birding',
+      'southwest Tasmania birds',
+      'Bruny Island birding',
+      '40-spotted pardalote Tasmania',
+      'swift parrot Tasmania',
+      'orange-bellied parrot',
+      'Hobart birding',
+      'Tasmania endemic birds',
+      'Tasmania wildlife tours',
+      'pelagic birding Tasmania',
+    ],
+    relatedDestinationSlugs: ['mallacoota-east-gippsland', 'gippsland-lakes'],
+  },
 ];
 
 export function getDestinationBySlug(slug: string): DestinationData | undefined {

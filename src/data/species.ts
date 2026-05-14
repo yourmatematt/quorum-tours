@@ -656,6 +656,192 @@ Malleefowl populations have declined severely since European settlement — fox 
     ],
     relatedSpeciesSlugs: ['plains-wanderer', 'southern-cassowary'],
   },
+  {
+    slug: 'night-parrot',
+    commonName: 'Night Parrot',
+    scientificName: 'Pezoporus occidentalis',
+    conservationStatus: 'Endangered',
+    conservationStatusCode: 'EN',
+    tagline: "Australia's most mysterious bird — nocturnal, elusive, and barely seen in over a century.",
+    heroDescription:
+      'Thought to be functionally extinct for decades, the Night Parrot was rediscovered in southwestern Queensland in 2013. Fewer than 250 are believed to remain. Finding one in the wild is among the most coveted experiences in world birding.',
+    fullDescription: `The Night Parrot (Pezoporus occidentalis) is arguably the most enigmatic bird in Australia — and one of the most elusive in the world. For much of the 20th century, it was believed to be extinct or functionally so. A handful of museum specimens existed, but there had been no confirmed live sightings for over 100 years. Then in 2013, naturalist John Young photographed a live bird in southwestern Queensland, and the Night Parrot was back.
+
+The species is nocturnal, secretive, and lives in some of Australia's most remote spinifex grasslands and samphire flats — vast, harsh country that discourages casual survey work. Its call was unknown until 2017. It feeds on grass seeds at night, spending the day hidden deep inside prickly spinifex clumps where it is essentially invisible. Even with modern playback equipment, camera traps, and eDNA techniques, encounters remain exceedingly rare.
+
+Following Young's discovery, Queensland's state government created the Pullen Pullen Reserve in the Diamantina region — a dedicated sanctuary protecting Night Parrot habitat from feral cats and livestock grazing. Steve Murphy and his research team have conducted the most intensive survey work, radio-tagging several birds and learning the species' behaviour for the first time. Western Australia has also produced confirmed records, suggesting a fragmented but more widespread remnant population than previously thought.
+
+The Night Parrot's conservation challenge is formidable: it occupies remote, inaccessible country; feral cats are its primary predator; and its nocturnal, cryptic habits make monitoring difficult. But it is not extinct. For serious twitchers and birders, a confirmed sighting remains among the most meaningful experiences available in Australian wildlife.`,
+    bestLocations: [
+      {
+        name: 'Pullen Pullen Reserve (Diamantina region)',
+        state: 'QLD',
+        notes: 'The only publicly known Night Parrot site. Access is tightly controlled; scientific permits required. Not open for general visitation.',
+      },
+      {
+        name: 'Kalgoorlie region (WA records)',
+        state: 'WA',
+        notes: 'Multiple confirmed records from the Goldfields region. Remote spinifex country; no reliable access point.',
+      },
+      {
+        name: 'Nullarbor Plain',
+        state: 'SA/WA',
+        notes: 'Historical stronghold; occasional road casualties recorded. Very remote.',
+      },
+    ],
+    bestSeason: 'Not reliably observable in any season. If attempting, May–August (cooler months) is slightly more feasible for extended time in remote habitat. Dawn surveys near water points yield the best — still extremely slim — odds.',
+    difficulty: 'Expert',
+    habitatTypes: ['Arid Spinifex Grassland', 'Samphire Flats', 'Gibber Plains', 'Remote Mulga Shrubland'],
+    topFacts: [
+      'Thought extinct for over 100 years before its rediscovery in 2013',
+      'Nocturnal — spends the day hidden inside spinifex tussocks where it is nearly impossible to locate',
+      'Population estimated at fewer than 250 individuals',
+      'The Pullen Pullen Reserve was created specifically to protect the Queensland population',
+      'Its call was not scientifically documented until 2017',
+    ],
+    metaDescription:
+      "The Night Parrot — Australia's most elusive bird. Rediscovered in 2013 after a century of mystery. Where to find it, why it matters, and what is being done to protect it.",
+    keywords: [
+      'night parrot',
+      'Australian night parrot',
+      'rarest bird Australia',
+      'Pezoporus occidentalis',
+      'night parrot sighting',
+      'night parrot Queensland',
+      'extinct bird rediscovered',
+      'Australian nocturnal birds',
+    ],
+    relatedSpeciesSlugs: ['orange-bellied-parrot', 'plains-wanderer'],
+  },
+  {
+    slug: 'forty-spotted-pardalote',
+    commonName: '40-spotted Pardalote',
+    scientificName: 'Pardalotus quadragintus',
+    conservationStatus: 'Endangered',
+    conservationStatusCode: 'EN',
+    tagline: 'A tiny jewel found only in Tasmania — one of Australia\'s rarest birds, entirely dependent on white gums.',
+    heroDescription:
+      'The 40-spotted Pardalote exists nowhere on Earth except Tasmania. With an estimated population below 2,000 birds and a strict dependence on white gum forest, it is among the most urgently threatened birds in Australia — and one of the most sought-after by visiting birders.',
+    fullDescription: `The 40-spotted Pardalote (Pardalotus quadragintus) is a tiny bird with a very large presence in Australian conservation concern. At roughly 10 cm long and weighing less than 10 grams, it is one of the smallest birds in Australia — and one of the most geographically restricted. It is found only in Tasmania, and only in patches of white gum (Eucalyptus viminalis) forest near the coast. Outside these stands, it essentially does not exist.
+
+The relationship between the 40-spotted Pardalote and white gum is total. The birds feed on a sugary secretion called manna produced by the white gum's leaves, as well as insects gleaned from its bark. They nest in the trees' hollow branches. When white gum is removed from a landscape — for farming, development, or changed land management — the Forty-spotted vanishes with it.
+
+Unlike its more widespread cousins (the Spotted and Striated Pardalotes are familiar garden birds across the mainland), the Forty-spotted is genuinely rare. A total population estimate of around 1,500–2,000 birds makes it one of Australia's least numerous bird species. The island populations are small and fragmented — Bruny Island holds the most important known colony, with smaller numbers at Maria Island, Bowen Island, and a handful of mainland Tasmanian sites.
+
+For visiting birders, the Forty-spotted Pardalote is a key target — and one of the more achievable of Australia's rarest birds. The Adventure Bay area on Bruny Island, and the white gum groves at Dennes Point, offer genuine year-round access to the species, particularly in the morning when birds are actively foraging in the canopy. Binoculars are essential: they move constantly and high, and the white spotting can be hard to pick out against bright canopy.`,
+    bestLocations: [
+      {
+        name: 'Bruny Island (Adventure Bay / Dennes Point)',
+        state: 'TAS',
+        notes: 'The most reliable site in Australia. White gum forest at Dennes Point and along the Adventure Bay Road hosts the most accessible colony. Morning visits recommended.',
+      },
+      {
+        name: 'Maria Island National Park',
+        state: 'TAS',
+        notes: 'Island sanctuary accessible by ferry from Triabunna. Car-free, making it excellent for wildlife watching. 40-spotteds present in white gum areas near Darlington.',
+      },
+      {
+        name: 'Bowen Island (near Hobart)',
+        state: 'TAS',
+        notes: 'Small colony. Private land access issues; check current access conditions.',
+      },
+      {
+        name: 'Mornington Peninsula analogue sites (no longer present)',
+        state: 'VIC',
+        notes: 'Historically recorded in Victoria; now entirely restricted to Tasmania.',
+      },
+    ],
+    bestSeason: 'Year-round, though breeding activity (Aug–Dec) increases calling and visibility. Winter months are productive as birds flock in white gum canopy. Bruny Island is accessible year-round by ferry from Kettering.',
+    difficulty: 'Hard',
+    habitatTypes: ['White Gum Forest', 'Coastal Dry Sclerophyll Forest', 'Woodland Edges'],
+    topFacts: [
+      'Endemic to Tasmania — found nowhere else on Earth',
+      'Entirely dependent on white gum (Eucalyptus viminalis) — the trees are not just habitat but their sole food source',
+      'Population estimated at 1,500–2,000 birds total',
+      'Bruny Island holds the most important colony outside of any protected reserve',
+      'The species nests in hollow branches of old white gums — loss of old trees is a key driver of decline',
+    ],
+    metaDescription:
+      "The 40-spotted Pardalote — Tasmania's rarest endemic bird. Where to see it on Bruny Island and Maria Island, why it's endangered, and what makes it special.",
+    keywords: [
+      '40-spotted pardalote',
+      'forty-spotted pardalote',
+      'Tasmania rare birds',
+      'Bruny Island birding',
+      'Pardalotus quadragintus',
+      'Tasmania endemic birds',
+      'Maria Island birding',
+      'Dennes Point birds',
+      'rarest birds Australia',
+    ],
+    relatedSpeciesSlugs: ['swift-parrot', 'orange-bellied-parrot'],
+  },
+  {
+    slug: 'eastern-curlew',
+    commonName: 'Eastern Curlew',
+    scientificName: 'Numenius madagascariensis',
+    conservationStatus: 'Critically Endangered',
+    conservationStatusCode: 'CR',
+    tagline: "The world's largest shorebird makes one of nature's longest journeys to reach Australia — and its numbers are crashing.",
+    heroDescription:
+      'The Eastern Curlew is the biggest shorebird on Earth, with a bill that curves dramatically downward and a distinctive two-note whistle that carries across wide estuaries. Australia holds the world\'s most important non-breeding population — and it is in freefall.',
+    fullDescription: `The Eastern Curlew (Numenius madagascariensis) is unmistakable. At 63 cm long, it dwarfs other waders, and its 15–20 cm decurved bill is among the most distinctive structures in avian anatomy — perfectly adapted for extracting ghost crabs and marine worms from deep in tidal mudflats. In flight, the long wings and plaintive, two-syllable call make it one of the few shorebirds identifiable at distance.
+
+Australia is the most important non-breeding destination for Eastern Curlews. Between September and March, hundreds of thousands arrive from breeding grounds in Siberia and northeastern China, settling on tidal mudflats and estuaries along the eastern and northern coasts. Moreton Bay in Queensland, Roebuck Bay in Western Australia, and the intertidal flats of the Clarence and Hunter rivers in New South Wales historically hosted the highest concentrations. Western Port Bay in Victoria remains an important southeastern refuge.
+
+The numbers are falling catastrophically. The global population has declined by more than 80% since the 1980s — from around 150,000 birds to fewer than 38,000 today. The primary cause is the destruction and degradation of Yellow Sea tidal flats on the East Asian–Australasian Flyway, where curlews and dozens of other shorebird species refuel during their twice-yearly migration. Without adequate stopover habitat, birds arrive in Australia underweight and unable to sustain breeding condition.
+
+This is one of the most urgent conservation crises in Australian wildlife. Eastern Curlew was listed as Critically Endangered under Australia's EPBC Act in 2016. International advocacy to protect Yellow Sea habitat — across China, North Korea, and South Korea — is ongoing. In Australia, the species benefits from shorebird-friendly management of estuaries and protection from disturbance at roost sites.
+
+For birders, the Eastern Curlew is an entirely achievable target at the right estuary between September and March. Large roosting flocks gather at predictable high-tide sites, allowing close observation of a genuinely magnificent bird.`,
+    bestLocations: [
+      {
+        name: 'Moreton Bay (Nudgee Beach, Toorbul Point)',
+        state: 'QLD',
+        notes: 'One of Australia\'s most important non-breeding sites. Hundreds of Eastern Curlews at high-tide roosts. Best viewed Sep–Mar.',
+      },
+      {
+        name: 'Roebuck Bay (near Broome)',
+        state: 'WA',
+        notes: 'The most important site in Australia for many shorebird species. Eastern Curlews present through the non-breeding season.',
+      },
+      {
+        name: 'Western Port Bay (Tooradin, Blind Bight)',
+        state: 'VIC',
+        notes: 'Key Victoria site. Good viewing from Tooradin Inlet and the Westernport Peninsula flats during high tide.',
+      },
+      {
+        name: 'Shoalhaven / Jervis Bay',
+        state: 'NSW',
+        notes: 'Significant estuarine flats hosting Eastern Curlews. Greenwell Point and Callala Bay are reliable viewing areas.',
+      },
+    ],
+    bestSeason: 'September to March (non-breeding season in Australia). Peak numbers typically October–February. Most birds depart by late March for the return migration north.',
+    difficulty: 'Moderate',
+    habitatTypes: ['Tidal Mudflats', 'Estuarine Mangroves', 'Coastal Wetlands', 'Intertidal Zones'],
+    topFacts: [
+      "World's largest shorebird at up to 63 cm long with a 15–20 cm curved bill",
+      "Undertakes one of the longest migrations in the animal kingdom — 10,000+ km each way between Siberia and Australia",
+      'Global population has crashed by over 80% since the 1980s — fewer than 38,000 remain',
+      'Listed as Critically Endangered under Australia\'s EPBC Act since 2016',
+      'Key threat is loss of Yellow Sea tidal mudflats used for refuelling during migration',
+    ],
+    metaDescription:
+      "The Eastern Curlew — the world's largest shorebird and one of Australia's most threatened birds. Where to see it in Australia, its remarkable migration, and the conservation crisis unfolding on the Yellow Sea.",
+    keywords: [
+      'eastern curlew',
+      'Numenius madagascariensis',
+      'Australian shorebirds',
+      'largest shorebird world',
+      'migratory birds Australia',
+      'critically endangered birds Australia',
+      'Moreton Bay shorebirds',
+      'wading birds Australia',
+      'tidal flat birds',
+      'East Asian Australasian Flyway',
+    ],
+    relatedSpeciesSlugs: ['plains-wanderer', 'orange-bellied-parrot'],
+  },
 ];
 
 export function getSpeciesBySlug(slug: string): SpeciesData | undefined {
